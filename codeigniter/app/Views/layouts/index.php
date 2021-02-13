@@ -1,4 +1,4 @@
-<?php 
+<?php
 $BASE_ASSETS = base_url('assets/template');
 $BASE_ASSETS_BASE = base_url('assets');
 ?>
@@ -36,6 +36,15 @@ $BASE_ASSETS_BASE = base_url('assets');
   <link rel="stylesheet" href="<?= $BASE_ASSETS ?>/plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
   <link rel="stylesheet" href="<?= $BASE_ASSETS ?>/plugins/summernote/summernote-bs4.min.css">
+  <!-- AUTO COMPLETADO -->
+  <link rel="stylesheet" href="<?= $BASE_ASSETS_BASE ?>/awesomplete/awesomplete.min.css">
+  <!--  PNOTIFY -->
+  <link rel="stylesheet" href="<?= $BASE_ASSETS_BASE ?>/pnotify/pnotify.css">
+
+
+
+
+
 
   <style>
     @import url("<?= base_url('assets/Marvel-Regular.ttf') ?>");
@@ -45,6 +54,41 @@ $BASE_ASSETS_BASE = base_url('assets');
       src: url("<?= base_url('assets/Marvel-Regular.ttf') ?>");
 
     }
+
+
+    /**Estilo d plantilla */
+    [class*="sidebar-dark-"] {
+      background-color: #009688;
+    }
+
+    .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active,
+    .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
+
+      background-color: #00796B;
+    }
+
+    .brand-link {
+      background-color: #00796B;
+    }
+
+    .btn.btn-primary {
+      background-color: #009688 !important;
+    }
+
+
+
+
+    .form-control {
+      /* height: calc(2.25rem + 2px); */
+      /* font-size: 1rem; */
+      /* background-color: #fff; */
+      height: calc(1.9rem + 0px);
+      font-size: 0.9rem;
+      background-color: #B3E5FC;
+      border: 1px solid #8c91d7;
+    }
+
+
 
     h1,
     h2,
@@ -56,6 +100,56 @@ $BASE_ASSETS_BASE = base_url('assets');
     label,
     legend {
       font-family: mainfont;
+    }
+
+
+    /***fieldsets */
+
+    fieldset {
+      border: 1px solid #9999ca;
+      padding: 1px 0px 1px 0px;
+
+      /* margin-bottom: 2px;*/
+      margin: 0px;
+      width: 100%;
+      height: 100%;
+    }
+
+    fieldset legend {
+      text-align: center;
+      padding-left: 5px;
+      padding-top: 2px;
+      border-radius: 6px 6px 0px 0px;
+      background-color: #00796B;
+      /*#8eb9b5;*/
+      color: white;
+      text-shadow: 1px 1px 8px #04043c;
+      font-size: 11pt;
+      font-weight: 600;
+    }
+
+    fieldset label.sobrio {
+      text-transform: capitalize;
+      font-size: 9pt;
+      font-weight: 600;
+      color: #4d4d4d;
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+
+
+    /**awesomplete */
+
+    #awesomplete_list_2 {
+      z-index: 1000000;
+      position: absolute;
+      opacity: 1;
+      background-color: #0072aa;
+      color: wheat;
+    }
+
+    .visually-hidden {
+      display: none;
     }
   </style>
 </head>
@@ -88,22 +182,10 @@ $BASE_ASSETS_BASE = base_url('assets');
         <!-- Navbar Search -->
         <li class="nav-item">
           <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-            <i class="fas fa-search"></i>
+
           </a>
           <div class="navbar-search-block">
-            <form class="form-inline">
-              <div class="input-group input-group-sm">
-                <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-                <div class="input-group-append">
-                  <button class="btn btn-navbar" type="submit">
-                    <i class="fas fa-search"></i>
-                  </button>
-                  <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
-              </div>
-            </form>
+
           </div>
         </li>
 
@@ -225,23 +307,14 @@ $BASE_ASSETS_BASE = base_url('assets');
           </div>
         </div>
 
-        <!-- SidebarSearch Form -->
-        <div class="form-inline">
-          <div class="input-group" data-widget="sidebar-search">
-            <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-            <div class="input-group-append">
-              <button class="btn btn-sidebar">
-                <i class="fas fa-search fa-fw"></i>
-              </button>
-            </div>
-          </div>
-        </div>
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
+
+          
             <li class="nav-item ">
               <a href="#" class="nav-link active">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -251,150 +324,142 @@ $BASE_ASSETS_BASE = base_url('assets');
                 </p>
               </a>
               <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="<?= base_url("deudor/index") ?>" class="nav-link">
+
+
+              <li class="nav-item">
+                  <a href="<?= base_url("deudor/index") ?>" class="nav-link ">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Ficha de clientes</p>
+                    <p>Lista de clientes</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="<?= base_url("prestamo/index") ?>" class="nav-link">
+                  <a href="<?= base_url("operacion/index") ?>" class="nav-link ">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Listar operaciones</p>
+                    <p>Operaciones</p>
                   </a>
                 </li>
+
 
                 <li class="nav-item">
                   <a href="<?= base_url("prestamo/index") ?>" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Crear operación</p>
+                    <p>Vencimientos</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="<?= base_url("prestamo/index") ?>" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Ofrecimientos</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="<?= base_url("prestamo/index") ?>" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Planilla solicitudes</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="<?= base_url("prestamo/index") ?>" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Referencias comerciales</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="<?= base_url("prestamo/index") ?>" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Operaciones pendientes</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="<?= base_url("prestamo/index") ?>" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Datos de cédula</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+
+
+            <li class="nav-item ">
+              <a href="#" class="nav-link active">
+                <i class="nav-icon fas fa-copy"></i>
+                <p>
+                  Caja
+                  <i class="fas fa-angle-left right"></i>
+                  <!-- <span class="right badge badge-danger">New</span> -->
+                </p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="#" class="nav-link active">
+                <i class="nav-icon fas fa-copy"></i>
+                <p>
+                  Requerimiento
+                  <i class="fas fa-angle-left right"></i>
+
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Opcion 1 </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Opcion 2</p>
                   </a>
                 </li>
 
-                <li class="nav-item">
-                  <a href="<?= base_url("prestamo/index") ?>" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Aprobar operación</p>
-                  </a>
-                </li>
-
-                <li class="nav-item">
-                  <a href="<?= base_url("prestamo/index") ?>" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Generación de vencimientos </p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="<?= base_url("prestamo/index") ?>" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Impresión pagaré</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="<?= base_url("prestamo/index") ?>" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Impresión tabla de vencimientos</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="<?= base_url("prestamo/index") ?>" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Imprimir factura de crédito</p>
-                  </a>
-                </li>
 
 
               </ul>
             </li>
-            <li class="nav-item">
-              <a href="pages/widgets.html" class="nav-link">
-              <i class="nav-icon fas fa-copy"></i>
+
+            <li class="nav-item ">
+              <a href="#" class="nav-link active">
+                <i class="nav-icon fas fa-copy"></i>
                 <p>
-                  Cobranzas
+                  Estadística
                   <i class="fas fa-angle-left right"></i>
-                <!-- <span class="right badge badge-danger">New</span> -->
+                  <!-- <span class="right badge badge-danger">New</span> -->
                 </p>
               </a>
             </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-copy"></i>
+
+
+            <li class="nav-item ">
+              <a href="#" class="nav-link active">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
-                 Caja
-                  <i class="fas fa-angle-left right"></i>
-                  
+                  Varios
+                  <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="pages/layout/top-nav.html" class="nav-link">
+                  <a href="<?= base_url("empresa/index") ?>" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Liquidación</p>
+                    <p>Empresas</p>
                   </a>
                 </li>
-                <a href="pages/layout/top-nav-sidebar.html" class="nav-link">
-                  <li class="nav-item">
+                <li class="nav-item">
+                  <a href="<?= base_url("porcentaje/index") ?>" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Impresión de factura contado y recibos</p>
-                </a>
+                    <p>Porcentajes</p>
+                  </a>
+                </li>
+              </ul>
             </li>
-            <li class="nav-item">
-              <a href="pages/layout/boxed.html" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Impresión de notas de crédito</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="pages/layout/fixed-sidebar.html" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Resumen y totales de caja</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="pages/layout/fixed-sidebar-custom.html" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p> Cierre y arqueo de caja</p>
-              </a>
-            </li>
-           
-            
-          </ul>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-chart-pie"></i>
-              <p>
-               Requerimientos
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="pages/charts/chartjs.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Planilla 90 días</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="pages/charts/flot.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Llamadas</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="pages/charts/inline.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Agenda</p>
-                </a>
-              </li>
-               
-            </ul>
-          </li>
-          
-          
-       
-         
-        
+
+
+
         </nav>
         <!-- /.sidebar-menu -->
       </div>
@@ -427,10 +492,10 @@ $BASE_ASSETS_BASE = base_url('assets');
       <section class="content">
 
 
-      <div class="container-fluid">
-      <?= $this->renderSection("contenido") ?>
-      </div>
-       
+        <div class="container-fluid p-0 m-0">
+          <?= $this->renderSection("contenido") ?>
+        </div>
+
 
 
 
@@ -458,7 +523,7 @@ $BASE_ASSETS_BASE = base_url('assets');
 
 
 
-        <div class="modal fade" id="modal-danger" tabindex="-1"  style="display: none;" aria-modal="true" role="dialog">
+        <div class="modal fade" id="modal-danger" tabindex="-1" style="display: none;" aria-modal="true" role="dialog">
           <div class="modal-dialog">
             <div class="modal-content bg-danger">
               <div class="modal-header">
@@ -490,8 +555,8 @@ $BASE_ASSETS_BASE = base_url('assets');
     </div>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
-      <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-      All rights reserved.
+      <strong>Año <?= date("Y") ?> <a href="#">Finanweb</a>.</strong>
+
       <div class="float-right d-none d-sm-inline-block">
         <b>Version</b> 3.1.0-rc
       </div>
@@ -545,13 +610,27 @@ $BASE_ASSETS_BASE = base_url('assets');
   <script src="<?= $BASE_ASSETS ?>/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
   <!-- AdminLTE App -->
   <script src="<?= $BASE_ASSETS ?>/dist/js/adminlte.js"></script>
-
-
   <!--XLS GEN -->
 
-  <script src="<?= $BASE_ASSETS_BASE ?>/xls_gen/xls.js"></script>
+  <script src="<?= $BASE_ASSETS_BASE ?>/xls_gen/xls.js<?= '?v='.microtime(true) ?>"></script>
   <script src="<?= $BASE_ASSETS_BASE ?>/xls_gen/xls_ini.js"></script>
+  <!--AUTOCOMPLETADO -->
+  <script src="<?= $BASE_ASSETS_BASE ?>/awesomplete/awesomplete.min.js"></script>
+  <!--AUTOCOMPLETADO -->
+  <script src="<?= $BASE_ASSETS_BASE ?>/pnotify/pnotify.js"></script>
+
+
   <script>
+    function replaceAll_compat() {
+      if (!("replaceAll" in String.prototype)) {
+        let replaceAll = function(expre_reg, substitute) {
+          return this.replace(expre_reg, substitute);
+        };
+        String.prototype.replaceAll = replaceAll;
+      }
+    }
+    replaceAll_compat();
+
     window.alertSuccess = function({
       title,
       body

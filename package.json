@@ -1,0 +1,24 @@
+{
+    "name": "finansys",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "webpack"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sn94/finansys.git"
+    },
+    "author": "Sonia Toledo",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/sn94/finansys/issues"
+    },
+    "homepage": "https://github.com/sn94/finansys#readme",
+    "devDependencies": {
+        "webpack": "^5.21.2",
+        "webpack-cli": "^4.5.0"
+    }
+}

@@ -4,11 +4,11 @@
 
 
 <a  style="font-weight: 600;"href="<?= base_url("deudor/index")?>">
-<i class="fa fa-user" aria-hidden="true"></i> &nbsp; LISTADO DE DEUDORES</a>
+<i class="fa fa-user" aria-hidden="true"></i> &nbsp; IR A LISTADO DE CLIENTES</a>
 
 
 <div class="container p-2">
-<h2 class="text-center prestyle">DEUDORES - ACTUALIZAR DATOS<small></small></h2>
+<h2 class="text-center prestyle">ACTUALIZAR DATOS DE CLIENTE<small></small></h2>
 <div class="clearfix"></div>
 </div>
 
@@ -20,7 +20,17 @@ echo form_open_multipart("deudor/edit",
  "class"=> "form-horizontal form-label-left container prestyle" ])
 ?>
 
-<?php echo view('deudor/form'); ?>
+<?php echo view('deudor/forms/form'); ?>
+
+
+<?php if (isset($OPERACION) && $OPERACION != "V") : ?>
+
+<div class="form-group mt-3">
+  <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+    <button type="submit" class="btn btn-primary">GUARDAR</button>
+  </div>
+</div>
+<?php endif; ?>
 
 </form>
 

@@ -15,7 +15,7 @@
 <!-- INI FORM -->
 <form style="padding-left: 10px;"  id="viewdeudor" enctype="multipart/form-data" class="form-horizontal form-label-left container prestyle" method="post" action="/deudor/edit">
 
-<?php echo view('deudor/forms/form'); ?>
+<?php echo view('deudor/forms/form', ['deudor_dato'=> $deudor_dato]); ?>
 
 </form>
 <script>

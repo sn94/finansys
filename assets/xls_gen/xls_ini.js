@@ -2,7 +2,7 @@
 
 function jsonToArray(arg) {
     try {
-        let ob = JSON.parse(arg);
+        let ob = typeof arg == "object" ? arg : JSON.parse(arg);
         let newob = ob.map(function(row) { return Object.values(row); });
 
         //agregar cabeceras

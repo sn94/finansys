@@ -29,7 +29,10 @@ class  Cat_monto_model extends Model
     public function list_dropdown(){
         		/***Montos */
 		$db = \Config\Database::connect();
-		$reg= $db->query("select IDNRO, CONCAT(MONTO, CONCAT(' Gs. = ', concat(CUOTA,CONCAT(' X ', CONCAT(NRO_CUOTAS, ( CASE WHEN FORMATO='D' THEN ' (Diario)' WHEN FORMATO='S' THEN ' (Semanal)'  WHEN FORMATO='Q' THEN ' (Quincenal)' WHEN FORMATO='M' THEN ' (Mensual)' END) ) ) ) ) ) AS DESCR from categoria_monto"); 
+		$reg= $db->query("select IDNRO, 
+
+        CONCAT(     FORMAT( MONTO ,  'de_DE')       , 
+        CONCAT(' Gs. = ', concat(    FORMAT(CUOTA, 'de_DE')    ,CONCAT(' X ', CONCAT(NRO_CUOTAS, ( CASE WHEN FORMATO='D' THEN ' (Diario)' WHEN FORMATO='S' THEN ' (Semanal)'  WHEN FORMATO='Q' THEN ' (Quincenal)' WHEN FORMATO='M' THEN ' (Mensual)' END) ) ) ) ) ) AS DESCR from categoria_monto"); 
 		$montos_d=$reg->getResultArray();
         $montos=  Utilidades::dropdown($montos_d);
         return $montos;

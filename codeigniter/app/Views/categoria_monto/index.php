@@ -3,80 +3,82 @@
 
 
 <div class="card">
-<div class="card-header card-header-primary">
-<h2 class="text-center prestyle">CATEGORÍAS DE MONTO<small></small></h2> 
-                  
-</div>
+  <div class="card-header card-header-primary">
+    <h2 class="text-center prestyle">TIPOS DE MONTO<small></small></h2>
 
-<div class="card-body">
- 
- 
+  </div>
 
-<!--form --> 
-<div id="formView">
-<?php
+  <div class="card-body">
 
-use App\Helpers\Utilidades;
 
-echo view("categoria_monto/create"); ?>
-</div>
-<!--End form--> 
 
-<div class="table-responsive">
+    <!--form -->
+    <div id="formView">
+      <?php
 
-<!-- ******************* CAJA  ***************** -->
-<table id="tabla-auxi" class="table table-bordered table-stripped">
-  <thead class="dark-head">
-  <tr>  <th></th><th></th> <th>MONTO</th><th>NRO CUOTAS</th> <th>CUOTA</th><th>FORMATO</th></tr>
-  </thead>
-<tbody>
-                       
-<?php  foreach($lista as $i):?>
+      echo view("categoria_monto/create"); ?>
+    </div>
+    <!--End form-->
 
-<tr id="<?=$i->IDNRO?>">  
-<td><a onclick="editarFila(event)" href="<?= base_url("categoria_monto/edit/".$i->IDNRO)?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
-<td><a onclick="borrarFila(event)" href="<?= base_url("categoria_monto/delete/".$i->IDNRO)?>"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
-<td> <?= Utilidades::number_f($i->MONTO) ?></td>
-<td> <?= $i->NRO_CUOTAS?></td>
-<td> <?= Utilidades::number_f($i->CUOTA) ?></td>
-<td> <?= $i->FORMATO=="D" ? "DIARIO" : ($i->FORMATO=="S" ? "SEMANAL" : ($i->FORMATO=="Q" ? "QUINCENAL" : "MENSUAL")  )   ?></td>
- </tr>
+    <div class="table-responsive" id="GRILL">
 
-<?php  endforeach;?>
-                   
-</tbody>
-</table>
-</div><!--End table responsive --> 
+      <?php
+      echo view("categoria_monto/grill");
+      ?>
 
-</div>
+    </div>
+    <!--End table responsive -->
+
+  </div>
 
 
 </div>
 
 
 <script>
+  function editarFila(ev) {
+    ev.preventDefault();
+    $.ajax({
+      url: ev.currentTarget.href,
+      success: function(resp) {
+        $("#formView").html(resp);
+      }
+    });
+  }
 
 
-function editarFila(ev){
-  ev.preventDefault();
-$.ajax( { url: ev.currentTarget.href,  success: function(resp){
- $("#formView").html( resp);
-}});
-}
+  function borrarFila(ev) {
 
- 
-function borrarFila( ev){
+    ev.preventDefault();
+    if (!confirm("BORRAR?")) return;
+    $.ajax({
+      url: ev.currentTarget.href,
+      dataType: "json",
+      success: function(resp) {
+        console.log(typeof resp, resp);
+        if (!("error" in resp)) //Ojo los parentesis internos
+          $("#" + resp.id).remove();
+      }
+    });
 
-ev.preventDefault();
-if( !confirm("BORRAR?")) return;
-$.ajax( { url: ev.currentTarget.href,dataType: "json", success: function(resp){
-  console.log( typeof resp, resp );
-    if( ! ("error" in resp) ) //Ojo los parentesis internos
-    $("#"+resp.id).remove();
-}});
- 
-}
+  }
 
-   
+
+
+
+  async function act_grilla() {
+    let endpoint = "<?= base_url('categoria-monto/index') ?>";
+    show_loader();
+    let req = await fetch(endpoint, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    });
+    let resp = await req.text();
+    hide_loader();
+    $("#GRILL").html(resp);
+
+  }
+
 </script>
 <?= $this->endSection() ?>
