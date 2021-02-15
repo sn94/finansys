@@ -2,18 +2,20 @@
 
 <nav aria-label="Page navigation">
     <ul class="pagination">
-        <?php if ($pager->hasPrevious()) : ?>
+       
+    <?php if ($pager->hasPrevious()) : ?>
             <li>
                 <a href="<?= $pager->getFirst() ?>" aria-label="<?= lang('Pager.first') ?>">
-                    <span aria-hidden="true"><?= lang('Pager.first') ?></span>
+                    <span aria-hidden="true">Primero ««  </span>
                 </a>
             </li>
             <li>
                 <a href="<?= $pager->getPrevious() ?>" aria-label="<?= lang('Pager.previous') ?>">
-                    <span aria-hidden="true"><?= lang('Pager.previous') ?></span>
+                    <span aria-hidden="true">Anterior ««  </span>
                 </a>
             </li>
         <?php endif ?>
+        
 
         <?php
         $the_page =  (isset($_GET['page'])) ?  $_GET['page'] : 1;
@@ -29,15 +31,19 @@
             </li>
         <?php endforeach ?>
 
+
+        
+
+        
         <?php if ($pager->hasNext()) : ?>
             <li>
                 <a href="<?= $pager->getNext() ?>" aria-label="<?= lang('Pager.next') ?>">
-                    <span aria-hidden="true"><?= lang('Pager.next') ?></span>
+                    <span aria-hidden="true"> Siguiente »»</span>
                 </a>
             </li>
             <li>
                 <a href="<?= $pager->getLast() ?>" aria-label="<?= lang('Pager.last') ?>">
-                    <span aria-hidden="true"><?= lang('Pager.last') ?></span>
+                    <span aria-hidden="true"> Último »» </span>
                 </a>
             </li>
         <?php endif ?>

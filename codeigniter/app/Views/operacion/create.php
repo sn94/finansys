@@ -11,7 +11,7 @@ $EMPRESA_NOM =  (new Empresa_model())->find($EMPRESA)->DESCR;
 $IDCLIENTE =  isset($CLIENTE) ?  $CLIENTE->IDNRO :  "";
 $CEDULA =  isset($CLIENTE) ?  $CLIENTE->CEDULA :  "";
 $NOMBRES =  isset($CLIENTE) ?  ($CLIENTE->NOMBRES . " " . $CLIENTE->APELLIDOS) :  "";
-$MONTO_SOLICITADO=   isset($CLIENTE) ? Utilidades::number_f(  $CLIENTE->MONTO_SOLICI ) :  "0";
+$MONTO_SOLICITADO =   isset($CLIENTE) ? Utilidades::number_f($CLIENTE->MONTO_SOLICI) :  "0";
 $TIPO_CREDITO =  isset($CLIENTE) ?  $CLIENTE->TIPO_CREDITO :  "";
 ?>
 <?= $this->extend("layouts/index") ?>
@@ -29,6 +29,7 @@ REGISTRO DE OPERACIÓN
 
 
 
+<input type="hidden" id="OPERACIONES-INDEX" value="<?= base_url("operacion/index") ?>">
 
 
 <div id="loaderplace">
@@ -60,11 +61,11 @@ echo form_open("operacion/create",  ["onsubmit" => "guardar(event)"]);
         </div>
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">NOMBRES: </label>
-            <input readonly style="grid-column-start: 2;"  type="text" class="form-control" value="<?= $NOMBRES ?>">
+            <input readonly style="grid-column-start: 2;" type="text" class="form-control" value="<?= $NOMBRES ?>">
         </div>
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">MONTO SOLICITADO: </label>
-            <input readonly style="grid-column-start: 2;"   type="text" class="form-control numerico" value="<?= $MONTO_SOLICITADO ?>">
+            <input readonly style="grid-column-start: 2;" type="text" class="form-control numerico" value="<?= $MONTO_SOLICITADO ?>">
         </div>
     </div>
     <div class="col-12 col-md-4 ">
@@ -98,19 +99,19 @@ echo form_open("operacion/create",  ["onsubmit" => "guardar(event)"]);
     <div class="col-12 col-md-4 ">
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">IMP. CUOTA: </label>
-            <input style="grid-column-start: 2;" name="CUOTA_IMPORTE" type="text" class="form-control numerico">
+            <input readonly style="grid-column-start: 2;" name="CUOTA_IMPORTE" type="text" class="form-control numerico">
         </div>
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">INTERÉS: </label>
-            <input style="grid-column-start: 2;" name="INTERES_CUOTA" type="text" class="form-control numerico">
+            <input readonly style="grid-column-start: 2;" name="INTERES_CUOTA" type="text" class="form-control numerico">
         </div>
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">SEGURO: </label>
-            <input style="grid-column-start: 2;" name="SEGURO" type="text" class="form-control numerico" value="0">
+            <input style="grid-column-start: 2;" id="SEGURO" name="SEGURO" type="text" class="form-control numerico" value="0">
         </div>
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">GASTOS ADM.: </label>
-            <input style="grid-column-start: 2;" name="GASTOS_ADM" type="text" class="form-control numerico" value="0">
+            <input style="grid-column-start: 2;" id="GASTOS_ADM" name="GASTOS_ADM" type="text" class="form-control numerico" value="0">
         </div>
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">INTERÉS FINAL: </label>
@@ -140,10 +141,19 @@ echo form_open("operacion/create",  ["onsubmit" => "guardar(event)"]);
         let nro_campos_a_limp = $("[numerico=yes], .numerico").length;
 
         for (let ind = 0; ind < nro_campos_a_limp; ind++) {
-            let valor = $("[numerico=yes]")[ind].value;
+            let valor = $("[numerico=yes], .numerico")[ind].value;
             let valor_forma = dar_formato_millares(valor);
-            $("[numerico=yes]")[ind].value = valor_forma;
+            $("[numerico=yes], .numerico")[ind].value = valor_forma;
         }
+        //decimales
+        let decimales = document.querySelectorAll(".decimal");
+        Array.prototype.forEach.call(decimales, function(inpu) {
+            let nuevo = inpu.value.replace(",", ".");
+            inpu.value = dar_formato_millares(nuevo);
+            $(inpu).addClass("text-right");
+        });
+
+
         //return val.replaceAll(new RegExp(/[.]*/g), "");
     }
 
@@ -263,18 +273,20 @@ echo form_open("operacion/create",  ["onsubmit" => "guardar(event)"]);
         let interes_porcen = limpiar_numero(interes_porcen_);
         //calc
 
-        let interes_cuota = parsearInt(monto) * (parsearInt(interes_porcen) / 100);
-        $("input[name=INTERES_CUOTA]").val(dar_formato_millares(isNaN(interes_cuota) ? 0 : interes_cuota));
+        let interes_cuota = parsearInt(monto) * (parsearFloat(interes_porcen) / 100);
+        console.log(interes_cuota);
+        $("input[name=INTERES_CUOTA]").val(dar_formato_millares(isNaN(interes_cuota) || !(isFinite(interes_cuota)) ? 0 : interes_cuota));
         let la_cuota = (parsearInt(monto) / parsearInt(nro_cuotas)) + interes_cuota;
-        let importe_cuota = $("input[name=CUOTA_IMPORTE]").val(dar_formato_millares(isNaN(la_cuota) ? 0 : la_cuota));
+        let importe_cuota = $("input[name=CUOTA_IMPORTE]").val(dar_formato_millares(isNaN(la_cuota) || !(isFinite(la_cuota)) ? 0 : la_cuota));
 
         //Calcular interes total
-        let cuota_con_int= isNaN(la_cuota) ? 0 : la_cuota;
-        let seguro = parsearInt(  limpiar_numero($("input[name=SEGURO]").val()) );
-        let gastos_adm = parsearInt( limpiar_numero( $("input[name=GASTOS_ADM]").val()) );
+        let cuota_con_int = isNaN(la_cuota) || !(isFinite(la_cuota)) ? 0 : la_cuota;
+        let seguro = parsearInt(limpiar_numero($("input[name=SEGURO]").val()));
+        let gastos_adm = parsearInt(limpiar_numero($("input[name=GASTOS_ADM]").val()));
 
-        let interes_total=   cuota_con_int + seguro +  gastos_adm ;
-        $("#INTERES_FINAL").val(  interes_total);
+        console.log(cuota_con_int, seguro, gastos_adm);
+        let interes_total = cuota_con_int + seguro + gastos_adm;
+        $("#INTERES_FINAL").val(dar_formato_millares(interes_total));
 
     }
     //loader spinner
@@ -300,14 +312,34 @@ echo form_open("operacion/create",  ["onsubmit" => "guardar(event)"]);
         });
     }
 
+
+    function campos_requeridos() {
+        if ($("#CREDITO").val() == "" || $("#CREDITO").val() == "0") {
+            alert("FALTA EL MONTO DE CRÉDITO APROBADO");
+            return false;
+        }
+        if ($("#INTERES").val() == "" || $("#INTERES").val() == "0") {
+            alert("DETALLE EL PORCENTAJE DE INTERÉS");
+            return false;
+        }
+        if ($("#CUOTAS").val() == "" || $("#CUOTAS").val() == "0") {
+            alert("INGRESE NRO DE CUOTAS");
+            return false;
+        }
+        return true;
+    }
+
     async function guardar(e) {
 
         e.preventDefault();
+        if (!campos_requeridos()) return;
+        limpiar_numeros();
 
         let payload = $(e.target).serialize();
         let endpoint = e.target.action;
 
         show_loader();
+
         //deshabilitar temporalmente boton
         $("button[type=submit]").prop("disabled", true);
         let req = await fetch(endpoint, {
@@ -321,10 +353,14 @@ echo form_open("operacion/create",  ["onsubmit" => "guardar(event)"]);
         let resp = await req.json();
         //Re habilitar
         $("button[type=submit]").prop("disabled", false);
+        restaurar_sep_miles();
         hide_loader();
 
 
         if ("ok" in resp) {
+            let ir_a = $("#OPERACIONES-INDEX").val();
+            window.location = ir_a;
+
             new PNotify({
                 title: "OPERACIÓN REGISTRADA ",
                 text: "",
@@ -333,7 +369,8 @@ echo form_open("operacion/create",  ["onsubmit" => "guardar(event)"]);
                 delay: 2000
             });
             limpiar_campos(e);
-        } else
+        } else {
+
             new PNotify({
                 title: "ERROR",
                 text: resp.error,
@@ -341,6 +378,7 @@ echo form_open("operacion/create",  ["onsubmit" => "guardar(event)"]);
                 styling: 'bootstrap3',
                 delay: 2000
             });
+        }
 
     }
 
@@ -377,7 +415,7 @@ echo form_open("operacion/create",  ["onsubmit" => "guardar(event)"]);
 
 
         //Auto calculo
-        let autocalc = document.querySelectorAll("#CREDITO, #INTERES, #CUOTAS");
+        let autocalc = document.querySelectorAll("#CREDITO, #INTERES, #CUOTAS,#SEGURO,#GASTOS_ADM ");
         Array.prototype.forEach.call(autocalc, function(inpu) {
             let keep = inpu.oninput;
 

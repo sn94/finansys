@@ -3,11 +3,11 @@
 
 
 
-<input type="hidden" id="INDEX-URL" value="<?= base_url("porcentaje/index") ?>">
+<input type="hidden" id="INDEX-URL" value="<?= base_url("letras/index") ?>">
 
 <div class="card">
   <div class="card-header card-header-primary">
-    <h2 class="text-center prestyle">PORCENTAJES<small></small></h2>
+    <h2 class="text-center prestyle">LETRAS<small></small></h2>
 
   </div>
 
@@ -17,7 +17,7 @@
 
     <!--form -->
     <div id="formView">
-      <?php echo view("porcentaje/create"); ?>
+      <?php echo view("letras/create"); ?>
     </div>
     <!--End form-->
 
@@ -69,9 +69,9 @@
       url: ev.currentTarget.href,
       dataType: "json",
       success: function(resp) {
-        console.log(typeof resp, resp);
+       
         if (!("error" in resp)) //Ojo los parentesis internos
-          $("#" + resp.id).remove();
+         act_grilla();
       }
     });
 

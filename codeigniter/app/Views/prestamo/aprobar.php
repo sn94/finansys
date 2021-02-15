@@ -181,8 +181,8 @@ echo form_open("prestamo/aprobar", ['id' => "aprobacion-form", 'onsubmit' => 'ap
 
 <script>
   function formato_cuotas(key) {
-    let num = 1;
-    switch (key) {
+    let num =    1;
+    switch (   (key == undefined ?  "M" :  key)   ) {
       case "D":
         num = 1;
         break; // Para Sumar un dia para generar la siguiente fecha de vencimiento

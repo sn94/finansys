@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Cuotas_model;
 use App\Models\Deudor_model;
 use App\Models\Empresa_model;
 use App\Models\Operacion_model;
@@ -20,52 +21,83 @@ class Operacion extends BaseController
 	public function index()
 	{
 		echo view("operacion/index");
-	/*	try {
-			$lista = (new Operacion_model())
-				->join("deudor", "deudor.IDNRO=operacion.NRO_CLIENTE")
-				->select("operacion.*,  concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRES");
-
-			$data = [
-				'lista' => $lista->paginate(10),
-				'pager' => $lista->pager,
-			];
-			echo view("operacion/index", 	$data);
-		} catch (\Exception $e) { //mostrar mensaje de error
-			//mostrar mensaje de operacion exitosa
-			die($e->getMessage());
-		}*/
 	}
 
 
 
 
 
-	
-	public function create(  $IDCLIENTE= null)
+
+	public function create($IDCLIENTE = null)
 	{
 		if ($this->request->getMethod() === 'post') {
 			//Datos del formulario
 			$reg = new Operacion_model();
 			$datos = $this->request->getPost();
-			
+
 			$db = \Config\Database::connect();
 			$reg->insert($datos);
-			return $this->response->setJSON(array("ok" => $db->insertID()   ));
+			return $this->response->setJSON(array("ok" => $db->insertID()));
 			//return redirect()->to("index");
 		} else {
 
-			$CLIENTE=   (new Deudor_model())
-			->join("prestamo","prestamo.DEUDOR = deudor.IDNRO")
-			->select("deudor.*,  prestamo.TIPO_CREDITO")
-			->where("deudor.IDNRO",   $IDCLIENTE )
-			->first( );
-		 
-			echo view('operacion/create',  ['CLIENTE'=>  $CLIENTE] );
+			$CLIENTE =   (new Deudor_model())->find($IDCLIENTE);
+			echo view('operacion/create',  ['CLIENTE' =>  $CLIENTE]);
 		}
 	}
 
 
 
+	public function generar_vencimiento($ID_OPERACION =  NULL)
+	{
+		if ($this->request->getMethod() === 'post') {
+			//Datos del formulario
+
+			$datos = $this->request->getPost();
+
+
+			$db = \Config\Database::connect();
+
+			$db->transBegin();
+			$db->transStart();
+			$reg = new Operacion_model();
+			$reg->update($datos['IDNRO'],  $datos);
+
+			//Generar las cuotas 
+			$DETALLE_ID = 1;
+			$DETALLE_MONTO =  $datos['DETALLE_MONTO'];
+			$DETALLE_VENCIMIENTO =  $datos['DETALLE_VENCIMIENTO'];
+			for ($cuo = 0; $cuo <  sizeof($DETALLE_MONTO); $cuo++) {
+				$nva_cuota = new Cuotas_model();
+				$nva_cuota->insert([
+					'OPERACION' => $datos['IDNRO'],
+					'NUMERO' => $DETALLE_ID,
+					'MONTO' => $DETALLE_MONTO[$cuo],
+					'VENCIMIENTO' => $DETALLE_VENCIMIENTO[$cuo],
+					'ESTADO' => "P"
+				]);
+				$DETALLE_ID++;
+			}
+			$db->transCommit();
+			$db->transComplete();
+
+			return $this->response->setJSON(array("ok" => $datos['IDNRO']));
+
+
+			//return redirect()->to("index");
+		} else {
+			if (is_null($ID_OPERACION))
+				echo view('operacion/vencimiento/index');
+			else {
+				$operacion = (new Operacion_model())
+					->join("deudor", "deudor.IDNRO =  operacion.NRO_CLIENTE")
+					->select("operacion.*, deudor.CEDULA, concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRES")
+					->where("operacion.IDNRO", $ID_OPERACION)->first();
+
+				echo view('operacion/vencimiento/create', ['OPERACION' =>  $operacion]);
+			}
+		}
+	}
 
 	public function edit($id = NULL)
 	{
@@ -109,24 +141,68 @@ class Operacion extends BaseController
 
 
 
-	public function  list($IDCLIENTE){
+	public function  list($IDCLIENTE = NULL)
+	{
 		//LETRA CORRE FACTURA RAZONS DEUDAT CREDITO
 
-		$operac= (new Operacion_model()) 
-		->where( "NRO_CLIENTE", $IDCLIENTE);
+		//RECOGER PARAMETROS
+		$CLIENTE = $IDCLIENTE;
+		$OTROS_FILTROS = array_diff_key($this->request->getPost(), ['BUSCADO' => '']);
 
-		$cliente= (new Deudor_model())->find(  $IDCLIENTE);
-		
 
+		$operac = (new Operacion_model());
+
+		//jOIN CLIENTE
+		$operac = $operac->join("deudor", "deudor.IDNRO = operacion.NRO_CLIENTE")
+			->select("operacion.*, concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRES");
+
+		//FILTRO CLIENTE
+		if (!is_null($CLIENTE))
+			$operac =   $operac->where("NRO_CLIENTE", $IDCLIENTE);
+		//Otros filtros
+		if (sizeof($OTROS_FILTROS)  > 0)
+			$operac =   $operac->where($OTROS_FILTROS);
+
+		//busqueda LIKE %
+		$FILTRO_NOMBRE =  $this->request->getPost("BUSCADO");
+		if (!is_null($FILTRO_NOMBRE))
+			$operac =   $operac->like('deudor.CEDULA', $FILTRO_NOMBRE)
+				->orLike('deudor.NOMBRES', $FILTRO_NOMBRE)
+				->orLike('deudor.APELLIDOS', $FILTRO_NOMBRE);
+
+
+		//Formato de respuest
+		$cabecera_formato = $this->request->getHeader("formato");
+		$formato = is_null($cabecera_formato) ? "" :  $cabecera_formato->getValue();
+
+		if ($formato == "json") {
+			return $this->response->setJSON($operac->get()->getResult());
+		}
+
+
+		//Formato HTML
 		$data = [
 			'OPERACION' => $operac->paginate(10),
-			'pager' => $operac->pager,
-			'CLIENTE'=>  $cliente
+			'pager' => $operac->pager
 		];
-
- 
-		return view("operacion/operaciones_cliente",  $data ); 
+		if (is_null($CLIENTE)) {
+			if ($this->request->isAJAX())
+				return view("operacion/vencimiento/grill",  $data);
+			else
+				return view("operacion/vencimiento/index",  $data);
+		} else
+			return view("operacion/operaciones_cliente",  array_merge($data,  ['CLIENTE' =>   $CLIENTE]));
 	}
 
-	 
+
+	public function ver_vencimientos($ID_OPERACION =  NULL)
+	{
+		$cuotas = (new Cuotas_model())->where("OPERACION", $ID_OPERACION);
+		$data = [
+			"cuotas" =>   $cuotas->paginate(10),
+			"pager" => $cuotas->pager,
+			"OPERACION"=> (new Operacion_model())->find( $ID_OPERACION)
+		];
+		return view("operacion/cuotas/index",    $data);
+	}
 }

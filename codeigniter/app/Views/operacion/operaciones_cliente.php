@@ -1,15 +1,25 @@
 <?php
 
 use App\Helpers\Utilidades;
+use App\Models\Deudor_model;
 
-$NOMBRECLIENTE=  isset($CLIENTE)? $CLIENTE->NOMBRES." ".$CLIENTE->APELLIDOS  :  "";
-$CEDULACLIENTE=  isset($CLIENTE)? $CLIENTE->CEDULA :  "";
-?> 
+//id cliente
+$IDCLIENTE =   $CLIENTE;
+$NOMBRECLIENTE = "";
+$CEDULACLIENTE =  "";
+
+
+if (!is_null($IDCLIENTE)) {
+  $cliente = (new Deudor_model())->find($IDCLIENTE);
+  $NOMBRECLIENTE =  $cliente->NOMBRES . " " . $cliente->APELLIDOS;
+  $CEDULACLIENTE =  $cliente->CEDULA;
+}
+?>
 
 <?= $this->extend("layouts/index") ?>
 
 <?= $this->section("title") ?>
-<?=  $CEDULACLIENTE."   ". $NOMBRECLIENTE   ?>
+<?= $CEDULACLIENTE . "   " . $NOMBRECLIENTE   ?>
 <?= $this->endSection() ?>
 
 <?= $this->section("contenido") ?>
@@ -21,11 +31,11 @@ $CEDULACLIENTE=  isset($CLIENTE)? $CLIENTE->CEDULA :  "";
   <thead class="dark-head">
     <tr style="font-family: mainfont;">
 
-       
-      <th>OPERACIÓN</th> 
+
+      <th>OPERACIÓN</th>
       <th>CRÉDITO</th>
-      <th>CUOTAS</th> 
-      <th>NOMBRES</th>
+      <th>CUOTAS</th>
+      <th>ESTADO</th>
       <th>CREADO</th>
       <th>ÚLT.MOD.</th>
     </tr>
@@ -50,5 +60,5 @@ $CEDULACLIENTE=  isset($CLIENTE)? $CLIENTE->CEDULA :  "";
   </tbody>
 </table>
 <?= $pager->links()
-    ?>
+?>
 <?= $this->endSection() ?>

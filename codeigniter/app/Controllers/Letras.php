@@ -2,10 +2,10 @@
 
 namespace App\Controllers;
 
-use App\Models\Porcentaje_model;
+use App\Models\Letras_model;
 use Exception;
 
-class Porcentaje extends BaseController
+class Letras extends BaseController
 {
 
 	//constructor
@@ -17,16 +17,16 @@ class Porcentaje extends BaseController
 	public function index()
 	{
 		try {
-			$reg = new Porcentaje_model();
+			$reg = new Letras_model();
 			 $data= [
 				"lista"=> $reg->paginate(10),
 				"pager"=> $reg->pager
 			 ];
 
 			if ($this->request->isAJAX())
-				echo view("porcentaje/grill", $data );
+				echo view("letras/grill", $data );
 			else
-				echo view("porcentaje/index");
+				echo view("letras/index");
 		} catch (\Exception $e) { //mostrar mensaje de error
 			//mostrar mensaje de operacion exitosa
 			die($e->getMessage());
@@ -41,20 +41,16 @@ class Porcentaje extends BaseController
 	{
 		if ($this->request->getMethod() === 'post') {
 			//Datos del formulario
-			$reg = new Porcentaje_model();
+			$reg = new Letras_model();
 
 			$datos = $this->request->getPost();
-			//QUITAR PUNTOS
-			$PORCENTAJE = preg_replace("/(\.+)/", "",  $datos['PORCENTAJE']);
-			//REEMPLAZAR COMA POR PUNTO
-			$PORCENTAJE =  preg_replace("/(,+)/", ".",  $PORCENTAJE);
-			$datos['PORCENTAJE'] =   $PORCENTAJE;
+		 
 			$db = \Config\Database::connect();
 			$reg->insert($datos);
 			return $this->response->setJSON(array("ok" =>  $db->insertID()));
 			//return redirect()->to( "index");
 		} else {
-			echo view('porcentaje/create');
+			echo view('letras/create');
 		}
 	}
 
@@ -65,39 +61,37 @@ class Porcentaje extends BaseController
 	{
 		if ($this->request->getMethod() === 'post') {
 			//Datos del formulario
-			$reg = new Porcentaje_model();
+			$reg = new Letras_model();
 			$datos =  $this->request->getPost();
-			//QUITAR PUNTOS
-			$PORCENTAJE = preg_replace("/(\.+)/", "",  $datos['PORCENTAJE']);
-			//REEMPLAZAR COMA POR PUNTO
-			$PORCENTAJE =  preg_replace("/(,+)/", ".",  $PORCENTAJE);
-			$datos['PORCENTAJE'] =   $PORCENTAJE;
+			 
 
 			if ($reg->update($datos['IDNRO'], $datos))
-			return $this->response->setJSON(array("ok" => $datos['IDNRO']  )); 
+			return $this->response->setJSON(array("ok" => $datos['IDNRO']  ));
+			//	return redirect()->to("index");
 			else
 			return $this->response->setJSON(array("error" =>  "Error al actualizar" ));
+			//	echo view('plantillas/error', ['titulo' => "ERROR", 'mensaje' => "NO SE PUDO ACTUALIZAR"]);
 		} else {
 			// Create a shared instance of the model 
-			$reg = new Porcentaje_model();
+			$reg = new Letras_model();
 			$registro = $reg->find($id);
-			echo view('porcentaje/edit', ['dato' => $registro]);
+			echo view('letras/edit', ['dato' => $registro]);
 		}
 	}
 
 
 	public function view($id)
 	{
-		$reg = new Porcentaje_model();
+		$reg = new Letras_model();
 		$registro = $reg->find($id);
-		echo view("porcentaje/view", array("dato" => $registro, "vista" => true));
+		echo view("letras/view", array("dato" => $registro, "vista" => true));
 	}
 
 
 
 	public function delete($id)
 	{
-		$reg = new Porcentaje_model();
+		$reg = new Letras_model();
 
 		if ($reg->delete($id))
 		return $this->response->setJSON(array("ok" => $id)); 

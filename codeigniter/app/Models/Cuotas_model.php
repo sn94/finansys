@@ -5,14 +5,14 @@ use CodeIgniter\Model;
 class Cuotas_model extends Model
 {
     
-    protected $table = 'cuotas_prestamo';
+    protected $table = 'operacion_cuotas';
 
     protected $primaryKey = 'IDNRO';
 
     protected $returnType     = 'object';/** */
 
     protected $allowedFields = 
-    [ 'IDPRESTAMO', 'NUMERO', 'MONTO','VENCIMIENTO','FECHA_PAGO','ESTADO'];
+    [ 'OPERACION', 'NUMERO', 'MONTO','VENCIMIENTO','FECHA_PAGO','ESTADO'];
     
 
 

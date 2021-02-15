@@ -82,7 +82,7 @@ $BASE_ASSETS_BASE = base_url('assets');
       /* height: calc(2.25rem + 2px); */
       /* font-size: 1rem; */
       /* background-color: #fff; */
-      height: calc(1.9rem + 0px);
+      height: calc( 2rem + 2px);
       font-size: 0.9rem;
       background-color: #B3E5FC;
       border: 1px solid #8c91d7;
@@ -341,7 +341,7 @@ $BASE_ASSETS_BASE = base_url('assets');
 
 
                 <li class="nav-item">
-                  <a href="<?= base_url("prestamo/index") ?>" class="nav-link">
+                  <a href="<?= base_url("operacion/generar-vencimiento") ?>" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Vencimientos</p>
                   </a>
@@ -455,6 +455,13 @@ $BASE_ASSETS_BASE = base_url('assets');
                     <p>Porcentajes</p>
                   </a>
                 </li>
+                <li class="nav-item">
+                  <a href="<?= base_url("letras/index") ?>" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Letras</p>
+                  </a>
+                </li>
+
               </ul>
             </li>
 
@@ -472,17 +479,12 @@ $BASE_ASSETS_BASE = base_url('assets');
       <div class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
-            <div class="col-sm-6">
+            <div class="col-sm-12">
               <h1 class="m-0">
                 <?= $this->renderSection("title") ?>
               </h1>
             </div><!-- /.col -->
-            <div class="col-sm-6">
-              <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">Dashboard v1</li>
-              </ol>
-            </div><!-- /.col -->
+             
           </div><!-- /.row -->
         </div><!-- /.container-fluid -->
       </div>
