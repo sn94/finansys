@@ -31,7 +31,7 @@ $CUOTAS =   isset($OPERACION) ?  $OPERACION->CUOTAS :  "0";
 
 <?= $this->extend("layouts/index") ?>
 <?= $this->section("title") ?>
-GENERACIÓN DE VENCIMIENTOS
+APROBACIÓN DE OPERACIÓN Y GENERACIÓN DE VENCIMIENTOS
 <?= $this->endSection() ?>
 
 
@@ -81,11 +81,11 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
         </div>
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">CRÉDITO: </label>
-            <input id="CREDITO" name="CREDITO" style="grid-column-start: 2;" type="text" class="form-control numerico" value="<?= $CREDITO ?>">
+            <input id="CREDITO" name="CREDITO" style="grid-column-start: 2;" type="text" class="form-control entero" value="<?= $CREDITO ?>">
         </div>
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">CUOTAS: </label>
-            <input style="grid-column-start: 2;" id="CUOTAS" name="CUOTAS" type="text" class="form-control numerico" value="<?= $CUOTAS ?>" > 
+            <input style="grid-column-start: 2;" id="CUOTAS" name="CUOTAS" type="text" class="form-control entero" value="<?= $CUOTAS ?>">
         </div>
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">1er VENCIMIENTO: </label>
@@ -101,7 +101,7 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
 
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">GASTOS ADM.: </label>
-            <input style="grid-column-start: 2;" id="GASTOS_ADM" name="GASTOS_ADM" type="text" class="form-control numerico" value="0">
+            <input style="grid-column-start: 2;" id="GASTOS_ADM" name="GASTOS_ADM" type="text" class="form-control entero" value="0">
         </div>
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">CÓDIGO OPERACIÓN: </label>
@@ -117,15 +117,15 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
         </div>
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">N° FACTURA: </label>
-            <input maxlength="15" style="grid-column-start: 2;" id="FACTURA" type="text" class="form-control numerico">
+            <input maxlength="15" style="grid-column-start: 2;" id="FACTURA" type="text" class="form-control entero">
         </div>
     </div>
 
-    <div class="col-12 col-md-4 text-light " style="background-color: #009688;">
+    <div class="col-12 col-md-4 text-light bg-primary ">
         <h5 class="text-center">GARANTES</h5>
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">CI°: </label>
-            <input maxlength="10" style="grid-column-start: 2;" name="GARANTE1_CI" type="text" class="form-control numerico">
+            <input maxlength="10" style="grid-column-start: 2;" name="GARANTE1_CI" type="text" class="form-control entero">
         </div>
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">NOMBRES: </label>
@@ -133,7 +133,7 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
         </div>
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">CI°: </label>
-            <input maxlength="10" style="grid-column-start: 2;" name="GARANTE2_CI" type="text" class="form-control numerico">
+            <input maxlength="10" style="grid-column-start: 2;" name="GARANTE2_CI" type="text" class="form-control entero">
         </div>
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">NOMBRES: </label>
@@ -141,7 +141,7 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
         </div>
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">CI°: </label>
-            <input maxlength="10" style="grid-column-start: 2;" name="GARANTE3_CI" type="text" class="form-control numerico">
+            <input maxlength="10" style="grid-column-start: 2;" name="GARANTE3_CI" type="text" class="form-control entero">
         </div>
         <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
             <label style="grid-column-start: 1;">NOMBRES: </label>
@@ -160,7 +160,7 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
             </tr>
         </thead>
         <tbody id="CUOTAS-TABLE">
-            Aún no se han generado vencimientos
+
         </tbody>
     </table>
 </div>
@@ -175,6 +175,10 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
 
 </form>
 
+
+<?= view("validations/formato_numerico") ?>
+<?= view("validations/form_validate") ?>
+<?= view("vencimiento/calc_vencimientos") ?>
 <script>
     /** 
      * generador de cuotas
@@ -256,11 +260,11 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
 
         //Por defecto tomar el dia de fecha de inicio de vencimiento
         let return_default_day = function() {
-          let fecha_ini=   $(fecha_inicio_cobro).val();
-         
-          let dma=  fecha_ini.split("-"); 
-          let dia_= new Date(  dma[0],  dma[1],  dma[2]).getDay();
-          return [ dia_ ];
+            let fecha_ini = $(fecha_inicio_cobro).val();
+
+            let dma = fecha_ini.split("-");
+            let dia_ = new Date(dma[0], dma[1], dma[2]).getDay();
+            return [dia_];
         };
 
         if (dias_de_pago == "") return return_default_day();
@@ -289,21 +293,21 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
             document.querySelector(tabla_dom_id).innerHTML = "";
             return false;
         }
-        $(tabla_dom_id).empty();
+        $(tabla_dom_id).html("");
         let fecha_inicio = $(fecha_inicio_cobro).val();
-        let montobase = limpiar_numero($(monto_del_credito).val());
+        let montobase = formValidator.limpiarNumero($(monto_del_credito).val());
         let nrocuotas = $(nro_de_cuotas).val();
-        let cuotas = limpiar_numero($(monto_de_cuota).val());
+        let cuotas = formValidator.limpiarNumero($(monto_de_cuota).val());
 
         //convertir a fecha
         let partes_fecha_base = fecha_inicio.split("-").map(function(ar) {
             return parseInt(ar);
         });
-        
+
         let fechaBase = new Date(partes_fecha_base[0], partes_fecha_base[1] - 1, partes_fecha_base[2]);
-        
+
         //limpiar tabla
-        $(tabla_dom_id).html( "");
+        $(tabla_dom_id).html("");
 
         let dia = 1;
 
@@ -394,7 +398,7 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
             LETRA: letra,
             CORRELATIVO: corr
         });
-        
+
         $("input[name=LETRA]").val(letra);
         $("input[name=CORRELATIVO]").val(corr);
 
@@ -406,114 +410,10 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
 
 
 
-    /** Formato numerico y decimal  * */
-
-
-    function restaurar_sep_miles() {
-        let nro_campos_a_limp = $("[numerico=yes], .numerico").length;
-
-        for (let ind = 0; ind < nro_campos_a_limp; ind++) {
-            let valor = $("[numerico=yes], .numerico")[ind].value;
-            let valor_forma = dar_formato_millares(valor);
-            $("[numerico=yes], .numerico")[ind].value = valor_forma;
-        }
-        //decimales
-        let decimales = document.querySelectorAll(".decimal");
-        Array.prototype.forEach.call(decimales, function(inpu) {
-            let nuevo = inpu.value.replace(",", ".");
-            inpu.value = dar_formato_millares(nuevo);
-            $(inpu).addClass("text-right");
-        });
-
-
-        //return val.replaceAll(new RegExp(/[.]*/g), "");
-    }
-
-    function limpiar_numero(val) {
-        if (/,+/.test(val))
-            return val.replaceAll(new RegExp(/[.]*/g), "").replace(",", ".");
-        else
-            return val.replaceAll(new RegExp(/[.]*/g), "");
-
-    }
-
-    function limpiar_numeros() {
-        let nro_campos_a_limp = $("[numerico=yes],.numerico,.decimal").length;
-
-        for (let ind = 0; ind < nro_campos_a_limp; ind++) {
-            let valor = $("[numerico=yes],.numerico,.decimal")[ind].value;
-            let valor_purifi = limpiar_numero(valor);
-            $("[numerico=yes],.numerico,.decimal")[ind].value = valor_purifi;
-        }
-        //return val.replaceAll(new RegExp(/[.]*/g), "");
-    }
 
 
 
-    function dar_formato_millares(ar) {
-        let enpuntos = new Intl.NumberFormat("de-DE").format(ar);
-        return enpuntos;
-    }
 
-    function input_number_millares(ev) {
-        if (ev.data != undefined) {
-            if (ev.data.charCodeAt() < 48 || ev.data.charCodeAt() > 57) {
-                ev.target.value =
-                    ev.target.value.substr(0, ev.target.selectionStart - 1) +
-                    ev.target.value.substr(ev.target.selectionStart);
-            }
-        }
-        //Formato de millares
-        let val_Act = ev.target.value;
-        val_Act = val_Act.replaceAll(new RegExp(/[\.]*[,]*/g), "");
-        let enpuntos = new Intl.NumberFormat("de-DE").format(val_Act);
-        $(ev.target).val(enpuntos);
-    }
-
-
-
-    function formatear_decimal(ev) { //
-
-        let limpiar_numero_para_float = function(val) {
-            return val.replaceAll(new RegExp(/[.]*/g), "").replaceAll(new RegExp(/[,]{1}/g), ".");
-        };
-        if (ev.data != undefined) {
-            if (ev.data.charCodeAt() < 48 || ev.data.charCodeAt() > 57) {
-                let noEsComa = ev.data.charCodeAt() != 44;
-                let yaHayComa = ev.data.charCodeAt() == 44 && /(,){1}/.test(ev.target.value.substr(0, ev.target.value.length - 2));
-                let yaHayComa2 = ev.data.charCodeAt() == 44 && /(,){2}/.test(ev.target.value);
-
-                let comaPrimerLugar = ev.data.charCodeAt() == 44 && ev.target.value.length == 1;
-                let comaDespuesDePunto = ev.data.charCodeAt() == 44 && /\.{1},{1}/.test(ev.target.value);
-                if (noEsComa || yaHayComa2 || (yaHayComa || comaPrimerLugar || comaDespuesDePunto)) {
-                    ev.target.value = ev.target.value.substr(0, ev.target.selectionStart - 1) + ev.target.value.substr(ev.target.selectionStart);
-                    return;
-                } else return;
-            }
-        }
-
-        if (ev.data == undefined) {
-            let solo_decimal = limpiar_numero_para_float(ev.target.value);
-            let float__ = parseFloat(solo_decimal);
-            let enpuntos = dar_formato_millares(float__);
-            if (!(isNaN(enpuntos)))
-                $(ev.target).val(enpuntos);
-            return;
-        }
-
-        //convertir a decimal
-        //dejar solo la coma decimal pero como punto 
-        let solo_decimal = limpiar_numero_para_float(ev.target.value);
-        let noEsComaOpunto = ev.data.charCodeAt() != 44 && ev.data.charCodeAt() != 46;
-        if (noEsComaOpunto) {
-            let float__ = parseFloat(solo_decimal);
-
-            //Formato de millares 
-            let enpuntos = dar_formato_millares(float__);
-            if (!(isNaN(enpuntos)))
-                $(ev.target).val(enpuntos);
-        }
-    }
 
 
 
@@ -543,25 +443,25 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
         let interes_porcen_ = $("input[name=INTERES]").val();
 
 
-        let monto = limpiar_numero(monto_);
-        let nro_cuotas = limpiar_numero(nro_cuotas_);
-        let interes_porcen = limpiar_numero(interes_porcen_);
+        let monto = formValidator.limpiarNumero(monto_);
+        let nro_cuotas = formValidator.limpiarNumero(nro_cuotas_);
+        let interes_porcen = formValidator.limpiarNumero(interes_porcen_);
         //calc
 
         let interes_cuota = parsearInt(monto) * (parsearFloat(interes_porcen) / 100);
-    
-        $("input[name=INTERES_CUOTA]").val(dar_formato_millares(isNaN(interes_cuota) || !(isFinite(interes_cuota)) ? 0 : interes_cuota));
+
+        $("input[name=INTERES_CUOTA]").val(formatoNumerico.darFormatoEnMillares(isNaN(interes_cuota) || !(isFinite(interes_cuota)) ? 0 : interes_cuota));
         let la_cuota = (parsearInt(monto) / parsearInt(nro_cuotas)) + interes_cuota;
-        let importe_cuota = $("input[name=CUOTA_IMPORTE]").val(dar_formato_millares(isNaN(la_cuota) || !(isFinite(la_cuota)) ? 0 : la_cuota));
+        let importe_cuota = $("input[name=CUOTA_IMPORTE]").val(formatoNumerico.darFormatoEnMillares(isNaN(la_cuota) || !(isFinite(la_cuota)) ? 0 : la_cuota));
 
         //Calcular interes total
         let cuota_con_int = isNaN(la_cuota) || !(isFinite(la_cuota)) ? 0 : la_cuota;
-        let seguro = parsearInt(limpiar_numero($("input[name=SEGURO]").val()));
-        let gastos_adm = parsearInt(limpiar_numero($("input[name=GASTOS_ADM]").val()));
+        let seguro = parsearInt(formValidator.limpiarNumero($("input[name=SEGURO]").val()));
+        let gastos_adm = parsearInt(formValidator.limpiarNumero($("input[name=GASTOS_ADM]").val()));
 
-      
+
         let interes_total = cuota_con_int + seguro + gastos_adm;
-        $("#INTERES_FINAL").val(dar_formato_millares(interes_total));
+        $("#INTERES_FINAL").val(formatoNumerico.darFormatoEnMillares(interes_total));
 
     }
     //loader spinner
@@ -579,20 +479,13 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
     /**Form */
 
 
-    function limpiar_campos(ev) {
-
-        let elements = ev.target.elements;
-        Array.prototype.forEach.call(elements, function(ar) {
-            ar.value = "";
-        });
-    }
 
     async function guardar(e) {
 
         e.preventDefault();
-        limpiar_numeros();
 
-        let payload = $(e.target).serialize();
+        formValidator.init(e.target);
+        let payload = formValidator.getData();
         let endpoint = e.target.action;
 
         show_loader();
@@ -610,7 +503,7 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
         let resp = await req.json();
         //Re habilitar
         $("button[type=submit]").prop("disabled", false);
-        restaurar_sep_miles();
+
         hide_loader();
 
 
@@ -625,7 +518,7 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
                 styling: 'bootstrap3',
                 delay: 2000
             });
-            limpiar_campos(e);
+
         } else {
 
             new PNotify({
@@ -657,21 +550,24 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
     window.onload = function() {
 
 
+        generar_cuotas();
         //Codigo de operacion
         generar_codigo_operacion();
-        //formato numerico
-        let numericos = document.querySelectorAll(".numerico");
-        Array.prototype.forEach.call(numericos, function(inpu) {
 
-            inpu.oninput = input_number_millares;
+        //formato entero
+        let enteros = document.querySelectorAll(".entero");
+        Array.prototype.forEach.call(enteros, function(inpu) {
+            inpu.oninput = formatoNumerico.formatearEntero;
             $(inpu).addClass("text-right");
         });
-        //formato con coma decimal
+
+
         let decimales = document.querySelectorAll(".decimal");
         Array.prototype.forEach.call(decimales, function(inpu) {
-            inpu.oninput = formatear_decimal;
+            inpu.oninput = formatoNumerico.formatearDecimal;
             $(inpu).addClass("text-right");
         });
+
 
 
 

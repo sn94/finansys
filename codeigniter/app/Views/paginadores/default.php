@@ -25,7 +25,7 @@
         ?>
 
             <li <?= $link['active'] ?  "class='btn btn-secondary'" : "class='btn btn-primary'" ?>>
-                <a class=" text-light" href="<?= $link['uri'] ?>">
+                <a onclick="act_grilla(event)" class=" text-light" href="<?= $link['uri'] ?>">
                     <?= $link['title'] ?>
                 </a>
             </li>

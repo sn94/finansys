@@ -58,21 +58,22 @@ $BASE_ASSETS_BASE = base_url('assets');
 
     /**Estilo d plantilla */
     [class*="sidebar-dark-"] {
-      background-color: #009688;
+      background-color: #3F51B5;
     }
 
     .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active,
     .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
 
-      background-color: #00796B;
+      background-color: #303F9F;
     }
 
     .brand-link {
-      background-color: #00796B;
+      background-color: #303F9F;
     }
 
-    .btn.btn-primary {
-      background-color: #009688 !important;
+    .btn.btn-primary, .bg-primary {
+      background-color: #3F51B5 !important;
+      background: #3F51B5 !important;
     }
 
 
@@ -120,7 +121,7 @@ $BASE_ASSETS_BASE = base_url('assets');
       padding-left: 5px;
       padding-top: 2px;
       border-radius: 6px 6px 0px 0px;
-      background-color: #00796B;
+      background-color: #303F9F;
       /*#8eb9b5;*/
       color: white;
       text-shadow: 1px 1px 8px #04043c;
@@ -170,10 +171,10 @@ $BASE_ASSETS_BASE = base_url('assets');
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-          <a href="index3.html" class="nav-link">Home</a>
+          <a href="index3.html" class="nav-link"> </a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-          <a href="#" class="nav-link">Contact</a>
+          <a href="#" class="nav-link"> </a>
         </li>
       </ul>
 
@@ -190,7 +191,7 @@ $BASE_ASSETS_BASE = base_url('assets');
         </li>
 
         <!-- Messages Dropdown Menu -->
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown d-none">
           <a class="nav-link" data-toggle="dropdown" href="#">
             <i class="far fa-comments"></i>
             <span class="badge badge-danger navbar-badge">3</span>
@@ -248,7 +249,7 @@ $BASE_ASSETS_BASE = base_url('assets');
           </div>
         </li>
         <!-- Notifications Dropdown Menu -->
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown d-none">
           <a class="nav-link" data-toggle="dropdown" href="#">
             <i class="far fa-bell"></i>
             <span class="badge badge-warning navbar-badge">15</span>
@@ -274,12 +275,12 @@ $BASE_ASSETS_BASE = base_url('assets');
             <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
           </div>
         </li>
-        <li class="nav-item">
+        <li class="nav-item d-none">
           <a class="nav-link" data-widget="fullscreen" href="#" role="button">
             <i class="fas fa-expand-arrows-alt"></i>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item d-none">
           <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
             <i class="fas fa-th-large"></i>
           </a>
@@ -303,7 +304,7 @@ $BASE_ASSETS_BASE = base_url('assets');
           <div class="info">
             <a href="#" class="d-block">
               <i class="fa fa-user"></i>
-              Alexander Pierce</a>
+              SUPERVISOR</a>
           </div>
         </div>
 
@@ -319,7 +320,7 @@ $BASE_ASSETS_BASE = base_url('assets');
               <a href="#" class="nav-link active">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
-                  Créditos
+              CRÉDITOS
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
@@ -329,11 +330,11 @@ $BASE_ASSETS_BASE = base_url('assets');
               <li class="nav-item">
                   <a href="<?= base_url("deudor/index") ?>" class="nav-link ">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Lista de clientes</p>
+                    <p>Clientes</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="<?= base_url("operacion/index") ?>" class="nav-link ">
+                  <a href="<?= base_url("operacion/pendientes") ?>" class="nav-link ">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Operaciones</p>
                   </a>
@@ -385,7 +386,7 @@ $BASE_ASSETS_BASE = base_url('assets');
               <a href="#" class="nav-link active">
                 <i class="nav-icon fas fa-copy"></i>
                 <p>
-                  Caja
+                  CAJA
                   <i class="fas fa-angle-left right"></i>
                   <!-- <span class="right badge badge-danger">New</span> -->
                 </p>
@@ -396,7 +397,7 @@ $BASE_ASSETS_BASE = base_url('assets');
               <a href="#" class="nav-link active">
                 <i class="nav-icon fas fa-copy"></i>
                 <p>
-                  Requerimiento
+                  REQUERIMIENTO
                   <i class="fas fa-angle-left right"></i>
 
                 </p>
@@ -426,7 +427,7 @@ $BASE_ASSETS_BASE = base_url('assets');
               <a href="#" class="nav-link active">
                 <i class="nav-icon fas fa-copy"></i>
                 <p>
-                  Estadística
+                  ESTADÍSTICA
                   <i class="fas fa-angle-left right"></i>
                   <!-- <span class="right badge badge-danger">New</span> -->
                 </p>
@@ -438,11 +439,18 @@ $BASE_ASSETS_BASE = base_url('assets');
               <a href="#" class="nav-link active">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
-                  Varios
+                  VARIOS
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
               <ul class="nav nav-treeview">
+              <li class="nav-item">
+                  <a href="<?= base_url("parametros/create") ?>" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Parámetros</p>
+                  </a>
+                </li>
+
                 <li class="nav-item">
                   <a href="<?= base_url("empresa/index") ?>" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>

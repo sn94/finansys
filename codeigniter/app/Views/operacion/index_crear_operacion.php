@@ -13,7 +13,7 @@
 
 <div class="card">
   <div class="card-header card-header-primary">
-    <h2 class="text-center prestyle"> GESTIÓN DE OPERACIONES <small></small></h2>
+    <h2 class="text-center prestyle"> BUSQUE UN CLIENTE PARA CREAR UNA OPERACIÓN<small></small></h2>
   </div>
 
 
@@ -88,7 +88,7 @@
       /**campos */
 
       let boton_crear = " <a class='btn btn-primary btn-sm'  href='" + link_ope_create + "' >CREAR</a>";
-      let boton_ver = " <a class='btn btn-primary btn-sm'  href='" + link_ope_list + "' >VER OP.</a>";
+      let boton_ver = " <a   href='" + link_ope_list + "' > <i class='fa fa-eye'  ></i> </a>";
 
       let cell1 = create_cell(boton_crear);
       let cell11= create_cell(boton_ver);

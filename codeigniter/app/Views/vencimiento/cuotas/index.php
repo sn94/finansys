@@ -24,6 +24,9 @@ if (!is_null($IDCLIENTE)) {
 <?= $this->section("title") ?>
 
 
+
+
+<a class="btn btn-primary mb-2" href="<?=base_url("operacion/generar-vencimiento")?>">VOLVER A VENCIMIENTOS</a>
 <div class="row"  style="background-color: #00796b; color: white;">
   
 <div class="col-12 col-md-3">

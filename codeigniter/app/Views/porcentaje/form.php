@@ -70,4 +70,30 @@ $PORCENTAJE =  !isset($dato) ? "" :   $dato->PORCENTAJE;
       $(ev.target).val(    enpuntos);
     }
   }
-</script>
+
+
+     function limpiar_campos(ev) {
+
+         let elements = ev.target.elements;
+         Array.prototype.forEach.call(elements, function(ar) {
+             ar.value = "";
+         });
+     }
+
+     async function guardar(ev) {
+         ev.preventDefault();
+         let req = await fetch(ev.target.action, {
+             "method": "POST",
+             headers: {
+                 'Content-Type': 'application/x-www-form-urlencoded'
+             },
+             body: $(ev.target).serialize()
+         });
+         let resp = await req.json();
+         if ("ok" in resp) {
+             limpiar_campos( ev );
+             act_grilla();
+         } else alert(resp.error);
+
+     }
+ </script>

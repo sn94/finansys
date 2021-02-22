@@ -3,11 +3,11 @@
 
 
 
-<input type="hidden" id="INDEX-URL" value="<?= base_url("porcentaje/index") ?>">
+<input type="hidden" id="INDEX-URL" value="<?= base_url("parametros/index") ?>">
 
 <div class="card">
   <div class="card-header card-header-primary">
-    <h2 class="text-center prestyle">PORCENTAJES<small></small></h2>
+    <h2 class="text-center prestyle">PARÁMETROS<small></small></h2>
 
   </div>
 
@@ -17,14 +17,9 @@
 
     <!--form -->
     <div id="formView">
-      <?php echo view("porcentaje/create"); ?>
+      <?php echo view("parametros/create"); ?>
     </div>
-    <!--End form-->
-
-    <div id="GRILL" class="table-responsive">
-
-
-    </div>
+    
   </div>
 </div>
 
@@ -39,20 +34,7 @@
     $("#GRILL").html("");
   }
 
-  async function act_grilla(  ev ) {
-
-    if(  ev != undefined)  ev.preventDefault();
-
-    let pagina=  ev == undefined  ?  $("#INDEX-URL").val() : ev.currentTarget.href;
-    show_loader();
-    let req = await fetch(  pagina , {
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest'
-      }
-    });
-    let resp = await req.text();
-    $("#GRILL").html(resp);
-  }
+ 
 
   function editarFila(ev) {
     ev.preventDefault();
@@ -81,9 +63,6 @@
 
   }
 
-
-  window.onload = function() {
-    act_grilla();
-  }
+ 
 </script>
 <?= $this->endSection() ?>

@@ -7,7 +7,7 @@ use App\Helpers\Utilidades;
 <?= $this->extend("layouts/index") ?>
 
 <?= $this->section("title") ?>
-GENERACIÓN DE VENCIMIENTOS
+VENCIMIENTOS
 <?= $this->endSection() ?>
 
 <?= $this->section("contenido") ?>
@@ -25,8 +25,15 @@ GENERACIÓN DE VENCIMIENTOS
 
 
 
-<input type="text" oninput="filtrar_operaciones(event)" id="BUSCADO" placeholder="BUSCAR CLIENTE POR CEDULA, O NOMBRE" class="form-control">
+<input type="text" oninput="filtrar_operaciones(event)" id="BUSCADO" placeholder="BUSCAR POR CEDULA, O NOMBRE, O CÓDIGO DE OPERACION" class="form-control">
 
+
+ 
+
+<a class="btn btn-primary mt-3" href="#">FACTURA CRÉDITO</a>
+<a class="btn btn-primary mt-3" href="#">IMPRIMIR
+
+</a>
 <div id="GRILL">
 </div>
 
@@ -45,11 +52,23 @@ GENERACIÓN DE VENCIMIENTOS
   }
 
 
+
+  async function borrar(ev) {
+    ev.preventDefault();
+    let pagina = ev.currentTarget.href;
+    show_loader();
+    let req = await fetch(pagina);
+    let resp = await req.json();
+    if( "ok" in resp) act_grilla();
+    else alert(  resp.err); 
+  }
+
+
   async function filtrar_operaciones(ev) {
 
     let buscado = ev == undefined ? "" : ev.target.value;
     let url_ = $("#INDEX-OPERACIONES-PARA-VENC").val();
-    let payload=  buscado == "" ?  "ESTADO=APROBADO" :  ( "BUSCADO=" + buscado + "&ESTADO=APROBADO" );
+ //   let payload=  buscado == "" ?  "ESTADO=APROBADO" :  ( "BUSCADO=" + buscado + "&ESTADO=APROBADO" );
     show_loader();
 
     let req = await fetch(url_, {
@@ -58,7 +77,7 @@ GENERACIÓN DE VENCIMIENTOS
         'Content-Type': 'application/x-www-form-urlencoded',
         'X-Requested-With': 'XMLHttpRequest'
       },
-      body: "BUSCADO=" + buscado
+      body: "BUSCADO=" + buscado+"&ESTADO=PROCESADO"
     });
     let html_result = await req.text();
     hide_loader();
