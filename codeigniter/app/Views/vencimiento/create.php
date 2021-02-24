@@ -8,47 +8,19 @@ APROBACIÓN DE OPERACIÓN Y GENERACIÓN DE VENCIMIENTOS
 
 <?= $this->section("contenido") ?>
 
-
-
-
-<style>
-    #CUOTAS-TABLE tr td,
-    #CUOTAS-TABLE tr th {
-        padding: 0px;
-        margin-right: 0px;
-    }
-
-
-    #CUOTAS-TABLE tr td input {
-        border-color: transparent;
-    }
-
-    #CUOTAS-TABLE tr>td:nth-child(1) input {
-        width: 20px;
-    }
-</style>
-
-
-
-
 <input type="hidden" id="OPERACIONES-INDEX" value="<?= base_url("operacion/generar-vencimiento") ?>">
 <input type="hidden" id="INDEX-OPERACIONES" value="<?= base_url('operacion/list') ?>">
 
-
 <div id="loaderplace">
 </div>
+
+
 
 <?php
 echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"]);
 ?>
 
-
-
-
 <input type="hidden" name="ESTADO" value="PROCESADO">
-
-
-
 
 <div class="row mr-md-5 ml-md-5 mb-1" style="background-color: #00968826;">
     <div class="col-12 col-md-4 ">
@@ -64,7 +36,9 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
     </div>
 
 </div>
-
+<div class="row mr-md-5 ml-md-5 mb-1 pt-2">
+<?= view("operacion/forms/form_codigos") ?>
+</div>
 <div class="row mr-md-5 ml-md-5 mb-1 text-light pt-2  bg-primary">
 
     <div class="col-12 col-md-7">
@@ -73,132 +47,27 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
     </div>
 
     <div class="col-12 col-md-5 ">
-        <h5 class="text-center">GARANTES</h5>
+        <h5 class="text-center text-light">GARANTES</h5>
         <?= view("operacion/forms/form_garantes") ?>
-
     </div>
-
 </div>
-
-
-
-<div class="row mr-md-5 ml-md-5 ">
-    <table class="table table-hover  ">
-        <thead>
-            <tr>
-                <th>N°</th>
-                <th>VENCIMIENTO</th>
-                <th>CUOTA</th>
-                <th>DIA</th>
-            </tr>
-        </thead>
-        <tbody id="CUOTAS-TABLE">
-
-        </tbody>
-    </table>
-</div>
-
-
+<?= view("vencimiento/create_detail_cuotas") ?>
 
 <div class="row mr-md-5 ml-md-5 ">
     <div class="col-12">
         <button type="submit" class="btn btn-primary"> GUARDAR</button>
     </div>
 </div>
-
 </form>
+
+
+
 
 
 <?= view("validations/formato_numerico") ?>
 <?= view("validations/form_validate") ?>
-<?= view("vencimiento/calc_vencimientos") ?>
-<?= view("vencimiento/sistema_frances") ?>
+
 <script>
-    /** 
-     * generador de cuotas DOM SELECTOR names
-     */
-
-    var fecha_inicio_cobro = "#PRIMER_VENCIMIENTO";
-    var monto_del_credito = "#CREDITO";
-    var nro_de_cuotas = "#NRO_CUOTAS";
-    var monto_de_cuota = "#CUOTA_IMPORTE";
-    var tabla_dom_id = "#CUOTAS-TABLE";
-    var formato_gen_cuotas = "";
-    var dias_de_pago = ""; //DOM OBJECT to choose pay days
-    var diasDePago = null;
-
-
-
-    function calcularInteresCuotas(   args  ) {
-        sistemaFrances.init(  args);
-
-        sistemaFrances.generarCuotas();
-    }
-
-    function mostrarCuotas() {
-        let fechaPrimerVenc = $(fecha_inicio_cobro).val();
-        let montoCredito = formValidator.limpiarNumero($("#CREDITO").val());
-        let nroCuotas = formValidator.limpiarNumero($("#NRO_CUOTAS").val());
-        //PARAMS
-        let DA = 300; //dias del anio
-        let MA = 12; //Meses del anio
-        let DM = 30; //Dias del mes
-        let porcentajeInteres = parseFloat(formValidator.limpiarNumero($("#PORCEN_INTERES").val())) / 100;
-        let porcentajeIvaInteres = formValidator.limpiarNumero($("#PORCEN_IVA_INTERES").val());
-        let netoDesembolsar = formValidator.limpiarNumero($("#CAPITAL_DESEMBOLSO").val());
-        let montoDeCuota = formValidator.limpiarNumero($("#CUOTA_IMPORTE").val());
-
-        let calcularInteresParams = {
-            DA: DA,
-            MA: MA,
-            DM: DM,
-            CAPITAL: netoDesembolsar,
-            NRO_CUOTAS: nroCuotas,
-            PORCEN_INTERES: porcentajeInteres,
-            PORCEN_IVA: porcentajeIvaInteres
-        };
-        console.log(calcularInteresParams);
-        calcularInteresCuotas(calcularInteresParams);
-
-        return;
-        calcVencimientos.init({
-            fechaReferencia: fechaPrimerVenc,
-            formatoGenCuotas: formato_gen_cuotas,
-            montoDeCredito: montoCredito,
-            numeroDeCuotas: nroCuotas,
-            //   montoDeCuota: montoCuota,
-            diasDePago: diasDePago,
-            interes: 0.0
-        });
-        //cuota vencimiento dia
-        let detalleGenCuota = calcVencimientos.generarCuotas();
-
-        let createTD = function(name, data, tipo) {
-            tipo = tipo == undefined ? "text" : tipo;
-            let domobj = "<input  name='" + name + "[]' type='" + tipo + "' readonly  value='" + data + "' >";
-            return "<td>" + domobj + "</td>";
-        };
-        let createTR = function(obj) {
-
-            let tds = Object.keys(obj).map((kname) => {
-                if (kname == "VENCIMIENTO") return createTD(kname, obj[kname], "date");
-                if (kname == "MONTO") return createTD(kname, formatoNumerico.darFormatoEnMillares(obj[kname], 0), "text");
-                return createTD(kname, obj[kname]);
-            }).join();
-            return "<tr>" + tds + "</tr>";
-        };
-
-        detalleGenCuota.forEach(function(cuo) {
-
-            $("#CUOTAS-TABLE").append(createTR(cuo));
-        });
-
-    }
-
-
-
-
-
     async function filtrar_operaciones(params) {
 
 
@@ -275,9 +144,6 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
         };
         let parsearFloat = function(arg) {
             try {
-                //  let truncar= formatoNumerico.darFormatoEnMillares( ar, 4);
-                // let cleaned = formValidator.limpiarNumero(  truncar );
-                //console.log(  ar, "trunc", truncar, "cleaned", cleaned );
                 return parseFloat(arg);
             } catch (err) {
                 return 0.0;
@@ -289,7 +155,7 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
         let seguro_3ros = parsearInt(formValidator.limpiarNumero($("input[name=SEGURO_3ROS]").val()));
         let gastos_adm = parsearInt(formValidator.limpiarNumero($("input[name=GASTOS_ADM]").val()));
         let capital_neto_a_desem = monto_ + seguro_cancel + seguro_3ros + gastos_adm;
-        $("#CAPITAL-NETO-DESEMBOLSO").val(formatoNumerico.darFormatoEnMillares(capital_neto_a_desem, 0));
+        $("#CAPITAL_DESEMBOLSO").val(formatoNumerico.darFormatoEnMillares(capital_neto_a_desem, 0));
         /**     ***   ***   ***   *** *** ****  */
         /** Monto Total del prestamo mas intereses + IVA */
         let nro_cuotas = parsearInt(formValidator.limpiarNumero($("input[name=NRO_CUOTAS]").val()));
@@ -406,6 +272,8 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
     window.onload = function() {
 
 
+
+        calcular_montos();
 
         mostrarCuotas();
         //Codigo de operacion

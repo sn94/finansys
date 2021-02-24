@@ -19,17 +19,17 @@ if (!is_null($IDCLIENTE)) {
 }
 ?>
 
-<div class="row" style="background-color: #303f9f; color: white;">
+<div class="row" style="background-color: #303f9f; color: white !important;">
 
-  <div class="col-12 col-md-3">
+  <div class="col-12 col-md-2">
     
   </div>
 
-  <div class="col-12 col-md-3">
-    <h4>CÓD. OPERACIÓN: <?= $CODIGO_OPE ?> </h4>
+  <div class="col-12 col-md-4">
+    <h4 class="text-light">CÓD. OPERACIÓN: <?= $CODIGO_OPE ?> </h4>
   </div>
   <div class="col-12 col-md-6">
-    <h4>CI°: <?= $CEDULACLIENTE . "   " . $NOMBRECLIENTE   ?></h4>
+    <h4 class="text-light">CI°: <?= $CEDULACLIENTE . "   " . $NOMBRECLIENTE   ?></h4>
   </div>
 </div>
 <table class="table table-bordered table-stripped prestyle">

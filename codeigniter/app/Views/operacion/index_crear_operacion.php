@@ -28,7 +28,7 @@
       <table class="table table-bordered table-striped table-hover">
 
         <thead>
-          <tr style="font-family: mainfont;">
+          <tr style="font-family: textfont;">
             <th>ACCIÓN</th>
             <th></th>
             <th>CEDULA</th>

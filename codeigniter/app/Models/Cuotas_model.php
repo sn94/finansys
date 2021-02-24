@@ -16,8 +16,8 @@ class Cuotas_model extends Model
 
     protected $allowedFields =
     [
-        'OPERACION', 'NUMERO', 'MONTO', 'MONTO_CAPITAL', 'INTERES', 'INTERES_IVA', 'SALDO_CAPITAL',
-        'VENCIMIENTO', 'FECHA_PAGO', 'ESTADO'
+        'OPERACION', 'NUMERO', 'MONTO', 'CAPITAL', 'INTERES', 'IVA', 'SALDO',
+        'VENCIMIENTO',  'DIA', 'FECHA_PAGO', 'ESTADO'
     ];
 
 

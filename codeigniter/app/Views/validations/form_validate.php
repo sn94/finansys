@@ -26,6 +26,7 @@
         },
         limpiarNumero: function(val) {
             let stringified=   typeof val == "string" ?  val  :  String(  val );
+            stringified=  stringified == "" ?  "0" :  stringified;
             let valor_purifi = stringified.replaceAll(new RegExp(/\.*/g), "").replaceAll(new RegExp(/,+/g), ".");
           
             return valor_purifi;

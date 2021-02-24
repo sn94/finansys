@@ -72,6 +72,7 @@ class Operacion extends BaseController
 
 			$datos = $this->request->getPost();
  
+		 
 			$db = \Config\Database::connect();
 
 			$db->transBegin();
@@ -81,8 +82,14 @@ class Operacion extends BaseController
 
 			//Generar las cuotas 
 			$DETALLE_ID = 1;
-			$DETALLE_MONTO =  $datos['MONTO'];
 			$DETALLE_VENCIMIENTO =  $datos['VENCIMIENTO'];
+			$DETALLE_DIA =  $datos['DIA'];
+			$DETALLE_MONTO =  $datos['CUOTA'];//cuota
+			$DETALLE_INTERES =  $datos['INTERES'];
+			$DETALLE_IVA =  $datos['IVA'];
+			$DETALLE_CAPITAL =  $datos['CAPITAL'];
+			$DETALLE_SALDO =  $datos['SALDO']; 
+
 			for ($cuo = 0; $cuo <  sizeof($DETALLE_MONTO); $cuo++) {
 				$nva_cuota = new Cuotas_model();
 				$nva_cuota->insert([
@@ -90,6 +97,11 @@ class Operacion extends BaseController
 					'NUMERO' => $DETALLE_ID,
 					'MONTO' => $DETALLE_MONTO[$cuo],
 					'VENCIMIENTO' => $DETALLE_VENCIMIENTO[$cuo],
+					'DIA'=> $DETALLE_DIA[ $cuo],
+					'INTERES'=>  $DETALLE_INTERES[$cuo],
+					'IVA'=>  $DETALLE_IVA[$cuo],
+					'CAPITAL'=>  $DETALLE_CAPITAL[$cuo],
+					'SALDO'=>  $DETALLE_SALDO[$cuo],
 					'ESTADO' => "P"
 				]);
 				$DETALLE_ID++;

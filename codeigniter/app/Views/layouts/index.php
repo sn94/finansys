@@ -47,14 +47,21 @@ $BASE_ASSETS_BASE = base_url('assets');
 
 
   <style>
-    @import url("<?= base_url('assets/Marvel-Regular.ttf') ?>");
+    @import url("<?= base_url('assets/Raleway-SemiBold.ttf') ?>");
 
     @font-face {
       font-family: "mainfont";
-      src: url("<?= base_url('assets/Marvel-Regular.ttf') ?>");
-
+      src: url("<?= base_url('assets/Raleway-SemiBold.ttf') ?>");
     }
 
+    @import url("<?= base_url('assets/Raleway-Regular.ttf') ?>");
+
+    @font-face {
+      font-family: "textfont";
+      src: url("<?= base_url('assets/Raleway-Regular.ttf') ?>");
+    }
+
+    
 
     /**Estilo d plantilla */
     [class*="sidebar-dark-"] {
@@ -71,7 +78,8 @@ $BASE_ASSETS_BASE = base_url('assets');
       background-color: #303F9F;
     }
 
-    .btn.btn-primary, .bg-primary {
+    .btn.btn-primary,
+    .bg-primary {
       background-color: #3F51B5 !important;
       background: #3F51B5 !important;
     }
@@ -83,7 +91,7 @@ $BASE_ASSETS_BASE = base_url('assets');
       /* height: calc(2.25rem + 2px); */
       /* font-size: 1rem; */
       /* background-color: #fff; */
-      height: calc( 2rem + 2px);
+      height: calc(2rem + 2px);
       font-size: 0.9rem;
       background-color: #B3E5FC;
       border: 1px solid #8c91d7;
@@ -97,12 +105,26 @@ $BASE_ASSETS_BASE = base_url('assets');
     h4,
     h4,
     h5,
-    h6,
-    label,
-    legend {
+    h6  [ui-pnotify-title] {
       font-family: mainfont;
+      color: #3f51b5;
     }
 
+    h1.ui-pnotify-title,
+    h2.ui-pnotify-title,
+    h3.ui-pnotify-title,
+    h4.ui-pnotify-title,
+    h4.ui-pnotify-title,
+    h5.ui-pnotify-title,
+    h6.ui-pnotify-title {
+      font-family: mainfont;
+      color: white;
+    }
+
+label, legend{
+  font-family: textfont;
+  font-size: 0.75rem;
+}
 
     /***fieldsets */
 
@@ -315,19 +337,19 @@ $BASE_ASSETS_BASE = base_url('assets');
             <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
 
-          
+
             <li class="nav-item ">
               <a href="#" class="nav-link active">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
-              CRÉDITOS
+                  CRÉDITOS
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
               <ul class="nav nav-treeview">
 
 
-              <li class="nav-item">
+                <li class="nav-item">
                   <a href="<?= base_url("deudor/index") ?>" class="nav-link ">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Clientes</p>
@@ -383,10 +405,10 @@ $BASE_ASSETS_BASE = base_url('assets');
 
 
             <li class="nav-item ">
-              <a href="#" class="nav-link active">
+              <a href="#" class="nav-link active"  onclick="alert('En desarrollo');" >
                 <i class="nav-icon fas fa-copy"></i>
                 <p>
-                  CAJA<span class="badge badge-warning">EN DESARROLLO</span>
+                  CAJA 
                   <i class="fas fa-angle-left right"></i>
                   <!-- <span class="right badge badge-danger">New</span> -->
                 </p>
@@ -394,10 +416,10 @@ $BASE_ASSETS_BASE = base_url('assets');
             </li>
 
             <li class="nav-item">
-              <a href="#" class="nav-link active">
+              <a href="#" class="nav-link active"  onclick="alert('En desarrollo');" >
                 <i class="nav-icon fas fa-copy"></i>
                 <p>
-                  REQUERIMIENTO <span class="badge badge-warning">EN DESARROLLO</span>
+                  REQUERIMIENTO  
                   <i class="fas fa-angle-left right"></i>
 
                 </p>
@@ -424,10 +446,10 @@ $BASE_ASSETS_BASE = base_url('assets');
             </li>
 
             <li class="nav-item ">
-              <a href="#" class="nav-link active">
+              <a href="#" class="nav-link active"   onclick="alert('En desarrollo');" >
                 <i class="nav-icon fas fa-copy"></i>
                 <p>
-                  ESTADÍSTICA <span class="badge badge-warning">EN DESARROLLO</span>
+                  ESTADÍSTICA 
                   <i class="fas fa-angle-left right"></i>
                   <!-- <span class="right badge badge-danger">New</span> -->
                 </p>
@@ -444,7 +466,7 @@ $BASE_ASSETS_BASE = base_url('assets');
                 </p>
               </a>
               <ul class="nav nav-treeview">
-              <li class="nav-item">
+                <li class="nav-item">
                   <a href="<?= base_url("parametros/create") ?>" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Parámetros</p>
@@ -492,7 +514,7 @@ $BASE_ASSETS_BASE = base_url('assets');
                 <?= $this->renderSection("title") ?>
               </h1>
             </div><!-- /.col -->
-             
+
           </div><!-- /.row -->
         </div><!-- /.container-fluid -->
       </div>
@@ -622,7 +644,7 @@ $BASE_ASSETS_BASE = base_url('assets');
   <script src="<?= $BASE_ASSETS ?>/dist/js/adminlte.js"></script>
   <!--XLS GEN -->
 
-  <script src="<?= $BASE_ASSETS_BASE ?>/xls_gen/xls.js<?= '?v='.microtime(true) ?>"></script>
+  <script src="<?= $BASE_ASSETS_BASE ?>/xls_gen/xls.js<?= '?v=' . microtime(true) ?>"></script>
   <script src="<?= $BASE_ASSETS_BASE ?>/xls_gen/xls_ini.js"></script>
   <!--AUTOCOMPLETADO -->
   <script src="<?= $BASE_ASSETS_BASE ?>/awesomplete/awesomplete.min.js"></script>

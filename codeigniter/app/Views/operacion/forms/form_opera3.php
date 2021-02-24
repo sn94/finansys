@@ -10,7 +10,7 @@ $paramtros=   (new Parametros_model())->select("parametros.*,FORMAT( parametros.
 		")
 		->first() ;
 
-$PORCEN_IVA_INTERES =  (isset($OPERACION) ?  $OPERACION->PORCEN_IVA_INTERES :  $paramtros->IVA);
+$PORCEN_IVA_INTERES =  (isset($OPERACION) ? ( $OPERACION->PORCEN_IVA_INTERES =="" ? $paramtros->IVA  :  $OPERACION->PORCEN_IVA_INTERES) :  $paramtros->IVA);
 $PORCEN_INTERES =    (isset($OPERACION) ?  $OPERACION->PORCEN_INTERES :   $paramtros->PORCEN_INTERES);
 $TOTAL_INTERESES =    (isset($OPERACION) ?  $OPERACION->TOTAL_INTERESES :    0);
 $TOTAL_INTERESES_IVA=    (isset($OPERACION) ?  $OPERACION->TOTAL_INTERESES_IVA :    0);

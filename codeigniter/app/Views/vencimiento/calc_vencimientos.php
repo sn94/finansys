@@ -2,21 +2,18 @@
     var calcVencimientos = {
 
         fechaReferencia: null,
-        formatoGenCuotas: "M", /* D S M Q */
-        montoDeCredito: 0,
-        numeroDeCuotas: 0,
-        montoDeCuota: 0,
-        diasDePago: null,  /** 1 2 3 4 5 6 7 */
-        interes: 0.0,
-        init: function( {fechaReferencia, formatoGenCuotas, montoDeCredito, numeroDeCuotas, montoDeCuota, diasDePago, interes} ){
+        formatoGenCuotas: "M", /* D S M Q */ 
+        numeroDeCuotas: 0, 
+        diasDePago: null,  /** 1 2 3 4 5 6 7 */ 
+        init: function( {PRIMER_VENCIMIENTO, FORMATO, NRO_CUOTAS, DIAS_PAGO} ){
 
-            this.fechaReferencia=  fechaReferencia;
-            this.formatoGenCuotas= formatoGenCuotas;
-            this.montoDeCredito= montoDeCredito;
-            this.numeroDeCuotas= numeroDeCuotas;
-            this.montoDeCuota= montoDeCuota;
-            this.diasDePago= diasDePago;
-            this.interes= interes;
+            this.fechaReferencia=  PRIMER_VENCIMIENTO;
+            this.formatoGenCuotas= FORMATO;
+            this.numeroDeCuotas= NRO_CUOTAS;
+            /*this.montoDeCredito= montoDeCredito;
+           
+            this.montoDeCuota= montoDeCuota;*/
+            this.diasDePago= DIAS_PAGO; 
         },
         
         calcularCuota: function(){
@@ -107,15 +104,14 @@
             }
             //Asegurar dias de pago marcados
             if (this.obtenerDiasDePago().length <= 0) {
-                alert("MARQUE AL MENOS UN DIA PARA LOS PAGOS");
-                // document.querySelector(tabla_dom_id).innerHTML = "";
+                alert("MARQUE AL MENOS UN DIA PARA LOS PAGOS"); 
                 return [];
             }
-            $(tabla_dom_id).empty();
+           
             let fecha_inicio = this.fechaReferencia;
-            let montobase = this.montoDeCredito;
+           /* let montobase = this.montoDeCredito;
             let nrocuotas = this.numeroDeCuotas;
-            let cuotas = this.montoDeCuota;
+            let cuotas = this.montoDeCuota;*/
 
             //convertir a fecha
             let partes_fecha_base = fecha_inicio.split("-").map(function(ar) {
@@ -123,13 +119,10 @@
             });
 
             let fechaBase = new Date(partes_fecha_base[0], partes_fecha_base[1] - 1, partes_fecha_base[2]);
-            console.log( fechaBase );
-            //limpiar tabla
-           // $(tabla_dom_id).html("");
-
+            
             let dia = 1;
 
-            while (dia <= nrocuotas) {
+            while (dia <= this.numeroDeCuotas) {
 
                 //Obtener dia mes anio 
                 let anio = fechaBase.getFullYear();
@@ -152,8 +145,7 @@
                     let dia_semana = contextoThis.obtenerNombreDia(numeroDia); //Lunes, Martes, miercoles,etc ...
                     fechasDeVencimiento.push({
                         NUMERO: dia,
-                        VENCIMIENTO: vencimiento,
-                        MONTO: contextoThis.montoDeCuota,
+                        VENCIMIENTO: vencimiento, 
                         DIA: dia_semana
                     });
                     //Incrementar fecha
