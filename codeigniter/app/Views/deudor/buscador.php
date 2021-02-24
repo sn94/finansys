@@ -1,112 +1,47 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-        <style>
-            .texto{
-                border: 1pt #a29bf7 solid;
-                font-size: 16px;
-                font-weight: 600;
-                color: #363636;
-                font-family: Verdana, Geneva, Tahoma, sans-serif;
-                width: 100%;
-            }
-
-            .grilla thead tr{
-                background-color: #8e8eea;
-                font-size: 12px;
-            }
-            .grilla{
-              
-                width: 100%;
-                font-family: Verdana, Geneva, Tahoma, sans-serif;
-                cursor:pointer; cursor: hand
-            }
-            .grilla tbody tr{
-                border-bottom: 1pt #7edaed solid;
-                background-color: #bbbcf2;
-            }
-            .grilla tbody tr:hover{
-                background-color: #57eaea;
-            }
-            .grilla tbody tr td{
-                padding-left: 2px;
-                padding-right: 2px;
-            }
-        </style>
-    </head>
-    <body>
-      
-    <input autofocus class="texto" oninput="actualizarBuscador()" type="text" placeholder="Ingrese algun nombre, cedula o RUC" id="buscado">
-      <table class="grilla">
-      <thead>
-      <tr><th>RUC/CI°</th><th>RAZÓN SOCIAL/NOMBRE COMPLETO</th></tr>
-
-      <tbody id="buscador_">
-
-      <?php  foreach($lista as $item):?>
-
-        <tr id="<?=$item->IDNRO?>" ><td>   <?=$item->ID?>   </td>  <td><?=$item->NOMBRES?></td></tr>
-
-      <?php  endforeach; ?>
+ <!-- BUSCADOR DE CLIENTES  -->
+ <!--URL DE LISTADO DE CLIENTES-->
+ <input type="hidden" id="CLIENTE-INDEX" value="<?= base_url("deudor/index") ?>">
+ <!--campo de busqueda -->
+ <input type="text" oninput="filtrar_clientes(event)" id="BUSCADO" placeholder="BUSCAR POR CEDULA, O NOMBRE" class="form-control mt-2">
+ <div class="table-responsive" id="GRILL">
+     <?= view("deudor/grill") ?>
+ </div>
 
 
-    
-      </tbody>
-      </thead>
-      </table>
+ <script>
+     async function act_grilla(ev) {
+ 
+         show_loader();
 
-      <script>
+         let req = await fetch( ev.currentTarget.href_, { 
+             headers: { 
+                 'X-Requested-With': 'XMLHttpRequest'
+             }
+         });
+         let html_result = await req.text();
 
-        var IDClient= "";
+         $("#GRILL").html(html_result);
 
-            function elegir( ev){
-                IDClient= ev.currentTarget.id;
-                close();
-            }
+     }
 
+     async function filtrar_clientes(ev) {
 
-            function actualizarGrilla( lista){
+         let buscado = ev == undefined ? "" : ev.target.value;
+         let url_ = $("#CLIENTE-INDEX").val();
+         //   let payload=  buscado == "" ?  "ESTADO=APROBADO" :  ( "BUSCADO=" + buscado + "&ESTADO=APROBADO" );
+         show_loader();
 
-                let tabla=  document.getElementById("buscador_");
-                //vaciar
-                tabla.innerHTML= "";
-                lista.forEach(function(item){
-                    let nuevafila= "<tr onclick='elegir(event)' id='"+item.IDNRO+"'><td>"+item.ID+"</td><td>"+item.NOMBRES+"</td></tr>";
-                    tabla.innerHTML= tabla.innerHTML + nuevafila ;
-                });
-            }
-          function actualizarBuscador(){
+         let req = await fetch(url_, {
+             "method": "POST",
+             headers: {
+                 'Content-Type': 'application/x-www-form-urlencoded',
+                 'X-Requested-With': 'XMLHttpRequest'
+             },
+             body: "BUSCADO=" + buscado
+         });
+         let html_result = await req.text();
 
+         $("#GRILL").html(html_result);
 
-            let url= "<?=base_url("deudor/buscar_por_palabra")?>";
-            let termino_buscado= document.getElementById("buscado").value;
-            fetch(  url, 
-            {method: "POST",
-            headers: {  "Content-Type": "application/json",
-                        "X-Requested-With": "XMLHttpRequest"},
-            body: JSON.stringify(  { buscado: termino_buscado })  })
-            .then(function(res){
-                return res.json();
-            }).then(function(listjson){
-
-                actualizarGrilla( listjson) ;
-
-
-            });
-          }
-
-
-
-      </script>
-    </body>
-</html>
+     }
+ </script>

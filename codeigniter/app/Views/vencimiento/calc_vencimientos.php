@@ -8,6 +8,17 @@
         montoDeCuota: 0,
         diasDePago: null,  /** 1 2 3 4 5 6 7 */
         interes: 0.0,
+        init: function( {fechaReferencia, formatoGenCuotas, montoDeCredito, numeroDeCuotas, montoDeCuota, diasDePago, interes} ){
+
+            this.fechaReferencia=  fechaReferencia;
+            this.formatoGenCuotas= formatoGenCuotas;
+            this.montoDeCredito= montoDeCredito;
+            this.numeroDeCuotas= numeroDeCuotas;
+            this.montoDeCuota= montoDeCuota;
+            this.diasDePago= diasDePago;
+            this.interes= interes;
+        },
+        
         calcularCuota: function(){
 
             //formula sistema frances
@@ -85,21 +96,20 @@
             else return this.diasDePago;
         },
 
-        generar_cuotas: function() {
-
-            console.log( "verificando el contexto ..", this );
+        generarCuotas: function() {
+ 
             let contextoThis=  this;
             let fechasDeVencimiento = [];
             //Asegurar fecha cargada
             if (this.fechaReferencia == null) {
                 alert("INDICAR FECHA DE INICIO DE COBRO PARA GENERAR LAS CUOTAS");
-                return false;
+                return [];
             }
             //Asegurar dias de pago marcados
             if (this.obtenerDiasDePago().length <= 0) {
                 alert("MARQUE AL MENOS UN DIA PARA LOS PAGOS");
                 // document.querySelector(tabla_dom_id).innerHTML = "";
-                return false;
+                return [];
             }
             $(tabla_dom_id).empty();
             let fecha_inicio = this.fechaReferencia;
@@ -141,9 +151,10 @@
 
                     let dia_semana = contextoThis.obtenerNombreDia(numeroDia); //Lunes, Martes, miercoles,etc ...
                     fechasDeVencimiento.push({
-                        cuota: dia,
-                        vencimiento,
-                        dia: dia_semana
+                        NUMERO: dia,
+                        VENCIMIENTO: vencimiento,
+                        MONTO: contextoThis.montoDeCuota,
+                        DIA: dia_semana
                     });
                     //Incrementar fecha
                     fechaBase.setDate(fechaBase.getDate() + formato); //La siguiente fecha de vencimiento

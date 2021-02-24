@@ -1,4 +1,3 @@
-
 <?= $this->extend("layouts/index") ?>
 <?= $this->section("title") ?>
 REGISTRO DE OPERACIÓN
@@ -17,13 +16,10 @@ REGISTRO DE OPERACIÓN
 <?php
 echo form_open("operacion/create",  ["onsubmit" => "guardar(event)"]);
 ?>
-<?=view("operacion/form")?>
+<?= view("operacion/forms/index") ?>
 </form>
 
 <script>
-     
-
-
     function show_loader() {
         let loader = "<img style='z-index: 400000;position: absolute;top: 30%;left: 50%;'  src='<?= base_url("assets/img/spinner.gif") ?>'   />";
         $("#loaderplace").html(loader);
@@ -34,28 +30,6 @@ echo form_open("operacion/create",  ["onsubmit" => "guardar(event)"]);
     }
 
 
-    /**Form */
-
-
-   
-
-    function campos_requeridos() {
-        if ($("#CREDITO").val() == "" || $("#CREDITO").val() == "0") {
-            alert("FALTA EL MONTO DE CRÉDITO APROBADO");
-            return false;
-        }
-        if ($("#INTERES").val() == "" || $("#INTERES").val() == "0") {
-            alert("DETALLE EL PORCENTAJE DE INTERÉS");
-            return false;
-        }
-        if ($("#CUOTAS").val() == "" || $("#CUOTAS").val() == "0") {
-            alert("INGRESE NRO DE CUOTAS");
-            return false;
-        }
-        return true;
-    }
-
-    
 
 
 
@@ -63,35 +37,36 @@ echo form_open("operacion/create",  ["onsubmit" => "guardar(event)"]);
 
 
 
+    window.onload = function() {
+
+        obtener_parametros();
+        //formato entero
+        let enteros = document.querySelectorAll(".entero");
+        Array.prototype.forEach.call(enteros, function(inpu) {
+            inpu.oninput = formatoNumerico.formatearEntero;
+            $(inpu).addClass("text-right");
+        });
 
 
-    window.onload = function() { 
-          //formato entero
-    let enteros = document.querySelectorAll(".entero");
-    Array.prototype.forEach.call(enteros, function(inpu) {
-      inpu.oninput = formatoNumerico.formatearEntero;
-      $(inpu).addClass("text-right");
-    });
-
-
-    let decimales = document.querySelectorAll(".decimal");
-    Array.prototype.forEach.call(decimales, function(inpu) {
-      inpu.oninput = formatoNumerico.formatearDecimal;
-      $(inpu).addClass("text-right");
-    });
+        let decimales = document.querySelectorAll(".decimal");
+        Array.prototype.forEach.call(decimales, function(inpu) {
+            inpu.oninput = formatoNumerico.formatearDecimal;
+            $(inpu).addClass("text-right");
+        });
 
 
         //Auto calculo
-        let autocalc = document.querySelectorAll("#CREDITO, #INTERES, #CUOTAS,#SEGURO,#GASTOS_ADM ");
+        let autocalc = document.querySelectorAll("#CREDITO, #NRO_CUOTAS,#SEGURO_CANCEL,#SEGURO_3ROS,#GASTOS_ADM ");
         Array.prototype.forEach.call(autocalc, function(inpu) {
-           
-            let keep = inpu.oninput; 
+
+            let keep = inpu.oninput;
             inpu.oninput = function(ev) {
-             
-               
+
+
                 calcular_montos();
-                if( typeof  keep == "function")
-               { keep(ev); }
+                if (typeof keep == "function") {
+                    keep(ev);
+                }
             };
             $(inpu).addClass("text-right");
         });

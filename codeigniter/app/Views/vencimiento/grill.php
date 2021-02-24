@@ -24,7 +24,7 @@
       <tr id="<?= $i->IDNRO ?>">
 
         <td style='padding: 0px;'>
-          <a class="btn btn-sm btn-primary m-0" href="<?= base_url("operacion/ver-vencimientos/" . $i->IDNRO) ?>">Ver cuotas</a>
+          <a  onclick="verCuotas(event)" class="btn btn-sm btn-primary m-0" href="<?= base_url("operacion/ver-vencimientos/" . $i->IDNRO) ?>">Ver cuotas</a>
         </td>
         <td  style='padding: 0px;'> 
           <a   href="<?= base_url("operacion/edit/". $i->IDNRO) ?>" ><i class="fa fa-edit" aria-hidden="true"></i></a>

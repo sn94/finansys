@@ -348,31 +348,31 @@ $BASE_ASSETS_BASE = base_url('assets');
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="<?= base_url("prestamo/index") ?>" class="nav-link">
+                  <a href="#" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Ofrecimientos</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="<?= base_url("prestamo/index") ?>" class="nav-link">
+                  <a href="#" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Planilla solicitudes</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="<?= base_url("prestamo/index") ?>" class="nav-link">
+                  <a href="#" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Referencias comerciales</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="<?= base_url("prestamo/index") ?>" class="nav-link">
+                  <a href="#" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Operaciones pendientes</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="<?= base_url("prestamo/index") ?>" class="nav-link">
+                  <a href="#" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Datos de cédula</p>
                   </a>
@@ -386,7 +386,7 @@ $BASE_ASSETS_BASE = base_url('assets');
               <a href="#" class="nav-link active">
                 <i class="nav-icon fas fa-copy"></i>
                 <p>
-                  CAJA
+                  CAJA<span class="badge badge-warning">EN DESARROLLO</span>
                   <i class="fas fa-angle-left right"></i>
                   <!-- <span class="right badge badge-danger">New</span> -->
                 </p>
@@ -397,7 +397,7 @@ $BASE_ASSETS_BASE = base_url('assets');
               <a href="#" class="nav-link active">
                 <i class="nav-icon fas fa-copy"></i>
                 <p>
-                  REQUERIMIENTO
+                  REQUERIMIENTO <span class="badge badge-warning">EN DESARROLLO</span>
                   <i class="fas fa-angle-left right"></i>
 
                 </p>
@@ -427,7 +427,7 @@ $BASE_ASSETS_BASE = base_url('assets');
               <a href="#" class="nav-link active">
                 <i class="nav-icon fas fa-copy"></i>
                 <p>
-                  ESTADÍSTICA
+                  ESTADÍSTICA <span class="badge badge-warning">EN DESARROLLO</span>
                   <i class="fas fa-angle-left right"></i>
                   <!-- <span class="right badge badge-danger">New</span> -->
                 </p>

@@ -2,14 +2,27 @@
   var formatoNumerico = {
 
 
-    darFormatoEnMillares: function(val_float) {
+    darFormatoEnMillares: function(val_float, decimales) {
+      let decimales__ = decimales == undefined ? 4 : decimales;
+      let valor =   val_float ;
+
+      //FLOAT
+      if (decimales__ > 0) {
+        try {
+          valor = parseFloat(val_float);
+        } catch (err) {
+          valor = this.limpiarNumeroParaFloat(val_float);
+        }
+      }
+
       return new Intl.NumberFormat("de-DE", {
-        minimumFractionDigits: 4,
-        maximumFractionDigits: 4
-      }).format(val_float);
+        minimumFractionDigits: decimales__,
+        maximumFractionDigits: decimales__
+      }).format(valor);
     },
     limpiarNumeroParaFloat: function(val) {
-      return val.replaceAll(new RegExp(/[.]*/g), "").replaceAll(new RegExp(/[,]{1}/g), ".");
+      let conv = String(val);
+      return conv.replace(new RegExp(/\.*/g), "").replace(new RegExp(/[,]{1}/g), ".");
     },
     formatearEntero: function(ev) {
       if (ev.data != undefined) {
@@ -31,10 +44,13 @@
         limpiarNumeroParaFloat: function(val) {
           return val.replaceAll(new RegExp(/[.]*/g), "").replaceAll(new RegExp(/[,]{1}/g), ".");
         },
-        darFormatoEnMillares: function(val_float) {
+        darFormatoEnMillares: function(val_float, decimales) {
+
+          let decimales__ = decimales == undefined ? 4 : decimales;
+
           return new Intl.NumberFormat("de-DE", {
-            minimumFractionDigits: 4,
-            maximumFractionDigits: 4
+            minimumFractionDigits: decimales__,
+            maximumFractionDigits: decimales__
           }).format(val_float);
         }
       };

@@ -34,8 +34,11 @@ VENCIMIENTOS
 <a class="btn btn-primary mt-3" href="#">IMPRIMIR
 
 </a>
-<div id="GRILL">
+<div id="GRILL" style="overflow-y: auto;height: 200px;"  >
 </div>
+<div id="GRILL-CUOTAS">
+</div>
+
 
 
 
@@ -82,6 +85,26 @@ VENCIMIENTOS
     let html_result = await req.text();
     hide_loader();
     $("#GRILL").html(html_result);
+
+  }
+
+
+
+
+  async function verCuotas(ev){
+  ev.preventDefault();
+    let url_ =ev.currentTarget.href; 
+  
+    let loader = "<img style='z-index: 400000;position: absolute;top: 30%;left: 50%;'  src='<?= base_url("assets/img/spinner.gif") ?>'   />";
+    $("#GRILL-CUOTAS").html(loader);
+
+
+    let req = await fetch(url_, { 
+      headers: { 
+        'X-Requested-With': 'XMLHttpRequest'
+      }  });
+    let html_result = await req.text(); 
+    $("#GRILL-CUOTAS").html(html_result);
 
   }
 

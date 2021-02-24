@@ -71,8 +71,7 @@ class Operacion extends BaseController
 			//Datos del formulario
 
 			$datos = $this->request->getPost();
-
-
+ 
 			$db = \Config\Database::connect();
 
 			$db->transBegin();
@@ -82,8 +81,8 @@ class Operacion extends BaseController
 
 			//Generar las cuotas 
 			$DETALLE_ID = 1;
-			$DETALLE_MONTO =  $datos['DETALLE_MONTO'];
-			$DETALLE_VENCIMIENTO =  $datos['DETALLE_VENCIMIENTO'];
+			$DETALLE_MONTO =  $datos['MONTO'];
+			$DETALLE_VENCIMIENTO =  $datos['VENCIMIENTO'];
 			for ($cuo = 0; $cuo <  sizeof($DETALLE_MONTO); $cuo++) {
 				$nva_cuota = new Cuotas_model();
 				$nva_cuota->insert([
@@ -113,7 +112,12 @@ class Operacion extends BaseController
 			else {
 				$operacion = (new Operacion_model())
 					->join("deudor", "deudor.IDNRO =  operacion.NRO_CLIENTE")
-					->select("operacion.*, deudor.CEDULA, concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRES")
+					->select("operacion.* ,  FORMAT(operacion.CREDITO, 0, 'de_DE') AS CREDITO, FORMAT(operacion.TOTAL_INTERESES, 0, 'de_DE') AS TOTAL_INTERESES,
+					format(TOTAL_INTERESES_IVA, 0 , 'de_DE') AS TOTAL_INTERESES_IVA,	format(PORCEN_INTERES, 8, 'de_DE') AS PORCEN_INTERES, 	format(PORCEN_IVA_INTERES,4  , 'de_DE') AS PORCEN_IVA_INTERES,
+					FORMAT(operacion.SEGURO_CANCEL, 0, 'de_DE') AS SEGURO_CANCEL, FORMAT(operacion.SEGURO_3ROS, 0, 'de_DE') AS SEGURO_3ROS,  FORMAT(operacion.GASTOS_ADM, 0, 'de_DE') AS GASTOS_ADM,
+					FORMAT(operacion.CAPITAL_DESEMBOLSO, 0, 'de_DE') AS CAPITAL_DESEMBOLSO,FORMAT(operacion.TOTAL_PRESTAMO, 0, 'de_DE') AS TOTAL_PRESTAMO,
+					FORMAT(operacion.CUOTA_IMPORTE, 0, 'de_DE') AS CUOTA_IMPORTE,
+					 FORMAT(deudor.MONTO_SOLICI, 0, 'de_DE') AS MONTO_SOLICI, deudor.TIPO_CREDITO, deudor.CEDULA, concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRES")
 
 					->where("operacion.IDNRO", $ID_OPERACION)->first();
 
@@ -247,6 +251,10 @@ class Operacion extends BaseController
 			"pager" => $cuotas->pager,
 			"OPERACION" => (new Operacion_model())->find($ID_OPERACION)
 		];
+
+		if(  $this->request->isAJAX())
+		return view("vencimiento/cuotas/grill",    $data);
+		else 
 		return view("vencimiento/cuotas/index",    $data);
 	}
 }

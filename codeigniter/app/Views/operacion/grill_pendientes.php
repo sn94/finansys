@@ -33,7 +33,7 @@ foreach ($lista as $it) :  ?>
       <td  class="p-0"><?= $it->NRO_CLIENTE ?></td>
       <td  class="p-0"><?= $it->IDNRO ?></td>
       <td  class="text-right p-0"><?= Utilidades::number_f($it->CREDITO) ?></td>
-      <td  class="text-center p-0"><?= $it->CUOTAS ?></td>
+      <td  class="text-center p-0"><?= $it->NRO_CUOTAS ?></td>
       <td  class="p-0"><?= $it->NOMBRES ?></td>
     </tr>
   <?php endforeach; ?>

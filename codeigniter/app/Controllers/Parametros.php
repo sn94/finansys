@@ -51,5 +51,14 @@ class Parametros extends BaseController
 
 
  
+
+
+	public function  get(){
+		$param=   (new Parametros_model())->select("parametros.*,FORMAT( parametros.BCP_INTERES,4, 'de_DE') AS BCP_INTERES,
+		FORMAT( parametros.IVA,4, 'de_DE') AS IVA
+		")
+		->first() ;
+		 return  $this->response->setJSON( $param );
+	}
  
 }

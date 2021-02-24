@@ -27,12 +27,11 @@
     $IDNRO =  isset($OPERACION) ?  $OPERACION->IDNRO :  "";
     ?>
  <input type="hidden" name="IDNRO" value="<?= $IDNRO ?>">
- <?= view("operacion/form") ?>
+ <?= view("operacion/forms/index") ?>
  </form>
 
 
  <script>
-     
      //loader spinner
 
      function show_loader() {
@@ -45,64 +44,48 @@
      }
 
 
-     /**Form */
-
-
-
-
-     function campos_requeridos() {
-         if ($("#CREDITO").val() == "" || $("#CREDITO").val() == "0") {
-             alert("FALTA EL MONTO DE CRÉDITO APROBADO");
-             return false;
-         }
-         if ($("#INTERES").val() == "" || $("#INTERES").val() == "0") {
-             alert("DETALLE EL PORCENTAJE DE INTERÉS");
-             return false;
-         }
-         if ($("#CUOTAS").val() == "" || $("#CUOTAS").val() == "0") {
-             alert("INGRESE NRO DE CUOTAS");
-             return false;
-         }
-         return true;
-     }
-
 
 
 
 
      window.onload = function() {
 
-           //formato entero
-    let enteros = document.querySelectorAll(".entero");
-    Array.prototype.forEach.call(enteros, function(inpu) {
-      inpu.oninput = formatoNumerico.formatearEntero;
-      $(inpu).addClass("text-right");
-    });
+
+         obtener_parametros();
 
 
-    let decimales = document.querySelectorAll(".decimal");
-    Array.prototype.forEach.call(decimales, function(inpu) {
-      inpu.oninput = formatoNumerico.formatearDecimal;
-      $(inpu).addClass("text-right");
-    });
+         //formato entero
+         let enteros = document.querySelectorAll(".entero");
+         Array.prototype.forEach.call(enteros, function(inpu) {
+             inpu.oninput = formatoNumerico.formatearEntero;
+             $(inpu).addClass("text-right");
+         });
 
-    
+
+         let decimales = document.querySelectorAll(".decimal");
+         Array.prototype.forEach.call(decimales, function(inpu) {
+             inpu.oninput = formatoNumerico.formatearDecimal;
+             $(inpu).addClass("text-right");
+         });
 
 
-        //Auto calculo
-        let autocalc = document.querySelectorAll("#CREDITO, #INTERES, #CUOTAS,#SEGURO,#GASTOS_ADM ");
-        Array.prototype.forEach.call(autocalc, function(inpu) {
-           
-            let keep = inpu.oninput; 
-            inpu.oninput = function(ev) {
-             
-               
-                calcular_montos();
-                if( typeof  keep == "function")
-               { keep(ev); }
-            };
-            $(inpu).addClass("text-right");
-        });
+
+
+         //Auto calculo
+         let autocalc = document.querySelectorAll("#CREDITO, #INTERES, #CUOTAS,#SEGURO,#GASTOS_ADM ");
+         Array.prototype.forEach.call(autocalc, function(inpu) {
+
+             let keep = inpu.oninput;
+             inpu.oninput = function(ev) {
+
+
+                 calcular_montos();
+                 if (typeof keep == "function") {
+                     keep(ev);
+                 }
+             };
+             $(inpu).addClass("text-right");
+         });
      }
  </script>
 

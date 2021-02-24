@@ -32,7 +32,7 @@ class Deudor extends BaseController
 
 			/**Parametros post  */
 			$BUSCADO =  is_null($this->request->getPost("BUSCADO")) ? "" : $this->request->getPost("BUSCADO");
-			$LIMITE =   is_null(  $this->request->getPost("LIMITE")) ? "":  $this->request->getPost("LIMITE");
+			$LIMITE =   is_null($this->request->getPost("LIMITE")) ? "" :  $this->request->getPost("LIMITE");
 
 			$lista = (new Deudor_model())
 				->select(" deudor.IDNRO, deudor.CEDULA,concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRES, deudor.TELEFONO, DATE(deudor.updated_at) as ULT_ACT,
@@ -43,18 +43,33 @@ class Deudor extends BaseController
 				->orLike('deudor.NOMBRES', $BUSCADO)
 				->orLike('deudor.APELLIDOS', $BUSCADO);
 
-			if (    $LIMITE != "" )  $lista =  $lista->limit($LIMITE);
-			$lista = $lista->groupBy("deudor.updated_at", "DESC")
-				->get()->getResultObject();
+			if ($LIMITE != "")  $lista =  $lista->limit($LIMITE);
+			$lista = $lista->groupBy("deudor.updated_at", "DESC");
+			$resultado = null;
+			//paginar
+			$data = [];
+			if ($formato ==  "json"  ||  $formato == "pdf") {
+				$resultado = $lista->get()->getResultObject();
+				$data = [
+					'lista' => $resultado
+				];
+			} else {
+				$resultado =  $lista->paginate(10);
+				$data = [
+					'lista' => $resultado,
+					'pager' =>  $lista->pager
+				];
+			}
+
 
 
 
 			$formato = $this->request->getHeader("formato");
 			$formato =  is_null($formato)  ?  $FORMATODEFAULT :  $formato->getValue();
 			if ($formato == "json")
-				return $this->response->setJSON($lista);
+				return $this->response->setJSON($resultado);
 			if ($formato == "pdf") {
-				$html = $this->generar_html($lista);
+				$html = $this->generar_html($resultado);
 				$tituloDocumento = "clientes-" . date("d") . "-" . date("m") . "-" . date("yy") . "-" . rand();
 				//echo $html;
 				$pdf = new PDF();
@@ -64,7 +79,11 @@ class Deudor extends BaseController
 				$pdf->generar();
 			}
 
-			echo view("deudor/index", array("lista" => $lista));
+
+			if ($this->request->isAJAX())
+				echo view("deudor/grill",  $data);
+			else
+				echo view("deudor/index",  $data);
 		} catch (\Exception $e) { //mostrar mensaje de error
 			//mostrar mensaje de operacion exitosa
 			die($e->getMessage());

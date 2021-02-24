@@ -1,34 +1,3 @@
-<?php
-
-use App\Helpers\Utilidades;
-use App\Models\Empresa_model;
-use App\Models\Letras_model;
-
-/*
-fuentes de datos 
-*/
-
-$EMPRESA = "1"; //Se debe obtener de la sesion
-$EMPRESAS =  (new Empresa_model())->list_dropdown();
-$LETRAS = (new Letras_model())->list_dropdown();
-$FUNCIONARIO = 1;
-
-/**Datos de operacion */
-
-$ID_OPERACION =  isset($OPERACION) ?  $OPERACION->IDNRO :  "";
-$NRO_CLIENTE =  isset($OPERACION) ?  $OPERACION->NRO_CLIENTE :  "";
-$CEDULA =  isset($OPERACION) ?  $OPERACION->CEDULA :  "";
-$NOMBRES =  isset($OPERACION) ?  ($OPERACION->NOMBRES) :  "";
-$CREDITO =   isset($OPERACION) ? Utilidades::number_f($OPERACION->CREDITO) :  "0";;
-$INTERES =   isset($OPERACION) ? Utilidades::number_f($OPERACION->INTERES) :  "0";;
-$INTERES_FINAL =   isset($OPERACION) ? Utilidades::number_f($OPERACION->INTERES_FINAL) :  "0";;
-$PRIMER_VENCIMIENTO =   isset($OPERACION) ?  $OPERACION->PRIMER_VENCIMIENTO :  "0";
-$CUOTA_IMPORTE =   isset($OPERACION) ?  $OPERACION->CUOTA_IMPORTE :  "0";
-$CUOTAS =   isset($OPERACION) ?  $OPERACION->CUOTAS :  "0";
-?>
-
-
-
 <?= $this->extend("layouts/index") ?>
 <?= $this->section("title") ?>
 APROBACIÓN DE OPERACIÓN Y GENERACIÓN DE VENCIMIENTOS
@@ -40,9 +9,31 @@ APROBACIÓN DE OPERACIÓN Y GENERACIÓN DE VENCIMIENTOS
 <?= $this->section("contenido") ?>
 
 
+
+
+<style>
+    #CUOTAS-TABLE tr td,
+    #CUOTAS-TABLE tr th {
+        padding: 0px;
+        margin-right: 0px;
+    }
+
+
+    #CUOTAS-TABLE tr td input {
+        border-color: transparent;
+    }
+
+    #CUOTAS-TABLE tr>td:nth-child(1) input {
+        width: 20px;
+    }
+</style>
+
+
+
+
 <input type="hidden" id="OPERACIONES-INDEX" value="<?= base_url("operacion/generar-vencimiento") ?>">
 <input type="hidden" id="INDEX-OPERACIONES" value="<?= base_url('operacion/list') ?>">
-<input type="hidden" id="CUOTA_IMPORTE" value="<?= $CUOTA_IMPORTE ?>">
+
 
 <div id="loaderplace">
 </div>
@@ -53,110 +44,52 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
 
 
 
-<input type="hidden" name="FUNCIONARIO" value="<?= $FUNCIONARIO ?>">
+
 <input type="hidden" name="ESTADO" value="PROCESADO">
 
 
 
 
 <div class="row mr-md-5 ml-md-5 mb-1" style="background-color: #00968826;">
-
     <div class="col-12 col-md-4 ">
-
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">ID. OPERACIÓN: </label>
-            <input readonly style="grid-column-start: 2;" name="IDNRO" type="text" class="form-control" value="<?= $ID_OPERACION ?>">
-        </div>
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">NRO. CLIENTE: </label>
-            <input readonly style="grid-column-start: 2;" name="NRO_CLIENTE" type="text" class="form-control" value="<?= $NRO_CLIENTE ?>">
-        </div>
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">CÉDULA: </label>
-            <input readonly style="grid-column-start: 2;" id="CEDULA" type="text" class="form-control" value="<?= $CEDULA ?>">
-        </div>
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">NOMBRES: </label>
-            <input readonly style="grid-column-start: 2;" type="text" class="form-control" value="<?= $NOMBRES ?>">
-        </div>
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">CRÉDITO: </label>
-            <input id="CREDITO" name="CREDITO" style="grid-column-start: 2;" type="text" class="form-control entero" value="<?= $CREDITO ?>">
-        </div>
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">CUOTAS: </label>
-            <input style="grid-column-start: 2;" id="CUOTAS" name="CUOTAS" type="text" class="form-control entero" value="<?= $CUOTAS ?>">
-        </div>
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">1er VENCIMIENTO: </label>
-            <input onchange="generar_cuotas()" style="grid-column-start: 2;" id="PRIMER_VENCIMIENTO" value="<?= $PRIMER_VENCIMIENTO ?>" name="PRIMER_VENCIMIENTO" type="date" class="form-control">
-        </div>
-    </div>
-    <div class="col-12 col-md-4 ">
-
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">EMPRESA :</label>
-            <?php echo form_dropdown("EMPRESA", $EMPRESAS,  $EMPRESA, ['class' => "form-control"]);  ?>
-        </div>
-
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">GASTOS ADM.: </label>
-            <input style="grid-column-start: 2;" id="GASTOS_ADM" name="GASTOS_ADM" type="text" class="form-control entero" value="0">
-        </div>
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">CÓDIGO OPERACIÓN: </label>
-            <?php echo form_dropdown("", $LETRAS,  '', ['id' => 'LETRAS', 'class' => "form-control", "onchange" => "generar_codigo_operacion(this)"]);  ?>
-        </div>
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">LETRA: </label>
-            <input readonly style="grid-column-start: 2;" name="LETRA" type="text" class="form-control">
-        </div>
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">CORRELATIVO: </label>
-            <input readonly style="grid-column-start: 2;" name="CORRELATIVO" type="text" class="form-control">
-        </div>
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">N° FACTURA: </label>
-            <input maxlength="15" style="grid-column-start: 2;" id="FACTURA" type="text" class="form-control entero">
-        </div>
+        <?= view("operacion/forms/form_cliente_view") ?>
     </div>
 
-    <div class="col-12 col-md-4 text-light bg-primary ">
-        <h5 class="text-center">GARANTES</h5>
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">CI°: </label>
-            <input maxlength="10" style="grid-column-start: 2;" name="GARANTE1_CI" type="text" class="form-control entero">
-        </div>
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">NOMBRES: </label>
-            <input maxlength="50" style="grid-column-start: 2;" name="GARANTE1_NOM" type="text" class="form-control">
-        </div>
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">CI°: </label>
-            <input maxlength="10" style="grid-column-start: 2;" name="GARANTE2_CI" type="text" class="form-control entero">
-        </div>
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">NOMBRES: </label>
-            <input maxlength="50" style="grid-column-start: 2;" name="GARANTE2_NOM" type="text" class="form-control">
-        </div>
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">CI°: </label>
-            <input maxlength="10" style="grid-column-start: 2;" name="GARANTE3_CI" type="text" class="form-control entero">
-        </div>
-        <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-            <label style="grid-column-start: 1;">NOMBRES: </label>
-            <input maxlength="50" style="grid-column-start: 2;" name="GARANTE3_NOM" type="text" class="form-control">
-        </div>
+    <div class="col-12 col-md-4">
+        <?= view("operacion/forms/form_opera1") ?>
+
+    </div>
+    <div class="col-12 col-md-4 ">
+        <?= view("operacion/forms/form_opera2") ?>
     </div>
 
 </div>
+
+<div class="row mr-md-5 ml-md-5 mb-1 text-light pt-2  bg-primary">
+
+    <div class="col-12 col-md-7">
+        <?= view("operacion/forms/form_opera3") ?>
+        <?= view("operacion/forms/form_opera4") ?>
+    </div>
+
+    <div class="col-12 col-md-5 ">
+        <h5 class="text-center">GARANTES</h5>
+        <?= view("operacion/forms/form_garantes") ?>
+
+    </div>
+
+</div>
+
+
+
 <div class="row mr-md-5 ml-md-5 ">
-    <table class="table table-hover table-striped">
+    <table class="table table-hover  ">
         <thead>
             <tr>
                 <th>N°</th>
-                <th>CUOTA</th>
                 <th>VENCIMIENTO</th>
+                <th>CUOTA</th>
+                <th>DIA</th>
             </tr>
         </thead>
         <tbody id="CUOTAS-TABLE">
@@ -179,180 +112,88 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
 <?= view("validations/formato_numerico") ?>
 <?= view("validations/form_validate") ?>
 <?= view("vencimiento/calc_vencimientos") ?>
+<?= view("vencimiento/sistema_frances") ?>
 <script>
     /** 
-     * generador de cuotas
+     * generador de cuotas DOM SELECTOR names
      */
 
     var fecha_inicio_cobro = "#PRIMER_VENCIMIENTO";
     var monto_del_credito = "#CREDITO";
-    var nro_de_cuotas = "#CUOTAS";
+    var nro_de_cuotas = "#NRO_CUOTAS";
     var monto_de_cuota = "#CUOTA_IMPORTE";
     var tabla_dom_id = "#CUOTAS-TABLE";
     var formato_gen_cuotas = "";
-    var dias_de_pago = "";
+    var dias_de_pago = ""; //DOM OBJECT to choose pay days
+    var diasDePago = null;
 
-    function formato_cuotas(key) {
-        let evaluado = (key == undefined) ? (formato_gen_cuotas == "" ? "M" : ($(formato_gen_cuotas).val())) : "M";
-        let num = 1;
-        switch (evaluado) {
-            case "D":
-                num = 1;
-                break; // Para Sumar un dia para generar la siguiente fecha de vencimiento
-            case "S":
-                num = 7;
-                break; //Para Sumar 7dias
-            case "Q":
-                num = 15;
-                break; // Para Sumar 15 dias
-            case "M":
-                num = 30;
-                break; // Para Sumar 30 dias
-        }
-        return num;
+
+
+    function calcularInteresCuotas(   args  ) {
+        sistemaFrances.init(  args);
+
+        sistemaFrances.generarCuotas();
     }
 
+    function mostrarCuotas() {
+        let fechaPrimerVenc = $(fecha_inicio_cobro).val();
+        let montoCredito = formValidator.limpiarNumero($("#CREDITO").val());
+        let nroCuotas = formValidator.limpiarNumero($("#NRO_CUOTAS").val());
+        //PARAMS
+        let DA = 300; //dias del anio
+        let MA = 12; //Meses del anio
+        let DM = 30; //Dias del mes
+        let porcentajeInteres = parseFloat(formValidator.limpiarNumero($("#PORCEN_INTERES").val())) / 100;
+        let porcentajeIvaInteres = formValidator.limpiarNumero($("#PORCEN_IVA_INTERES").val());
+        let netoDesembolsar = formValidator.limpiarNumero($("#CAPITAL_DESEMBOLSO").val());
+        let montoDeCuota = formValidator.limpiarNumero($("#CUOTA_IMPORTE").val());
 
+        let calcularInteresParams = {
+            DA: DA,
+            MA: MA,
+            DM: DM,
+            CAPITAL: netoDesembolsar,
+            NRO_CUOTAS: nroCuotas,
+            PORCEN_INTERES: porcentajeInteres,
+            PORCEN_IVA: porcentajeIvaInteres
+        };
+        console.log(calcularInteresParams);
+        calcularInteresCuotas(calcularInteresParams);
 
-    function es_bisiesto(nu) {
-        if (parseInt(nu) % 4 == 0) {
-            if (parseInt(nu) % 100 == 0) {
-                if (parseInt(nu) % 400 == 0) {
-                    return true;
-                } else return false;
-            } else {
-                return true;
-            }
-        } else return false;
-    }
+        return;
+        calcVencimientos.init({
+            fechaReferencia: fechaPrimerVenc,
+            formatoGenCuotas: formato_gen_cuotas,
+            montoDeCredito: montoCredito,
+            numeroDeCuotas: nroCuotas,
+            //   montoDeCuota: montoCuota,
+            diasDePago: diasDePago,
+            interes: 0.0
+        });
+        //cuota vencimiento dia
+        let detalleGenCuota = calcVencimientos.generarCuotas();
 
+        let createTD = function(name, data, tipo) {
+            tipo = tipo == undefined ? "text" : tipo;
+            let domobj = "<input  name='" + name + "[]' type='" + tipo + "' readonly  value='" + data + "' >";
+            return "<td>" + domobj + "</td>";
+        };
+        let createTR = function(obj) {
 
-    function obtener_nombre_dia(dia) {
-        let dia_semana = "DOMINGO";
-        switch (dia) {
-            case 0:
-                dia_semana = "DOMINGO";
-                break;
-            case 1:
-                dia_semana = "LUNES";
-                break;
-            case 2:
-                dia_semana = "MARTES";
-                break;
-            case 3:
-                dia_semana = "MIERCOLES";
-                break;
-            case 4:
-                dia_semana = "JUEVES";
-                break;
-            case 5:
-                dia_semana = "VIERNES";
-                break;
-            case 6:
-                dia_semana = "SABADO";
-                break;
-        }
-        return dia_semana;
-    }
-
-    //Agrupa el numero de dias definidos para pago, ya sea Lunes = 1, Martes= 2, Miercoles= 3, etc.
-    function obtener_dias_pago() {
-
-        //Por defecto tomar el dia de fecha de inicio de vencimiento
-        let return_default_day = function() {
-            let fecha_ini = $(fecha_inicio_cobro).val();
-
-            let dma = fecha_ini.split("-");
-            let dia_ = new Date(dma[0], dma[1], dma[2]).getDay();
-            return [dia_];
+            let tds = Object.keys(obj).map((kname) => {
+                if (kname == "VENCIMIENTO") return createTD(kname, obj[kname], "date");
+                if (kname == "MONTO") return createTD(kname, formatoNumerico.darFormatoEnMillares(obj[kname], 0), "text");
+                return createTD(kname, obj[kname]);
+            }).join();
+            return "<tr>" + tds + "</tr>";
         };
 
-        if (dias_de_pago == "") return return_default_day();
+        detalleGenCuota.forEach(function(cuo) {
 
-        let los_dias = document.querySelectorAll(dias_de_pago); //"#dias-de-pago input[type=checkbox]"
-        if (los_dias.length == 0) return return_default_day();
-
-        let dias_permitidos = Array.prototype.filter.call(los_dias, function(ar) {
-            return ar.checked;
-        }).map(function(ar) {
-            let numero_dia = parseInt(ar.value);
-            return numero_dia;
-        });
-        return dias_permitidos;
-    }
-
-    function generar_cuotas() {
-        //Asegurar fecha cargada
-        if ($(fecha_inicio_cobro).val() == "" || $(fecha_inicio_cobro).val() == undefined) {
-            alert("INDICAR FECHA DE INICIO DE COBRO PARA GENERAR LAS CUOTAS");
-            return false;
-        }
-        //Asegurar dias de pago marcados
-        if (obtener_dias_pago().length <= 0) {
-            alert("MARQUE AL MENOS UN DIA PARA LOS PAGOS");
-            document.querySelector(tabla_dom_id).innerHTML = "";
-            return false;
-        }
-        $(tabla_dom_id).html("");
-        let fecha_inicio = $(fecha_inicio_cobro).val();
-        let montobase = formValidator.limpiarNumero($(monto_del_credito).val());
-        let nrocuotas = $(nro_de_cuotas).val();
-        let cuotas = formValidator.limpiarNumero($(monto_de_cuota).val());
-
-        //convertir a fecha
-        let partes_fecha_base = fecha_inicio.split("-").map(function(ar) {
-            return parseInt(ar);
+            $("#CUOTAS-TABLE").append(createTR(cuo));
         });
 
-        let fechaBase = new Date(partes_fecha_base[0], partes_fecha_base[1] - 1, partes_fecha_base[2]);
-
-        //limpiar tabla
-        $(tabla_dom_id).html("");
-
-        let dia = 1;
-
-        while (dia <= nrocuotas) {
-
-            //Obtener dia mes anio 
-            let anio = fechaBase.getFullYear();
-            let mes = (fechaBase.getMonth() + 1) < 10 ? "0" + (fechaBase.getMonth() + 1) : (fechaBase.getMonth() + 1);
-            let diaa = (fechaBase.getDate()) < 10 ? "0" + (fechaBase.getDate()) : (fechaBase.getDate());
-            let vencimiento = anio + "-" + mes + "-" + diaa;
-            let formato = formato_cuotas();
-
-            let showvencimiento = "<input readonly type='date' name='DETALLE_VENCIMIENTO[]' value='" + vencimiento + "' >";
-            let showcuotas = "<input readonly type='hidden' name='DETALLE_MONTO[]' value='" + cuotas + "' >";
-
-            //Dia de la semana en que cae el vencimiento
-            let numeroDia = fechaBase.getDay(); // 1 2 3 4 5 6
-            //Es uno de los dias marcados para PAGO ?
-            let diasPermitidos = obtener_dias_pago();
-
-            if (diasPermitidos.includes(numeroDia)) {
-
-                let dia_semana = obtener_nombre_dia(numeroDia); //Lunes, Martes, miercoles,etc ...
-                $(tabla_dom_id).append("<tr><th scope='row'>" + dia + "</th><td>" + showcuotas + cuotas + "</td><td>" + showvencimiento + "</td><td>" + dia_semana + "</td></tr>");
-                //Incrementar fecha
-                fechaBase.setDate(fechaBase.getDate() + formato); //La siguiente fecha de vencimiento
-                dia++; // Seguir calculando pero para la siguiente cuota
-
-            } else {
-                //mantener el contador pero seguir 
-                //Incrementando fecha hasta llegar a uno de los dias permitidos
-                fechaBase.setDate(fechaBase.getDate() + 1);
-
-            }
-        }
-        return true;
     }
-
-
-    /** 
-     * end generador de cuotas
-     */
-
-
-
 
 
 
@@ -423,6 +264,7 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
 
     /**Calculo de intereses   */
 
+
     function calcular_montos() {
         let parsearInt = function(arg) {
             try {
@@ -433,37 +275,51 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
         };
         let parsearFloat = function(arg) {
             try {
+                //  let truncar= formatoNumerico.darFormatoEnMillares( ar, 4);
+                // let cleaned = formValidator.limpiarNumero(  truncar );
+                //console.log(  ar, "trunc", truncar, "cleaned", cleaned );
                 return parseFloat(arg);
             } catch (err) {
                 return 0.0;
             }
         };
-        let monto_ = $("input[name=CREDITO]").val();
-        let nro_cuotas_ = $("input[name=CUOTAS]").val();
-        let interes_porcen_ = $("input[name=INTERES]").val();
-
-
-        let monto = formValidator.limpiarNumero(monto_);
-        let nro_cuotas = formValidator.limpiarNumero(nro_cuotas_);
-        let interes_porcen = formValidator.limpiarNumero(interes_porcen_);
-        //calc
-
-        let interes_cuota = parsearInt(monto) * (parsearFloat(interes_porcen) / 100);
-
-        $("input[name=INTERES_CUOTA]").val(formatoNumerico.darFormatoEnMillares(isNaN(interes_cuota) || !(isFinite(interes_cuota)) ? 0 : interes_cuota));
-        let la_cuota = (parsearInt(monto) / parsearInt(nro_cuotas)) + interes_cuota;
-        let importe_cuota = $("input[name=CUOTA_IMPORTE]").val(formatoNumerico.darFormatoEnMillares(isNaN(la_cuota) || !(isFinite(la_cuota)) ? 0 : la_cuota));
-
-        //Calcular interes total
-        let cuota_con_int = isNaN(la_cuota) || !(isFinite(la_cuota)) ? 0 : la_cuota;
-        let seguro = parsearInt(formValidator.limpiarNumero($("input[name=SEGURO]").val()));
+        /**Capital NETO A DESEMBOLSAR */
+        let monto_ = parsearInt(formValidator.limpiarNumero($("input[name=CREDITO]").val()));
+        let seguro_cancel = parsearInt(formValidator.limpiarNumero($("input[name=SEGURO_CANCEL]").val()));
+        let seguro_3ros = parsearInt(formValidator.limpiarNumero($("input[name=SEGURO_3ROS]").val()));
         let gastos_adm = parsearInt(formValidator.limpiarNumero($("input[name=GASTOS_ADM]").val()));
+        let capital_neto_a_desem = monto_ + seguro_cancel + seguro_3ros + gastos_adm;
+        $("#CAPITAL-NETO-DESEMBOLSO").val(formatoNumerico.darFormatoEnMillares(capital_neto_a_desem, 0));
+        /**     ***   ***   ***   *** *** ****  */
+        /** Monto Total del prestamo mas intereses + IVA */
+        let nro_cuotas = parsearInt(formValidator.limpiarNumero($("input[name=NRO_CUOTAS]").val()));
+        let interes_porcen = parseFloat(formValidator.limpiarNumero($("#PORCEN_INTERES").val())) / 100; //8 dec
+
+        let intereses = (monto_ * (interes_porcen)) * nro_cuotas;
+        let intereses_iva_porce = parseFloat(formValidator.limpiarNumero($("#PORCEN_IVA_INTERES").val())) / 100;
+        let iva_intereses = intereses * (intereses_iva_porce);
+
+        let total_prestamo = capital_neto_a_desem + intereses + iva_intereses;
+        $("#MONTO-PRESTAMO").val(formatoNumerico.darFormatoEnMillares(total_prestamo, 0));
+        $("#INTERESES").val(formatoNumerico.darFormatoEnMillares(intereses, 0));
+        $("#INTERES_IVA").val(formatoNumerico.darFormatoEnMillares(iva_intereses, 0));
+        /**  */
+        /*** Calculo de importe de cuota */
+
+        let importe_de_la_cuota = sistemaFrances.calculaMontoCuota({
+            CAPITAL_A_DESENVOL: capital_neto_a_desem,
+            TASA_INTERES: interes_porcen,
+            NRO_CUOTAS: nro_cuotas
+        });
 
 
-        let interes_total = cuota_con_int + seguro + gastos_adm;
-        $("#INTERES_FINAL").val(formatoNumerico.darFormatoEnMillares(interes_total));
-
+        importe_de_la_cuota = (!isFinite(importe_de_la_cuota) || isNaN(importe_de_la_cuota)) ? 0 : importe_de_la_cuota;
+        $("#CUOTA_IMPORTE").val(formatoNumerico.darFormatoEnMillares(importe_de_la_cuota, 0));
     }
+
+
+
+
     //loader spinner
 
     function show_loader() {
@@ -550,7 +406,8 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
     window.onload = function() {
 
 
-        generar_cuotas();
+
+        mostrarCuotas();
         //Codigo de operacion
         generar_codigo_operacion();
 
@@ -572,7 +429,7 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
 
 
         //Auto calculo
-        let autocalc = document.querySelectorAll("#CREDITO, #INTERES, #CUOTAS,#SEGURO,#GASTOS_ADM ");
+        let autocalc = document.querySelectorAll("#CREDITO, #NRO_CUOTAS,#SEGURO_CANCEL,#SEGURO_3ROS,#GASTOS_ADM ");
         Array.prototype.forEach.call(autocalc, function(inpu) {
             let keep = inpu.oninput;
 
