@@ -41,7 +41,8 @@ class Parametros extends BaseController
 		} else {
 			$param=  (new Parametros_model())->
 			select("parametros.*, format( BCP_INTERES, 4, 'de_DE') as BCP_INTERES,  format( GAST_ADM_PORCE, 4, 'de_DE') AS GAST_ADM_PORCE,
-			format( IVA, 4, 'de_DE') AS IVA,  format( SALARIO_MIN, 0, 'de_DE')  AS SALARIO_MIN,  format( JORNAL_MIN, 0, 'de_DE') AS JORNAL_MIN")
+			format( IVA, 4, 'de_DE') AS IVA,  format( SALARIO_MIN, 0, 'de_DE')  AS SALARIO_MIN,  format( JORNAL_MIN, 0, 'de_DE') AS JORNAL_MIN,
+			format(MORA_PORCE,  4,  'de_DE' ) AS MORA_PORCE  , FORMAT(PUNITORIO_PORCE, 4, 'de_DE' ) as PUNITORIO_PORCE ")
 			->first();
 			echo view('parametros/index',  ['dato'=>   $param]);
 		}
@@ -54,8 +55,10 @@ class Parametros extends BaseController
 
 
 	public function  get(){
-		$param=   (new Parametros_model())->select("parametros.*,FORMAT( parametros.BCP_INTERES,4, 'de_DE') AS BCP_INTERES,
-		FORMAT( parametros.IVA,4, 'de_DE') AS IVA
+		$param=   (new Parametros_model())->select(
+			"parametros.*,FORMAT( parametros.BCP_INTERES,4, 'de_DE') AS BCP_INTERES,
+		format(MORA_PORCE,  4,  'de_DE' ) AS MORA_PORCE  , FORMAT(PUNITORIO_PORCE, 4, 'de_DE' ) as PUNITORIO_PORCE,
+		FORMAT( parametros.IVA,4, 'de_DE') AS IVA,  format(GAST_ADM_PORCE,  4,  'de_DE' ) AS GAST_ADM_PORCE 
 		")
 		->first() ;
 		 return  $this->response->setJSON( $param );

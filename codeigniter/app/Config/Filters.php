@@ -1,4 +1,6 @@
-<?php namespace Config;
+<?php
+
+namespace Config;
 
 use App\Filters\LoggedUser;
 use App\Filters\RightAccess;
@@ -12,7 +14,7 @@ class Filters extends BaseConfig
 		'csrf'     => \CodeIgniter\Filters\CSRF::class,
 		'toolbar'  => \CodeIgniter\Filters\DebugToolbar::class,
 		'honeypot' => \CodeIgniter\Filters\Honeypot::class,
-		//'logged_user'=> LoggedUser::class,
+		'logged_user' => LoggedUser::class,
 		//'right_access'=> RightAccess::class
 	];
 
@@ -21,7 +23,7 @@ class Filters extends BaseConfig
 		'before' => [
 			//'honeypot'
 			// 'csrf',
-			//'logged_user',
+			'logged_user',
 			//'right_access'
 		],
 		'after'  => [
@@ -39,7 +41,9 @@ class Filters extends BaseConfig
 	// that they should run on, like:
 	//    'isLoggedIn' => ['before' => ['account/*', 'profiles/*']],
 	public $filters = [
-	//	'logged_user'=> ['before'=> [ "prestamo/*", 'deudor/*', 'garante/*',  'caja/*','cargo/*',
-	//					'categoria_monto/*', 'funcionario/*', 'usuario/create', 'usuario/edit','usuario/delete', 'usuario/index'] ]
+		'logged_user' => ['before' => [
+			"operacion/*", 'deudor/*', 'garante/*',  'caja/*', 'cargo/*',
+			'categoria_monto/*', 'funcionario/*', 'usuario/create', 'usuario/edit', 'usuario/delete', 'usuario/index'
+		]]
 	];
 }

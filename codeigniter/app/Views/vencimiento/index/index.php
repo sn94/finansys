@@ -17,6 +17,16 @@ VENCIMIENTOS
   #BUSCADO::placeholder {
     color: black;
   }
+
+  table thead tr th,   table tbody tr td{
+    padding: 0px !important;
+  }
+  table thead tr th{
+    font-size: 12px  !important; 
+  }
+  table tbody tr td{
+    font-size: 14px  !important;
+  }
 </style>
 
 <input type="hidden" id="INDEX-OPERACIONES-PARA-VENC" value="<?= base_url('operacion/list') ?>">
@@ -32,9 +42,9 @@ VENCIMIENTOS
 
 <a class="btn btn-primary mt-3" href="#">FACTURA CRÉDITO</a>
 <a class="btn btn-primary mt-3" href="#">IMPRIMIR
-
 </a>
-<div id="GRILL" style="overflow-y: auto;height: 200px;"  >
+
+<div id="GRILL"  class="mt-1" style="overflow-y: auto;height: 200px;"  >
 </div>
 <div id="GRILL-CUOTAS">
 </div>
@@ -69,9 +79,13 @@ VENCIMIENTOS
 
   async function filtrar_operaciones(ev) {
 
+    //borrar vista actual de cuotas
+    $("#GRILL-CUOTAS").html("");
+
+
     let buscado = ev == undefined ? "" : ev.target.value;
     let url_ = $("#INDEX-OPERACIONES-PARA-VENC").val();
- //   let payload=  buscado == "" ?  "ESTADO=APROBADO" :  ( "BUSCADO=" + buscado + "&ESTADO=APROBADO" );
+ 
     show_loader();
 
     let req = await fetch(url_, {

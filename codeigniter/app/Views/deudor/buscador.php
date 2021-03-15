@@ -28,7 +28,7 @@
 
          let buscado = ev == undefined ? "" : ev.target.value;
          let url_ = $("#CLIENTE-INDEX").val();
-         //   let payload=  buscado == "" ?  "ESTADO=APROBADO" :  ( "BUSCADO=" + buscado + "&ESTADO=APROBADO" );
+ 
          show_loader();
 
          let req = await fetch(url_, {

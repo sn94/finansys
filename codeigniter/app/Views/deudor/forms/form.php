@@ -15,7 +15,7 @@ endif;
 
 <style>
   .card-primary:not(.card-outline)>.card-header {
-    background-color: #00796b;
+    background-color: #303f9f;
   }
 </style>
 

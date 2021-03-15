@@ -5,8 +5,9 @@
 use App\Controllers\Parametros;
 use App\Models\Parametros_model;
 
-$paramtros=   (new Parametros_model())->select("parametros.*,FORMAT( parametros.BCP_INTERES/12,4, 'de_DE') AS PORCEN_INTERES,
-		FORMAT( parametros.IVA,4, 'de_DE') AS IVA
+$paramtros=   (new Parametros_model())->select("parametros.*,
+FORMAT( parametros.BCP_INTERES/12,4, 'de_DE') AS PORCEN_INTERES,
+		FORMAT( parametros.IVA, 0 , 'de_DE') AS IVA
 		")
 		->first() ;
 

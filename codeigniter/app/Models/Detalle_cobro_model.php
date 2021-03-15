@@ -12,7 +12,7 @@ class  Detalle_cobro_model extends Model
     protected $returnType     = 'object';/** */
 
     protected $allowedFields = 
-    [ 'IDCOBRO','IDCUOTA','IMPORTE'];
+    [ 'IDCOBRO','IDCUOTA','IMPORTE',  'IMPORTE_MOROSO', 'IDOPERACION'];
     
 
 

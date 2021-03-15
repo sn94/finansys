@@ -21,7 +21,10 @@ class App extends BaseConfig
 	| environments.
 	|
 	*/
+
+
 	public $baseURL = 'http://localhost/finansys'; 
+	//public $baseURL = 'http://192.168.0.12/finansys'; 
 	/*
 	|--------------------------------------------------------------------------
 	| Index File

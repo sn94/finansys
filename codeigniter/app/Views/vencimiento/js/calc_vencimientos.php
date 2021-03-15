@@ -2,24 +2,31 @@
     var calcVencimientos = {
 
         fechaReferencia: null,
-        formatoGenCuotas: "M", /* D S M Q */ 
-        numeroDeCuotas: 0, 
-        diasDePago: null,  /** 1 2 3 4 5 6 7 */ 
-        init: function( {PRIMER_VENCIMIENTO, FORMATO, NRO_CUOTAS, DIAS_PAGO} ){
+        formatoGenCuotas: "M",
+        /* D S M Q */
+        numeroDeCuotas: 0,
+        diasDePago: null,
+        /** 1 2 3 4 5 6 7 */
+        init: function({
+            PRIMER_VENCIMIENTO,
+            FORMATO,
+            NRO_CUOTAS,
+            DIAS_PAGO
+        }) {
 
-            this.fechaReferencia=  PRIMER_VENCIMIENTO;
-            this.formatoGenCuotas= FORMATO;
-            this.numeroDeCuotas= NRO_CUOTAS;
+            this.fechaReferencia = PRIMER_VENCIMIENTO;
+            this.formatoGenCuotas = FORMATO;
+            this.numeroDeCuotas = NRO_CUOTAS;
             /*this.montoDeCredito= montoDeCredito;
            
             this.montoDeCuota= montoDeCuota;*/
-            this.diasDePago= DIAS_PAGO; 
+            this.diasDePago = DIAS_PAGO;
         },
-        
-        calcularCuota: function(){
+
+        calcularCuota: function() {
 
             //formula sistema frances
-            this.montoDeCuota= 0;
+            this.montoDeCuota = 0;
         },
         formatoCuotas: function(key) {
             let evaluado = (key == undefined) ? (this.formatoGenCuotas == "" ? "M" : this.formatoGenCuotas) : key;
@@ -81,7 +88,7 @@
         obtenerDiasDePago: function() {
 
             //Por defecto tomar el dia de fecha de inicio de vencimiento
-            let return_default_day = function( esto) {
+            let return_default_day = function(esto) {
                 let fecha_ini = esto.fechaReferencia;
 
                 let dma = fecha_ini.split("-");
@@ -89,13 +96,13 @@
                 return [dia_];
             };
 
-            if (this.diasDePago == null) return return_default_day( this );
+            if (this.diasDePago == null) return return_default_day(this);
             else return this.diasDePago;
         },
 
         generarCuotas: function() {
- 
-            let contextoThis=  this;
+
+            let contextoThis = this;
             let fechasDeVencimiento = [];
             //Asegurar fecha cargada
             if (this.fechaReferencia == null) {
@@ -104,14 +111,14 @@
             }
             //Asegurar dias de pago marcados
             if (this.obtenerDiasDePago().length <= 0) {
-                alert("MARQUE AL MENOS UN DIA PARA LOS PAGOS"); 
+                alert("MARQUE AL MENOS UN DIA PARA LOS PAGOS");
                 return [];
             }
-           
+
             let fecha_inicio = this.fechaReferencia;
-           /* let montobase = this.montoDeCredito;
-            let nrocuotas = this.numeroDeCuotas;
-            let cuotas = this.montoDeCuota;*/
+            /* let montobase = this.montoDeCredito;
+             let nrocuotas = this.numeroDeCuotas;
+             let cuotas = this.montoDeCuota;*/
 
             //convertir a fecha
             let partes_fecha_base = fecha_inicio.split("-").map(function(ar) {
@@ -119,7 +126,8 @@
             });
 
             let fechaBase = new Date(partes_fecha_base[0], partes_fecha_base[1] - 1, partes_fecha_base[2]);
-            
+            let DIA_BASE = fechaBase.getDate();
+
             let dia = 1;
 
             while (dia <= this.numeroDeCuotas) {
@@ -132,7 +140,7 @@
                 let formato = contextoThis.formatoCuotas();
 
 
-               // let showvencimiento = "<input readonly type='date' name='DETALLE_VENCIMIENTO[]' value='" + vencimiento + "' >";
+                // let showvencimiento = "<input readonly type='date' name='DETALLE_VENCIMIENTO[]' value='" + vencimiento + "' >";
                 //let showcuotas = "<input readonly type='hidden' name='DETALLE_MONTO[]' value='" + cuotas + "' >";
 
                 //Dia de la semana en que cae el vencimiento
@@ -145,17 +153,28 @@
                     let dia_semana = contextoThis.obtenerNombreDia(numeroDia); //Lunes, Martes, miercoles,etc ...
                     fechasDeVencimiento.push({
                         NUMERO: dia,
-                        VENCIMIENTO: vencimiento, 
+                        VENCIMIENTO: vencimiento,
                         DIA: dia_semana
                     });
-                    //Incrementar fecha
-                    fechaBase.setDate(fechaBase.getDate() + formato); //La siguiente fecha de vencimiento
+                    //OPCION 1    -----  Mantener dia constante 
+                    let NUEVA_FECHA_DIA= true ? DIA_BASE :  fechaBase.getDate();
+                    let nuevaFechaBase = new Date(fechaBase.getFullYear(), fechaBase.getMonth() + 1, NUEVA_FECHA_DIA);
+                    fechaBase = nuevaFechaBase;
+                    console.log(nuevaFechaBase);
+                    //OPCION 2    ------ Incrementar fecha en X dias
+                    // fechaBase.setDate(fechaBase.getDate() + formato); //La siguiente fecha de vencimiento
+
                     dia++; // Seguir calculando pero para la siguiente cuota
 
                 } else {
                     //mantener el contador pero seguir 
                     //Incrementando fecha hasta llegar a uno de los dias permitidos
                     fechaBase.setDate(fechaBase.getDate() + 1);
+                    let dia_permi = fechaBase.getDay();
+                    while (!(diasPermitidos.includes(dia_permi))) {
+                        fechaBase.setDate(fechaBase.getDate() + 1);
+                        dia_permi = fechaBase.getDay();
+                    } 
 
                 }
             }

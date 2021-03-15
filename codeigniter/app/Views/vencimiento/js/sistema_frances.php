@@ -33,10 +33,11 @@
             DIAS_PAGO
         }) {
 
+            
             this.DA = DA;
             this.MA = MA;
             this.DM = DM;
-            this.SALDO_CAPITAL = CAPITAL;
+            this.SALDO_CAPITAL = parseInt( CAPITAL );
             this.NRO_CUOTAS = NRO_CUOTAS;
             this.INTERES_PORCE = PORCEN_INTERES;
             this.IVA_INTERES_PORCE = PORCEN_IVA;
@@ -50,12 +51,16 @@
             TASA_INTERES
         }) {
 
+           
             let da = parseInt(this.DA);
             let ma = parseInt(this.MA);
             let dm = parseInt(this.DM);
             let tasa = parseFloat(TASA_INTERES);
+           
             let capital = parseInt(CAPITAL_A_DESENVOL);
-            let interes = CAPITAL_A_DESENVOL * (tasa * ma) * dm / da;
+            let interes = capital * (tasa * ma) * dm / da;
+           
+
             return Math.round(interes);
         },
 
@@ -117,11 +122,13 @@
                 NRO_CUOTAS: nro_cuotas
             });
             /**  Primer Interes cuota **  */
+           
+
             let interes_ = this.calculaMontoInteresCuota({
                 CAPITAL_A_DESENVOL: this.SALDO_CAPITAL,
                 TASA_INTERES: this.INTERES_PORCE
             });
-
+           
 
             let CuotaCounter = 1;
             let TotalCuotas = parseInt(this.NRO_CUOTAS);
@@ -130,6 +137,8 @@
                 this.INTERESs.push(interes_);
                 //calcular iva 
                 let iva_interes = (parseFloat(this.IVA_INTERES_PORCE)/100) * parseInt(interes_);
+              
+
                 iva_interes= Math.round(  iva_interes );
                 this.IVAs.push(iva_interes);
                 //calculo capital
@@ -138,6 +147,7 @@
                
                 //Nuevo saldo capital
                 this.SALDO_CAPITAL = parseInt(this.SALDO_CAPITAL) - capital_de_cuota;
+               
                  //Adjuntar saldo actual
                  this.SALDO_CAPITALs.push(this.SALDO_CAPITAL);
                 //recalcular interes

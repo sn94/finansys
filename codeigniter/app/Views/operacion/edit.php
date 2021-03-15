@@ -13,8 +13,12 @@
 
 
 
- <input type="hidden" id="OPERACIONES-INDEX" value="<?= base_url("operacion/pendientes") ?>">
-
+ <?php
+    //Url solicitante
+    $request = \Config\Services::request();
+    $referer = is_null($request->getHeader("Referer")) ?  ""  :  $request->getHeader("Referer")->getValue();
+    ?>
+ <input type="hidden" id="OPERACIONES-INDEX" value="<?= $referer ?>">
 
  <div id="loaderplace">
 
@@ -72,7 +76,7 @@
 
 
          //Auto calculo
-         let autocalc = document.querySelectorAll("#CREDITO, #INTERES, #CUOTAS,#SEGURO,#GASTOS_ADM ");
+         let autocalc = document.querySelectorAll("#CREDITO, #INTERES, #NRO_CUOTAS,#SEGURO,#GASTOS_ADM ");
          Array.prototype.forEach.call(autocalc, function(inpu) {
 
              let keep = inpu.oninput;

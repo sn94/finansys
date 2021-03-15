@@ -19,8 +19,9 @@ APROBACIÓN DE OPERACIÓN Y GENERACIÓN DE VENCIMIENTOS
 <?php
 echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"]);
 ?>
-
+ 
 <input type="hidden" name="ESTADO" value="PROCESADO">
+<input type="hidden" name="PROCESADO_POR" value="<?=session("ID")?>">
 
 <div class="row mr-md-5 ml-md-5 mb-1" style="background-color: #00968826;">
     <div class="col-12 col-md-4 ">
@@ -37,7 +38,7 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
 
 </div>
 <div class="row mr-md-5 ml-md-5 mb-1 pt-2">
-<?= view("operacion/forms/form_codigos") ?>
+    <?= view("operacion/forms/form_codigos") ?>
 </div>
 <div class="row mr-md-5 ml-md-5 mb-1 text-light pt-2  bg-primary">
 
@@ -51,7 +52,7 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
         <?= view("operacion/forms/form_garantes") ?>
     </div>
 </div>
-<?= view("vencimiento/create_detail_cuotas") ?>
+<?= view("vencimiento/generacion/create_detail_cuotas") ?>
 
 <div class="row mr-md-5 ml-md-5 ">
     <div class="col-12">
@@ -66,8 +67,11 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
 
 <?= view("validations/formato_numerico") ?>
 <?= view("validations/form_validate") ?>
+<?= view("operacion/js/calculador_montos") ?>
 
-<script>
+<script> 
+
+
     async function filtrar_operaciones(params) {
 
 
@@ -120,69 +124,9 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-    /**Calculo de intereses   */
-
-
-    function calcular_montos() {
-        let parsearInt = function(arg) {
-            try {
-                return parseInt(arg);
-            } catch (err) {
-                return 0;
-            }
-        };
-        let parsearFloat = function(arg) {
-            try {
-                return parseFloat(arg);
-            } catch (err) {
-                return 0.0;
-            }
-        };
-        /**Capital NETO A DESEMBOLSAR */
-        let monto_ = parsearInt(formValidator.limpiarNumero($("input[name=CREDITO]").val()));
-        let seguro_cancel = parsearInt(formValidator.limpiarNumero($("input[name=SEGURO_CANCEL]").val()));
-        let seguro_3ros = parsearInt(formValidator.limpiarNumero($("input[name=SEGURO_3ROS]").val()));
-        let gastos_adm = parsearInt(formValidator.limpiarNumero($("input[name=GASTOS_ADM]").val()));
-        let capital_neto_a_desem = monto_ + seguro_cancel + seguro_3ros + gastos_adm;
-        $("#CAPITAL_DESEMBOLSO").val(formatoNumerico.darFormatoEnMillares(capital_neto_a_desem, 0));
-        /**     ***   ***   ***   *** *** ****  */
-        /** Monto Total del prestamo mas intereses + IVA */
-        let nro_cuotas = parsearInt(formValidator.limpiarNumero($("input[name=NRO_CUOTAS]").val()));
-        let interes_porcen = parseFloat(formValidator.limpiarNumero($("#PORCEN_INTERES").val())) / 100; //8 dec
-
-        let intereses = (monto_ * (interes_porcen)) * nro_cuotas;
-        let intereses_iva_porce = parseFloat(formValidator.limpiarNumero($("#PORCEN_IVA_INTERES").val())) / 100;
-        let iva_intereses = intereses * (intereses_iva_porce);
-
-        let total_prestamo = capital_neto_a_desem + intereses + iva_intereses;
-        $("#MONTO-PRESTAMO").val(formatoNumerico.darFormatoEnMillares(total_prestamo, 0));
-        $("#INTERESES").val(formatoNumerico.darFormatoEnMillares(intereses, 0));
-        $("#INTERES_IVA").val(formatoNumerico.darFormatoEnMillares(iva_intereses, 0));
-        /**  */
-        /*** Calculo de importe de cuota */
-
-        let importe_de_la_cuota = sistemaFrances.calculaMontoCuota({
-            CAPITAL_A_DESENVOL: capital_neto_a_desem,
-            TASA_INTERES: interes_porcen,
-            NRO_CUOTAS: nro_cuotas
-        });
-
-
-        importe_de_la_cuota = (!isFinite(importe_de_la_cuota) || isNaN(importe_de_la_cuota)) ? 0 : importe_de_la_cuota;
-        $("#CUOTA_IMPORTE").val(formatoNumerico.darFormatoEnMillares(importe_de_la_cuota, 0));
-    }
-
+ 
+ 
+ 
 
 
 
@@ -207,7 +151,8 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
         e.preventDefault();
 
         formValidator.init(e.target);
-        let payload = formValidator.getData();
+        let cabecera = formValidator.getData("application/json");
+        let payload= {CABECERA: cabecera, DETALLE: cuotas_model };
         let endpoint = e.target.action;
 
         show_loader();
@@ -217,10 +162,10 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
         let req = await fetch(endpoint, {
             method: "POST",
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            body: payload
+            body: JSON.stringify( payload)
         });
         let resp = await req.json();
         //Re habilitar
@@ -245,7 +190,7 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
 
             new PNotify({
                 title: "ERROR",
-                text: resp.error,
+                text: resp.err,
                 type: 'error',
                 styling: 'bootstrap3',
                 delay: 2000
@@ -269,13 +214,17 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
 
 
 
-    window.onload = function() {
+    window.onload = async function() {
 
 
+        await obtener_parametros();
+        
 
         calcular_montos();
 
+
         mostrarCuotas();
+
         //Codigo de operacion
         generar_codigo_operacion();
 
@@ -304,6 +253,7 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
             inpu.oninput = function(ev) {
                 keep(ev);
                 calcular_montos();
+                mostrarCuotas() ;
             };
             $(inpu).addClass("text-right");
         });

@@ -2,9 +2,23 @@
   var formatoNumerico = {
 
 
+    parsearInt: function(arg) {
+      try {
+        return parseInt(arg);
+      } catch (err) {
+        return 0;
+      }
+    },
+    parsearFloat: function(arg) {
+      try {
+        return isNaN(parseFloat(arg)) ? 0.0 : parseFloat(arg);
+      } catch (err) {
+        return 0.0;
+      }
+    },
     darFormatoEnMillares: function(val_float, decimales) {
       let decimales__ = decimales == undefined ? 4 : decimales;
-      let valor =   val_float ;
+      let valor = val_float;
 
       //FLOAT
       if (decimales__ > 0) {
@@ -89,6 +103,14 @@
           $(ev.target).val(enpuntos);
       }
     },
+    limpiarNumero: function(val) {
+      let stringified = typeof val == "string" ? val : String(val);
+      stringified = stringified == "" ? "0" : stringified;
+      let valor_purifi = stringified.replaceAll(new RegExp(/\.*/g), "").replaceAll(new RegExp(/,+/g), ".");
+
+      return valor_purifi;
+
+    },
     limpiarNumeros: function() {
       let nro_campos_a_limp = $(".decimal,.entero").length;
 
@@ -112,6 +134,25 @@
         $(".decimal,.entero")[ind].value = valor_forma;
       }
       //return val.replaceAll(new RegExp(/[.]*/g), "");
+    },
+
+
+
+    formatearCamposNumericos: function() { //dar formato
+      let contexto=  this;
+      //formato entero
+      let enteros = document.querySelectorAll(".entero");
+      Array.prototype.forEach.call(enteros, function(inpu) {
+        inpu.oninput = contexto.formatearEntero;
+        $(inpu).addClass("text-right");
+      });
+
+
+      let decimales = document.querySelectorAll(".decimal");
+      Array.prototype.forEach.call(decimales, function(inpu) {
+        inpu.oninput = contexto.formatearDecimal;
+        $(inpu).addClass("text-right");
+      });
     }
 
 

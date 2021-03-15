@@ -9,7 +9,9 @@ REGISTRO DE OPERACIÓN
 <?= $this->section("contenido") ?>
 
 
+ 
 <input type="hidden" id="OPERACIONES-INDEX" value="<?= base_url("operacion/pendientes") ?>">
+
 <div id="loaderplace">
 </div>
 

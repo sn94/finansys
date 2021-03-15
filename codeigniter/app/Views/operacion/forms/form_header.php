@@ -1,18 +1,18 @@
 <?php
 
-use App\Models\Empresa_model;
+use App\Models\Empresa_model; 
 
 $IDNRO_OPERACION = isset($OPERACION) ? $OPERACION->IDNRO : "";
 $EMPRESA =   isset($OPERACION) ? $OPERACION->EMPRESA : "1"; //Se debe obtener de la sesion
 $EMPRESA_NOM =  (new Empresa_model())->find($EMPRESA)->DESCR;
-$FUNCIONARIO = "";
+$FUNCIONARIO = session("ID");
 ?>
 
 
 <div class=" row  mr-md-5 ml-md-5 mb-0 pt-0  bg-primary text-center" style=" color:beige;">
 
-    <div class="col-12 col-md-4">
-        <h5>EMPRESA: <?= $EMPRESA_NOM ?></h5>
+    <div class="col-12 col-md-4 ">
+        <h5 class="text-light">EMPRESA: <?= $EMPRESA_NOM ?></h5>
     </div>
     <div class="col-12 col-md-4">
 

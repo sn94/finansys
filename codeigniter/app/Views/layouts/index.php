@@ -1,4 +1,7 @@
 <?php
+
+use CodeIgniter\Session\Session;
+
 $BASE_ASSETS = base_url('assets/template');
 $BASE_ASSETS_BASE = base_url('assets');
 ?>
@@ -61,7 +64,7 @@ $BASE_ASSETS_BASE = base_url('assets');
       src: url("<?= base_url('assets/Raleway-Regular.ttf') ?>");
     }
 
-    
+
 
     /**Estilo d plantilla */
     [class*="sidebar-dark-"] {
@@ -84,6 +87,9 @@ $BASE_ASSETS_BASE = base_url('assets');
       background: #3F51B5 !important;
     }
 
+    .text-primary {
+      color: #3F51B5 !important;
+    }
 
 
 
@@ -105,7 +111,7 @@ $BASE_ASSETS_BASE = base_url('assets');
     h4,
     h4,
     h5,
-    h6  [ui-pnotify-title] {
+    h6 [ui-pnotify-title] {
       font-family: mainfont;
       color: #3f51b5;
     }
@@ -121,10 +127,11 @@ $BASE_ASSETS_BASE = base_url('assets');
       color: white;
     }
 
-label, legend{
-  font-family: textfont;
-  font-size: 0.75rem;
-}
+    label,
+    legend {
+      font-family: textfont;
+      font-size: 0.75rem;
+    }
 
     /***fieldsets */
 
@@ -314,7 +321,7 @@ label, legend{
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
-      <a href="index3.html" class="brand-link">
+      <a href="<?= base_url("/") ?>" class="brand-link">
         <span class="brand-text font-weight-light">Sistema Financiero</span>
       </a>
 
@@ -326,7 +333,8 @@ label, legend{
           <div class="info">
             <a href="#" class="d-block">
               <i class="fa fa-user"></i>
-              SUPERVISOR</a>
+              <?= session("NICK") ?>
+            </a>
           </div>
         </div>
 
@@ -405,10 +413,10 @@ label, legend{
 
 
             <li class="nav-item ">
-              <a href="#" class="nav-link active"  onclick="alert('En desarrollo');" >
+              <a href="<?= base_url("operacion/procesadas") ?>" class="nav-link active">
                 <i class="nav-icon fas fa-copy"></i>
                 <p>
-                  CAJA 
+                  CAJA
                   <i class="fas fa-angle-left right"></i>
                   <!-- <span class="right badge badge-danger">New</span> -->
                 </p>
@@ -416,10 +424,10 @@ label, legend{
             </li>
 
             <li class="nav-item">
-              <a href="#" class="nav-link active"  onclick="alert('En desarrollo');" >
+              <a href="#" class="nav-link active" onclick="alert('En desarrollo');">
                 <i class="nav-icon fas fa-copy"></i>
                 <p>
-                  REQUERIMIENTO  
+                  REQUERIMIENTO
                   <i class="fas fa-angle-left right"></i>
 
                 </p>
@@ -446,10 +454,10 @@ label, legend{
             </li>
 
             <li class="nav-item ">
-              <a href="#" class="nav-link active"   onclick="alert('En desarrollo');" >
+              <a href="#" class="nav-link active" onclick="alert('En desarrollo');">
                 <i class="nav-icon fas fa-copy"></i>
                 <p>
-                  ESTADÍSTICA 
+                  ESTADÍSTICA
                   <i class="fas fa-angle-left right"></i>
                   <!-- <span class="right badge badge-danger">New</span> -->
                 </p>
