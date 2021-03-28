@@ -1,16 +1,19 @@
 <?= $this->extend("layouts/index") ?>
 
+
+<?= $this->section("title") ?>
+FICHA DE CLIENTE 
+<?= $this->endSection() ?>
+
+
 <?= $this->section("contenido") ?>
 
 
-<a  style="font-weight: 600;"href="<?= base_url("deudor/index")?>">
+<a  style="font-weight: 600;"href="<?= base_url("deudor/index/index")?>">
 <i class="fa fa-user" aria-hidden="true"></i> &nbsp; IR A LISTADO DE CLIENTES</a>
 
 
-<div class="container p-2">
-<h2 class="text-center prestyle">ACTUALIZAR DATOS DE CLIENTE<small></small></h2>
-<div class="clearfix"></div>
-</div>
+ 
 
 <!-- INI FORM -->
  

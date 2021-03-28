@@ -145,7 +145,7 @@
                             <ul class="nav side-menu">
                                 <li><a><i class="fa fa-home"></i> Cr&eacute;ditos <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="<?=base_url("deudor/index")?>">Datos de cliente</a></li>
+                                        <li><a href="<?=base_url("deudor/index/index")?>">Datos de cliente</a></li>
                                         <li><a href="<?=base_url("garante/index")?>">Garantes</a></li>
                                         <li><a href="<?=base_url("prestamo/index")?>">Préstamos</a></li>  
                                     </ul>

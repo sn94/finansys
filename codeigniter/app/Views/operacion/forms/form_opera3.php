@@ -11,10 +11,12 @@ FORMAT( parametros.BCP_INTERES/12,4, 'de_DE') AS PORCEN_INTERES,
 		")
 		->first() ;
 
+     
 $PORCEN_IVA_INTERES =  (isset($OPERACION) ? ( $OPERACION->PORCEN_IVA_INTERES =="" ? $paramtros->IVA  :  $OPERACION->PORCEN_IVA_INTERES) :  $paramtros->IVA);
 $PORCEN_INTERES =    (isset($OPERACION) ?  $OPERACION->PORCEN_INTERES :   $paramtros->PORCEN_INTERES);
 $TOTAL_INTERESES =    (isset($OPERACION) ?  $OPERACION->TOTAL_INTERESES :    0);
 $TOTAL_INTERESES_IVA=    (isset($OPERACION) ?  $OPERACION->TOTAL_INTERESES_IVA :    0);
+ 
 ?>
 <div class="form-group mr-1" style="grid-column-start: 1;display: grid; grid-template-columns: 40% 60%;">
             <label style="grid-column-start: 1;">% INTERÉS: </label>
@@ -27,7 +29,7 @@ $TOTAL_INTERESES_IVA=    (isset($OPERACION) ?  $OPERACION->TOTAL_INTERESES_IVA :
         <div style="display: grid; grid-template-columns: 40% 60%; ">
             <div class="form-group" style="grid-column-start: 1;display: grid; grid-template-columns: 40% 60%; ">
                 <label style="grid-column-start: 1;">%I.V.A: </label>
-                <input readonly style="grid-column-start: 2;" id="PORCEN_IVA_INTERES" value="<?= $PORCEN_IVA_INTERES ?>" name="PORCEN_IVA_INTERES" type="text" class="form-control entero">
+                <input readonly style="grid-column-start: 2;" id="PORCEN_IVA_INTERES" value="<?= $PORCEN_IVA_INTERES ?>" name="PORCEN_IVA_INTERES" type="text" class="form-control  entero">
             </div>
             <div class="form-group" style="grid-column-start: 2;display: grid; grid-template-columns: 30% 70%; ">
                 <label style="grid-column-start: 1;">&nbsp; I.V.A: </label>

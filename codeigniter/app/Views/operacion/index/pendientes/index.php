@@ -1,4 +1,10 @@
 <?= $this->extend("layouts/index") ?>
+<?= $this->section("title") ?>
+OPERACIONES PENDIENTES 
+<?= $this->endSection() ?>
+
+
+
 <?= $this->section("contenido") ?>
 
 <style>
@@ -9,14 +15,9 @@
 
 <input type="hidden" id="INDEX-URL" value="<?= base_url('operacion/pendientes') ?>">
 
-<div class="card">
-  <div class="card-header card-header-primary">
-    <h2 class="text-center prestyle"> OPERACIONES PENDIENTES <small></small></h2>
-  </div>
-
-
-
-  <div class="card-body">
+<div class="card pt-0">
+   
+  <div class="card-body mt-0 pt-0">
 
     <a class="btn btn-primary" href="<?= base_url('operacion/crear') ?>">CREAR OPERACIÓN</a>
 
@@ -25,7 +26,7 @@
     <div class="table-responsive" id="GRILL">
 
 
-      <?= view("operacion/grill_pendientes") ?>
+      <?= view("operacion/index/pendientes/grill") ?>
 
     </div>
 

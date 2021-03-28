@@ -1,7 +1,9 @@
 <script>
     var sistemaFrances = {
 
+        TOTAL_PRESTAMO: 0, //nuevo
         SALDO_CAPITAL: 0,
+        CAPITAL_NETO_A_DESEMBOLSAR: 0,//nETO A DESEMBOLSAR
         IMPORTE_CUOTA: 0,
         NRO_CUOTAS: 0,
         INTERES_PORCE: 0.0,
@@ -16,7 +18,7 @@
         INTERESs: [],
         IVAs: [],
         CAPITALs: [],
-        SALDO_CAPITALs: [],
+        SALDOS_CAPITALES: [],
         VENCIMIENTOs: [],
         DETALLE_CALCULO: [],
 
@@ -24,6 +26,7 @@
             DA,
             MA,
             DM,
+            TOTAL_PRESTAMO,
             CAPITAL,
             NRO_CUOTAS,
             PORCEN_INTERES,
@@ -33,11 +36,12 @@
             DIAS_PAGO
         }) {
 
-            
+
+            this.TOTAL_PRESTAMO=  TOTAL_PRESTAMO,
             this.DA = DA;
             this.MA = MA;
             this.DM = DM;
-            this.SALDO_CAPITAL = parseInt( CAPITAL );
+            this.CAPITAL_NETO_A_DESEMBOLSAR = parseInt(CAPITAL);
             this.NRO_CUOTAS = NRO_CUOTAS;
             this.INTERES_PORCE = PORCEN_INTERES;
             this.IVA_INTERES_PORCE = PORCEN_IVA;
@@ -51,15 +55,15 @@
             TASA_INTERES
         }) {
 
-           
+
             let da = parseInt(this.DA);
             let ma = parseInt(this.MA);
             let dm = parseInt(this.DM);
             let tasa = parseFloat(TASA_INTERES);
-           
+
             let capital = parseInt(CAPITAL_A_DESENVOL);
             let interes = capital * (tasa * ma) * dm / da;
-           
+
 
             return Math.round(interes);
         },
@@ -91,7 +95,7 @@
 
             //LIMPIAR
             this.DETALLE_CALCULO = [];
-            this.VENCIMIENTOs= [];
+            this.VENCIMIENTOs = [];
             /**
              * 
              * *Fechas de vencimiento
@@ -107,49 +111,57 @@
                 DIAS_PAGO: this.DIAS_DE_PAGO
             });
             let fechasDeVencimiento = calculoFechas.generarCuotas();
-            this.VENCIMIENTOs = fechasDeVencimiento.map((ar) =>{ return { VENCIMIENTO: ar.VENCIMIENTO, DIA: ar.DIA};  });
+            this.VENCIMIENTOs = fechasDeVencimiento.map((ar) => {
+                return {
+                    VENCIMIENTO: ar.VENCIMIENTO,
+                    DIA: ar.DIA
+                };
+            });
 
             /**********End calculo fechas */
 
 
-            let saldo_capital = this.SALDO_CAPITAL;
+            // this.CAPITAL_NETO_A_DESEMBOLSAR= this.TOTAL_PRESTAMO    ;//CAMBIO
+            let capital_neto_desembolsar = this.CAPITAL_NETO_A_DESEMBOLSAR; //Neto a desembolsar
             let interes_porce = this.INTERES_PORCE;
             let nro_cuotas = this.NRO_CUOTAS;
             /**Importe constante de cuota */
             let cuota = this.calculaMontoCuota({
-                CAPITAL_A_DESENVOL: saldo_capital,
+                CAPITAL_A_DESENVOL: capital_neto_desembolsar,
                 TASA_INTERES: interes_porce,
                 NRO_CUOTAS: nro_cuotas
             });
             /**  Primer Interes cuota **  */
-           
+
 
             let interes_ = this.calculaMontoInteresCuota({
-                CAPITAL_A_DESENVOL: this.SALDO_CAPITAL,
+                CAPITAL_A_DESENVOL: this.CAPITAL_NETO_A_DESEMBOLSAR,
                 TASA_INTERES: this.INTERES_PORCE
             });
-           
 
+ 
+
+            this.SALDO_CAPITAL= this.TOTAL_PRESTAMO;   
             let CuotaCounter = 1;
             let TotalCuotas = parseInt(this.NRO_CUOTAS);
             while (CuotaCounter <= TotalCuotas) {
 
                 this.INTERESs.push(interes_);
                 //calcular iva 
-                let iva_interes = (parseFloat(this.IVA_INTERES_PORCE)/100) * parseInt(interes_);
-              
+                let iva_interes = (parseFloat(this.IVA_INTERES_PORCE) / 100) * parseInt(interes_);
 
-                iva_interes= Math.round(  iva_interes );
+
+                iva_interes = Math.round(iva_interes);
                 this.IVAs.push(iva_interes);
                 //calculo capital
                 let capital_de_cuota = Math.abs(parseInt(cuota) - parseInt(interes_));
                 this.CAPITALs.push(capital_de_cuota);
-               
+
                 //Nuevo saldo capital
-                this.SALDO_CAPITAL = parseInt(this.SALDO_CAPITAL) - capital_de_cuota;
-               
-                 //Adjuntar saldo actual
-                 this.SALDO_CAPITALs.push(this.SALDO_CAPITAL);
+                this.SALDO_CAPITAL = parseInt(this.SALDO_CAPITAL) - cuota;//mENOS EL MONTO DE CUOTA
+
+                //Adjuntar saldo actual
+                this.SALDOS_CAPITALES.push(this.SALDO_CAPITAL);
                 //recalcular interes
                 interes_ = this.calculaMontoInteresCuota({
                     CAPITAL_A_DESENVOL: this.SALDO_CAPITAL,
@@ -164,11 +176,11 @@
             for (let nc = 0; nc < TotalCuotas; nc++) {
                 let idcuota = (nc + 1);
                 let vencimi = this.VENCIMIENTOs[nc]["VENCIMIENTO"];
-                let dia_venci= this.VENCIMIENTOs[nc]["DIA"];
+                let dia_venci = this.VENCIMIENTOs[nc]["DIA"];
                 let intere = this.INTERESs[nc];
                 let ivaInte = this.IVAs[nc];
                 let capital = this.CAPITALs[nc];
-                let saldocap = this.SALDO_CAPITALs[nc];
+                let saldocap = this.SALDOS_CAPITALES[nc];
                 let data = {
                     IDCUOTA: idcuota,
                     VENCIMIENTO: vencimi,

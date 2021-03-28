@@ -81,9 +81,9 @@ class Deudor extends BaseController
 
 
 			if ($this->request->isAJAX())
-				echo view("deudor/grill",  $data);
+				echo view("deudor/index/grill/index",  $data);
 			else
-				echo view("deudor/index",  $data);
+				echo view("deudor/index/index",  $data);
 		} catch (\Exception $e) { //mostrar mensaje de error
 			//mostrar mensaje de operacion exitosa
 			die($e->getMessage());

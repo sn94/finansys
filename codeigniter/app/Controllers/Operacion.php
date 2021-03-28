@@ -36,13 +36,16 @@ class Operacion extends BaseController
 		];
 
 		if ($this->request->isAJAX())
-			echo view("operacion/grill_pendientes",  $data);
+			echo view("operacion/index/pendientes/grill",  $data);
 		else
-			echo view("operacion/index_pendientes",  $data);
+			echo view("operacion/index/pendientes/index",  $data);
 	}
 
 
 
+
+
+	
 	//Vista de operaciones procesadas, con cuotas generadas
 	public function procesadas()
 	{
@@ -54,24 +57,26 @@ class Operacion extends BaseController
 			->join("deudor", "deudor.IDNRO =  operacion.NRO_CLIENTE")
 			->select("operacion.*, deudor.CEDULA, concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRES")
 			->where(" (operacion.ESTADO='APROBADO')  AND 
-			( deudor.CEDULA LIKE '%$BUSCADO%' OR CONCAT(operacion.LETRA,operacion.CORRELATIVO) LIKE '%$BUSCADO%'  OR  deudor.NOMBRES LIKE '%$BUSCADO%'  OR  deudor.APELLIDOS LIKE '%$BUSCADO%' )")
+		( deudor.CEDULA LIKE '%$BUSCADO%' OR CONCAT(operacion.LETRA,operacion.CORRELATIVO) LIKE '%$BUSCADO%'  OR  deudor.NOMBRES LIKE '%$BUSCADO%'  OR  deudor.APELLIDOS LIKE '%$BUSCADO%' )")
 			->orderBy("created_at", "DESC");
 
 		$data = [
 			"lista" =>   $operaciones->paginate(10),
-			"pager" => $operaciones->pager
+			"pager" => $operaciones->pager,
+			'ACCION_GRILL' => ['COBRAR']
 		];
 
 		if ($this->request->isAJAX())
-			echo view("cobro/index/grill_procesados",  $data);
+			echo view("operacion/index/aprobados/grill/index",  $data); //boton cobrar  boton ver cuotas
 		else
-			echo view("cobro/index/index_procesados",  $data);
+			echo view("operacion/index/aprobados/index",  $data);
 	}
+
 
 
 	public function crear()
 	{
-		echo view("operacion/index_crear_operacion");
+		echo view("operacion/create/buscador_clientes");
 	}
 
 	public function create($IDCLIENTE = null)
@@ -90,7 +95,8 @@ class Operacion extends BaseController
 			$CLIENTE =   (new Deudor_model())
 				->select("deudor.*, format( MONTO_SOLICI, 0, 'de_DE') as MONTO_SOLICI")
 				->where("IDNRO",  $IDCLIENTE)->first();
-			echo view('operacion/create',  ['CLIENTE' =>  $CLIENTE]);
+
+			echo view('operacion/create/form',  ['CLIENTE' =>  $CLIENTE]);
 		}
 	}
 
@@ -146,7 +152,7 @@ class Operacion extends BaseController
 			//return redirect()->to("index");
 		} else {
 			if (is_null($ID_OPERACION))
-				echo view('vencimiento/index/index');
+				echo view('operacion/index/aprobados/index', ['ACCION_GRILL' => ['VER_CUOTA']]);
 			else {
 
 
@@ -161,11 +167,13 @@ class Operacion extends BaseController
 					FORMAT(operacion.SEGURO_CANCEL, 0, 'de_DE') AS SEGURO_CANCEL, FORMAT(operacion.SEGURO_3ROS, 0, 'de_DE') AS SEGURO_3ROS,  FORMAT(operacion.GASTOS_ADM, 0, 'de_DE') AS GASTOS_ADM,
 					FORMAT(operacion.CAPITAL_DESEMBOLSO, 0, 'de_DE') AS CAPITAL_DESEMBOLSO,FORMAT(operacion.TOTAL_PRESTAMO, 0, 'de_DE') AS TOTAL_PRESTAMO,
 					FORMAT(operacion.CUOTA_IMPORTE, 0, 'de_DE') AS CUOTA_IMPORTE,
-					 FORMAT(deudor.MONTO_SOLICI, 0, 'de_DE') AS MONTO_SOLICI, deudor.TIPO_CREDITO, deudor.CEDULA, concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRES")
+					 FORMAT( if(deudor.MONTO_SOLICI is null, 0, deudor.MONTO_SOLICI), 0, 'de_DE') AS MONTO_SOLICI, deudor.TIPO_CREDITO, deudor.CEDULA, concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRES")
 
-					->where("operacion.IDNRO", $ID_OPERACION)->first();
+					->where("operacion.IDNRO", $ID_OPERACION)
+					->orderBy("operacion.IDNRO", "DESC")
+					->first();
 
-				echo view('vencimiento/generacion/create', ['OPERACION' =>  $operacion]);
+				echo view('aprobacion/generacion/create', ['OPERACION' =>  $operacion]);
 			}
 		}
 	}
@@ -187,6 +195,9 @@ class Operacion extends BaseController
 			//return redirect()->to("index");
 		} else {
 
+			//verificar estado
+			$operaModel =  (new Operacion_model())->find($ID_OPERACION);
+			if ($operaModel->ESTADO  ==  "PENDIENTE");
 
 			$operacion = (new Operacion_model())
 				->join("deudor", "deudor.IDNRO =  operacion.NRO_CLIENTE")
@@ -205,6 +216,8 @@ class Operacion extends BaseController
 					 deudor.TIPO_CREDITO, deudor.CEDULA, concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRES")
 
 				->where("operacion.IDNRO", $ID_OPERACION)->first();
+
+
 			echo view('operacion/edit',  ['OPERACION' =>  $operacion]);
 		}
 	}
@@ -222,25 +235,33 @@ class Operacion extends BaseController
 	public function delete($id)
 	{
 		$reg = new Operacion_model();
-
-		if ($reg->delete($id))
-			return $this->response->setJSON(["ok" =>  $id]);
-		else
-			return $this->response->setJSON(['err' => "ERROR AL BORRAR"]);
+		//verificar estado
+		$operaModel =  (new Operacion_model())->find($id);
+		if ($operaModel->ESTADO  ==  "PENDIENTE") {
+			if ($reg->delete($id))
+				return $this->response->setJSON(["ok" =>  $id]);
+			else
+				return $this->response->setJSON(['err' => "ERROR AL BORRAR"]);
+		}
+		return $this->response->setJSON(['err' => "NO PERMITIDO. SOLO ES POSIBLE BORRAR OPERACIONES PENDIENTES"]);
 	}
-
 
 
 
 
 	public function  list($IDCLIENTE = NULL)
 	{
-		//LETRA CORRE FACTURA RAZONS DEUDAT CREDITO
+
+		$data_ = $this->request->getJSON(true);
+	 
+
+		//acciones
+		$acciones =  $data_['ACCIONES'];
 
 		//RECOGER PARAMETROS
 		$CLIENTE = is_null($IDCLIENTE) ? "" :  $IDCLIENTE;
-		$ESTADO =  $this->request->getPost("ESTADO");
-		$BUSCADO =   $this->request->getPost("BUSCADO");
+		$ESTADO =  $data_["ESTADO"];
+		$BUSCADO =   $data_["BUSCADO"];
 
 		$operac = (new Operacion_model())->builder();
 
@@ -249,7 +270,8 @@ class Operacion extends BaseController
 			$operac = $operac->join("deudor", "deudor.IDNRO = operacion.NRO_CLIENTE")
 				->select("operacion.*, deudor.CEDULA,concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRES")
 				->where("NRO_CLIENTE", $IDCLIENTE)
-				->where("ESTADO",  $ESTADO);
+				->where("ESTADO",  $ESTADO)
+				->orderBy("operacion.IDNRO", "DESC");
 		} else {
 			if ($BUSCADO != "") {
 				$operac = $operac->join("deudor", "deudor.IDNRO = operacion.NRO_CLIENTE")
@@ -258,21 +280,20 @@ class Operacion extends BaseController
 					->like('deudor.CEDULA', $BUSCADO)
 					->orLike('deudor.NOMBRES', $BUSCADO)
 					->orLike('deudor.APELLIDOS', $BUSCADO)
-					->orLike('concat(operacion.LETRA, concat("-", operacion.CORRELATIVO))', $BUSCADO);
+					->orLike('concat(operacion.LETRA, concat("-", operacion.CORRELATIVO))', $BUSCADO)
+					->orderBy("operacion.IDNRO", "DESC");
 			} else {
 				$operac = $operac->join("deudor", "deudor.IDNRO = operacion.NRO_CLIENTE")
 					->select("operacion.*, deudor.CEDULA,concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRES")
-					->where("ESTADO",  $ESTADO);
+					->where("ESTADO",  $ESTADO)
+					->orderBy("operacion.IDNRO", "DESC");
 			}
 		}
 
 
 
-		//Formato de respuest
-		$cabecera_formato = $this->request->getHeader("formato");
-		$formato = is_null($cabecera_formato) ? "" :  $cabecera_formato->getValue();
-
-		if ($formato == "json") {
+		//Formato de respuest 
+		if ($this->getRequestContentType() ==  "json") {
 			return $this->response->setJSON($operac->get()->getResult());
 		}
 
@@ -280,174 +301,47 @@ class Operacion extends BaseController
 		//Formato HTML
 		$data = [
 			'OPERACION' => $operac->paginate(10),
-			'pager' => $operac->pager
+			'pager' => $operac->pager,
+			'ACCION_GRILL' => $acciones
 		];
 		if ($CLIENTE == "") {
 			if ($this->request->isAJAX())
-				return view("vencimiento/index/grill",  $data);
+				return view("operacion/index/aprobados/grill/index",  $data);
 			else
-				return view("vencimiento/index/index",  $data);
+				return view("operacion/index/aprobados/index",  $data);
 		} else
-			return view("operacion/operaciones_cliente",  array_merge($data,  ['CLIENTE' =>   $CLIENTE]));
+			return view("deudor/operaciones",  array_merge($data,  ['CLIENTE' =>   $CLIENTE]));
 	}
 
 
 
 
 
-	public function ver_vencimientos($ID_OPERACION =  NULL)
+	public function cuotas($ID_OPERACION =  NULL)
 	{
-		$cuotas = (new Cuotas_model())->where("OPERACION", $ID_OPERACION);
-		$data = [
-			"cuotas" =>   $cuotas->paginate(10),
-			"pager" => $cuotas->pager,
-			"OPERACION" => (new Operacion_model())->find($ID_OPERACION)
-		];
-
-		if ($this->request->isAJAX())
-			return view("vencimiento/cuotas/grill",    $data);
-		else
-			return view("vencimiento/cuotas/index",    $data);
-	}
-
-
-
-
-	public function  cuotas($ID_OPERACION = null)
-	{
-		/***Cuotas */
-		$cuotas = (new Cuotas_model())
-			->select("operacion_cuotas.*, FORMAT( operacion_cuotas.MONTO, 0,  'de_DE') as MONTO,  
-			DATE_FORMAT( VENCIMIENTO, '%d/%m/%Y') AS VENCIMIENTO, 
+		$cuotas = (new Cuotas_model())->where("OPERACION", $ID_OPERACION)
+			->select("operacion_cuotas.*,
+			(SELECT  FORMAT( SUM(operacion_cuotas.MONTO),0, 'de_DE' ) FROM operacion_cuotas where OPERACION=$ID_OPERACION) as TOTAL_MONTO_CUOTA,
+			  FORMAT( operacion_cuotas.MONTO, 0,  'de_DE') as MONTO,  
+		DATE_FORMAT( VENCIMIENTO, '%d/%m/%Y') AS VENCIMIENTO, 
 IF( DATEDIFF(VENCIMIENTO,  CURRENT_DATE)<0, ABS(DATEDIFF(VENCIMIENTO,  CURRENT_DATE)), 0) AS ATRASO,
-if( FECHA_PAGO IS NULL, '',  FECHA_PAGO) AS FECHA_PAGO
-")
-			->where("OPERACION",  $ID_OPERACION)->get()->getResult();
-		return $this->response->setJSON($cuotas);
-	}
+if( FECHA_PAGO IS NULL, '', DATE_FORMAT( FECHA_PAGO,  '%d/%m/%Y' )   ) AS FECHA_PAGO
+");
 
-	public function cobrar($ID_OPERACION =  NULL)
-	{
+		if ($this->getRequestContentType() ==  "json")
+			return $this->response->setJSON($cuotas->get()->getResult());
 
-		if ($this->request->getMethod() === 'post') {
-			$dataJSON = $this->request->getJSON(TRUE);
-			$data = $dataJSON['CABECERA'];
+		if ($this->getRequestContentType() ==  "html") {
 
-			if ((new Operacion_model())->find($data['IDOPERACION'])->ESTADO != "APROBADO")
-				return  $this->response->setJSON(["err" => "ESTA OPERACIÓN  AÚN NO FUE APROBADA "]);
-
-
-			//Actualizar estado de prestamo a Aprobado
-			//Generar las cuotas
-			$db = \Config\Database::connect();
-
-			//COD de recibo
-			$id_recibo = NULL;
-			$cobr = new Cobro_model();
-			try {
-				$db->transStart();
-				//1	Header de cobro
-				$cobr->insert($data);
-				//2	Detalle de cuota cobradas
-
-				$IDCOBRO = $db->insertID(); // Ultimo ID generado
-				//Obtener de la BD las cuotas asociadas a la operacion, y filtrar segun cuantas se cobraron
-				$nroCuotasPagadas = $data['CUOTAS_PAGADAS'];
-
-				$dataCuotas =  (new Cuotas_model())
-					->select("operacion_cuotas.*,  
-				IF( DATEDIFF(VENCIMIENTO,  CURRENT_DATE)<0, ABS(DATEDIFF(VENCIMIENTO,  CURRENT_DATE)), 0) AS ATRASO")
-					->where("OPERACION", $data['IDOPERACION'])
-					->where("ESTADO", "P")->orderBy("NUMERO", "ASC")
-					->limit($nroCuotasPagadas)->get()->getResult();
-
-				//Iterar las cuotas y grabarlas en cobro
-				//Total pagado en cuotas, distribuir esto en monto pagado por cuota
-				$totalEnCuotasPagadas =  round($data['IMPORTE_PAGADO']);
-				/************* */
-				//$moraPorCadaAtraso = intval($data['MORA_UNITARIA']);
-				foreach ($dataCuotas  as  $detail) :
-					//	IDCOBRO 	IDCUOTA 	IMPORTE 	IDOPERACION 
-					$montoPagado = 0;
-					$nuevoSaldo = 0;
-					//calculo de monto pagado
-					if ($detail->MONTO  > $totalEnCuotasPagadas) $montoPagado = $totalEnCuotasPagadas; //Pago parcial
-					else {
-						$montoPagado = $detail->MONTO;
-						$totalEnCuotasPagadas -=  $montoPagado;
-					} //pago total
-					//calcular nuevo saldo
-					//cuota - (saldo_ant + pago actual)
-					$saldo_pendiente =   $detail->SALDO_PENDIENTE;
-					$nuevoSaldo =   ($saldo_pendiente - $montoPagado);
-
-					//Pago por mora, y otros pesares
-					//	$pagadoPorMora =  $detail->ATRASO  *  $moraPorCadaAtraso;
-
-					//Grabar en detalle de cobro
-					$cob_det = new Detalle_cobro_model();
-					$data_det =  [
-						'IDCUOTA' =>  $detail->IDNRO,
-						'IDOPERACION' =>  $detail->OPERACION,
-						'IMPORTE' =>  $montoPagado,
-						'IDCOBRO' =>  $IDCOBRO,
-						//	'IMPORTE_MOROSO' =>  $pagadoPorMora
-					];
-					$cob_det->insert($data_det);
-
-					//3	Actualizar estado de cuotas, dependiendo del estado del Saldo, 
-					$nuevoEstado = $detail->MONTO > $montoPagado ? "P"  : "C";
-					(new Cuotas_model())
-						->where("OPERACION", $detail->OPERACION)
-						->where("IDNRO", $detail->IDNRO)
-						->set(
-							[
-								"ESTADO" => $nuevoEstado,
-								"FECHA_PAGO" => date("Y-m-d"),
-								"SALDO_PENDIENTE" => $nuevoSaldo,
-								"ATRASO" =>  $detail->ATRASO,
-							]
-						)->update();
-				endforeach;
-				//4 Actualizar estado de Operacion(prestamo)  si se pagó la totalidad de las cuotas
-				$yaPagadas =  (new Cuotas_model())
-					->where("OPERACION", $data['IDOPERACION'])
-					->where("ESTADO", "C")->countAllResults();
-				$nroTotalDeCuotas = ((new Operacion_model())->find($data['IDOPERACION']))->NRO_CUOTAS;
-				if ($yaPagadas ==  $nroTotalDeCuotas) ((new Operacion_model())->where("IDNRO",  $data['IDOPERACION']))
-					->set(['ESTADO' => 'LIQUIDADO'])->update();
-
-				$db->transComplete();
-			} catch (Exception $ex) {
-				return $this->response->setJSON(['err' => $ex->getMessage()]);
-			} catch (DatabaseException $ex) {
-				return $this->response->setJSON(['err' => $ex->getMessage()]);
-			}
-
-			if ($db->transStatus()) {
-				return $this->response->setJSON(['ok' => "Cobro registrado"]);
-			} else
-				return $this->response->setJSON(['err' => "Hubo un error en la transacción. Reintente"]);
+			$data = [
+				"cuotas" =>   $cuotas->paginate(25),
+				"pager" => $cuotas->pager,
+				"OPERACION" => (new Operacion_model())->find($ID_OPERACION)
+			];
+			if ($this->request->isAJAX())
+				return view("operacion/index/aprobados/cuotas/grill",    $data);
+			else
+				return view("operacion/index/aprobados/cuotas/index",    $data);
 		}
-
-		//GET REQUEST
-		if (is_null($ID_OPERACION)) return view("cobro/index/index_procesados");
-
-		if ((new Operacion_model())->find($ID_OPERACION)->ESTADO != "APROBADO")
-			return  view("plantillas/error", ['titulo' => "<NO PERMITIDO>", "mensaje" => "ESTA OPERACIÓN  AÚN NO FUE APROBADA "]);
-
-
-		// formulario de cobro contextualizado a una operacion
-		$prestamo = (new Operacion_model())
-			->select("deudor.CEDULA, concat(deudor.NOMBRES, CONCAT('',deudor.APELLIDOS) ) AS NOMBRES,operacion.* ")
-			->join("deudor",  "deudor.IDNRO = operacion.NRO_CLIENTE")
-			->where("operacion.IDNRO",  $ID_OPERACION)
-			->first();
-
-		helper("form");
-		echo view(
-			"cobro/proceso/index",
-			["prestamo_dato" => $prestamo]
-		);
 	}
 }

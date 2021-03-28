@@ -12,5 +12,5 @@
 <?= $this->section("contenido") ?>
 
 
- <?=view("vencimiento/cuotas/grill")?>
+ <?=view("operacion/index/aprobados/cuotas/grill")?>
 <?= $this->endSection() ?>

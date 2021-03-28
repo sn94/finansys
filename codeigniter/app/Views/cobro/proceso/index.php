@@ -1,7 +1,4 @@
-<?php
-
-use App\Helpers\Utilidades;
-?>
+ 
 <?= $this->extend("layouts/index") ?>
 
 <?= $this->section("title") ?>
@@ -38,14 +35,14 @@ use App\Helpers\Utilidades;
 
 
 <div id="vista-form-cobro">
-  <?php echo form_open("operacion/cobrar", ['id' => "cobro-form", 'onsubmit' => 'guardarCobro(event)']); ?>
+  <?php echo form_open("cobro/create", ['id' => "cobro-form", 'onsubmit' => 'guardarCobro(event)']); ?>
 
   <div class="container">
     <button type="submit" class="btn btn-danger">COBRAR</button>
   </div>
 
   <!--CAMPOS OCULTOS -->
-  <?php echo  view("cobro/proceso/header");  ?>
+  <?php echo  view("cobro/proceso/campos_ocultos");  ?>
 
 
   <div class="row">

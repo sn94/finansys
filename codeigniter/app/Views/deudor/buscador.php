@@ -1,10 +1,10 @@
  <!-- BUSCADOR DE CLIENTES  -->
  <!--URL DE LISTADO DE CLIENTES-->
- <input type="hidden" id="CLIENTE-INDEX" value="<?= base_url("deudor/index") ?>">
+ <input type="hidden" id="CLIENTE-INDEX" value="<?= base_url("deudor/index/index") ?>">
  <!--campo de busqueda -->
  <input type="text" oninput="filtrar_clientes(event)" id="BUSCADO" placeholder="BUSCAR POR CEDULA, O NOMBRE" class="form-control mt-2">
  <div class="table-responsive" id="GRILL">
-     <?= view("deudor/grill") ?>
+     <?= view("deudor/index/grill/index) ?>
  </div>
 
 

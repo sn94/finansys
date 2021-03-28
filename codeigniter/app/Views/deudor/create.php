@@ -2,7 +2,7 @@
 
 
 <?= $this->section("title") ?>
-<h2 class="prestyle">NUEVO CLIENTE<small></small></h2>
+FICHA DE CLIENTE 
 <?= $this->endSection() ?>
  
 
@@ -10,7 +10,7 @@
 <?= $this->section("contenido") ?>
 
 
-<a class="btn btn-primary mb-3" style="font-weight: 600;" href="<?= base_url("deudor/index")?>">
+<a class="btn btn-primary mb-3" style="font-weight: 600;" href="<?= base_url("deudor/index/index")?>">
 <i class="fa fa-user" aria-hidden="true"></i> &nbsp; Ir a Lista de clientes</a>
 
 <!-- INI FORM --> 

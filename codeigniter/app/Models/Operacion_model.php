@@ -36,4 +36,8 @@ class  Operacion_model extends Model
         parent::__construct();
         $this->db = \Config\Database::connect();
     }
+
+
+
+    
 }

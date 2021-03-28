@@ -75,8 +75,8 @@
         </tbody>
     </table>
 </div>
-<?= view("vencimiento/js/calc_vencimientos") ?>
-<?= view("vencimiento/js/sistema_frances") ?>
+<?= view("aprobacion/js/calc_vencimientos") ?>
+<?= view("aprobacion/js/sistema_frances") ?>
 
 
 <script>
@@ -129,13 +129,15 @@
         let porcentajeIvaInteres = formValidator.limpiarNumero($("#PORCEN_IVA_INTERES").val());
         let netoDesembolsar = formValidator.limpiarNumero($("#CAPITAL_DESEMBOLSO").val());
         let montoDeCuota = formValidator.limpiarNumero($("#CUOTA_IMPORTE").val());
-
+        //Total del prestamp
+        let totalPrestamo= formValidator.limpiarNumero( $("#MONTO-PRESTAMO").val() );
 
         let calcularInteresParams = {
             DA: parametrosCalc['DIASXANIO'], //dias del anio
             MA: parametrosCalc['MESESXANIO'], //Meses del anio
             DM: parametrosCalc['DIASXMES'], //Dias del mes
             CAPITAL: netoDesembolsar,
+            TOTAL_PRESTAMO: totalPrestamo  ,//Nuevo
             NRO_CUOTAS: nroCuotas,
             PORCEN_INTERES: porcentajeInteres,
             PORCEN_IVA: porcentajeIvaInteres,

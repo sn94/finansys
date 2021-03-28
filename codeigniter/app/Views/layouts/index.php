@@ -358,7 +358,7 @@ $BASE_ASSETS_BASE = base_url('assets');
 
 
                 <li class="nav-item">
-                  <a href="<?= base_url("deudor/index") ?>" class="nav-link ">
+                  <a href="<?= base_url("deudor/index/index") ?>" class="nav-link ">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Clientes</p>
                   </a>
@@ -413,7 +413,7 @@ $BASE_ASSETS_BASE = base_url('assets');
 
 
             <li class="nav-item ">
-              <a href="<?= base_url("operacion/procesadas") ?>" class="nav-link active">
+              <a href="<?= base_url("cobro/index") ?>" class="nav-link active">
                 <i class="nav-icon fas fa-copy"></i>
                 <p>
                   CAJA
@@ -514,17 +514,11 @@ $BASE_ASSETS_BASE = base_url('assets');
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
-      <div class="content-header">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-sm-12">
-              <h1 class="m-0">
-                <?= $this->renderSection("title") ?>
-              </h1>
-            </div><!-- /.col -->
+      <div class="content-header p-0 m-0">
+        <h5 class="m-0 p-0 text-center">
+          <?= $this->renderSection("title") ?>
+        </h5>
 
-          </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
       </div>
       <!-- /.content-header -->
 

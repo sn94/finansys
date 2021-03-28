@@ -44,18 +44,9 @@ echo form_open("operacion/create",  ["onsubmit" => "guardar(event)"]);
         obtener_parametros();
         //formato entero
         let enteros = document.querySelectorAll(".entero");
-        Array.prototype.forEach.call(enteros, function(inpu) {
-            inpu.oninput = formatoNumerico.formatearEntero;
-            $(inpu).addClass("text-right");
-        });
 
-
-        let decimales = document.querySelectorAll(".decimal");
-        Array.prototype.forEach.call(decimales, function(inpu) {
-            inpu.oninput = formatoNumerico.formatearDecimal;
-            $(inpu).addClass("text-right");
-        });
-
+       formatoNumerico.formatearCamposNumericos();
+       
 
         //Auto calculo
         let autocalc = document.querySelectorAll("#CREDITO, #NRO_CUOTAS,#SEGURO_CANCEL,#SEGURO_3ROS,#GASTOS_ADM ");

@@ -43,4 +43,18 @@ class BaseController extends Controller
 		// $this->session = \Config\Services::session();
 	}
 
+
+
+
+	public function  getRequestContentType(){
+		$formato = "html";
+		$request=  \Config\Services::request();
+		$formatoSolicitado = is_null($request->getHeader("formato")) ?  "html"  :  $request->getHeader("formato")->getValue();
+		if (!is_null($formatoSolicitado)  &&  $formatoSolicitado !=  "") $formato = $formatoSolicitado;
+		return $formato;
+	}
+
+
+	
+
 }

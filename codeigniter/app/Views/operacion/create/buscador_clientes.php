@@ -1,4 +1,9 @@
 <?= $this->extend("layouts/index") ?>
+
+<?= $this->section("title") ?>
+BUSQUE UN CLIENTE PARA CREAR UNA OPERACIÓN
+<?= $this->endSection() ?>
+
 <?= $this->section("contenido") ?>
 
 <style>
@@ -11,14 +16,10 @@
 <input type="hidden" id="OPERACION-CREATE" value="<?= base_url('operacion/create') ?>">
 <input type="hidden" id="OPERACION-LIST" value="<?= base_url('operacion/list') ?>">
 
-<div class="card">
-  <div class="card-header card-header-primary">
-    <h2 class="text-center prestyle"> BUSQUE UN CLIENTE PARA CREAR UNA OPERACIÓN<small></small></h2>
-  </div>
+<div class="card pt-0">
+ 
 
-
-
-  <div class="card-body">
+  <div class="card-body mt-0 pt-0">
 
     <input type="text" oninput="filtrar_clientes(event)" id="BUSCADO" placeholder="BUSCAR CLIENTE POR CEDULA, O NOMBRE" class="form-control">
 

@@ -1,4 +1,9 @@
 <?= $this->extend("layouts/index") ?>
+<?= $this->section("title") ?>
+FICHA DE CLIENTES
+<?= $this->endSection() ?>
+
+
 <?= $this->section("contenido") ?>
 
 <style>
@@ -9,25 +14,20 @@
 
 
 
-<div class="card">
-  <div class="card-header card-header-primary">
-    <h2 class="text-center prestyle"> CLIENTES<small></small></h2>
-  </div>
 
 
 
-
-  <div class="card-body">
-    <a href="<?= base_url("deudor/create") ?>" class="btn btn-sm btn-primary">NUEVO</a>
-    <a onclick="callToXlsGen(event, 'CLIENTES')" href="<?= base_url("deudor/index/json") ?>"><img src="<?= base_url("assets/img/excel_icon.png") ?>" alt="">XLS</a>
-    <a href="<?= base_url("deudor/index/pdf") ?>"><img src="<?= base_url("assets/img/pdf_icon.png") ?>" alt="">PDF</a>
-
+<div class="card-body">
+  <a href="<?= base_url("deudor/create") ?>" class="btn btn-sm btn-primary">NUEVO</a>
+  <a onclick="callToXlsGen(event, 'CLIENTES')" href="<?= base_url("deudor/index/index/json") ?>"><img src="<?= base_url("assets/img/excel_icon.png") ?>" alt="">XLS</a>
+  <a href="<?= base_url("deudor/index/index/pdf") ?>"><img src="<?= base_url("assets/img/pdf_icon.png") ?>" alt="">PDF</a>
 
 
-   <?= view("deudor/buscador")?>
+
+  <?= view("deudor/buscador") ?>
 
 
-  </div><!-- END CARD BODY  -->
+</div><!-- END CARD BODY  -->
 </div>
 
 
@@ -38,7 +38,7 @@
   }
 
 
-  
+
 
 
   function borrarFila(ev) {
@@ -56,7 +56,5 @@
     });
 
   }
-
- 
 </script>
 <?= $this->endSection() ?>

@@ -102,7 +102,7 @@ function input_number_millares(ev) {
     //Autocomplete
     async function autocompletado_clientes() {
 
-        let url_ = "<?= base_url("deudor/index") ?>";
+        let url_ = "<?= base_url("deudor/index/index") ?>";
         //   let termino_busqueda = $("#CLIENTE-SEARCH").val();
         let req = await fetch(url_, {
 

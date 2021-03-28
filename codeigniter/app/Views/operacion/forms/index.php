@@ -23,7 +23,7 @@
     </div>
     <div class="col-12 col-md-4 pt-1 bg-primary" id="FICHA-CLIENTE">
 
-        <?= view("operacion/forms/form_cliente_view") ?>
+        <?= view("operacion/forms/form_cliente_view",  ['CLIENTE'=>  $CLIENTE]) ?>
     </div>
     <div class="col-12 col-md-4 bg-primary  pt-1">
         <?= view("operacion/forms/form_opera2") ?>
@@ -41,7 +41,7 @@
     <div class="col-12 col-md-2 ">
         <div class="row mr-md-5 ml-md-5 ">
             <div class="col-12">
-                <button type="submit" class="btn btn-success"> GUARDAR</button>
+                <button id="BOTON-ENVIO" type="submit" class="btn btn-success"> GUARDAR</button>
             </div>
         </div>
     </div>
@@ -55,7 +55,7 @@
 
 <?= view("validations/formato_numerico") ?>
 <?= view("validations/form_validate") ?>
-<?= view("vencimiento/js/sistema_frances") ?>
+<?= view("aprobacion/js/sistema_frances") ?>
 <?= view("operacion/js/calculador_montos") ?>
 <script>
     function campos_requeridos() {
@@ -67,7 +67,7 @@
             alert("DETALLE EL PORCENTAJE DE INTERÉS");
             return false;
         }
-        if ($("#CUOTAS").val() == "" || $("#CUOTAS").val() == "0") {
+        if ($("#NRO_CUOTAS").val() == "" || $("#NRO_CUOTAS").val() == "0") {
             alert("INGRESE NRO DE CUOTAS");
             return false;
         }
@@ -79,10 +79,11 @@
     async function guardar(e) {
 
         e.preventDefault();
-        formValidator.init(e.target);
-
         if (!campos_requeridos()) return;
 
+        $("#BOTON-ENVIO").prop("disabled", true);
+
+        formValidator.init(e.target);
 
         let payload = formValidator.getData();
         let endpoint = e.target.action;
@@ -128,6 +129,7 @@
                 delay: 2000
             });
         }
+        $("#BOTON-ENVIO").prop("disabled", false);
 
     }
 </script>

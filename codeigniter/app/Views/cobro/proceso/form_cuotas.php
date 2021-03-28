@@ -136,7 +136,10 @@
 
 
    async function cargar_modelo_cuotas() {
-     let req = await fetch($("#CUOTAS-SOURCE").val());
+     let url_cuotas=  $("#CUOTAS-SOURCE").val();
+     let req = await fetch(  url_cuotas,  {
+       headers: {  formato:  "json"}
+     });
      cuotas_data_model = await req.json();
 
 

@@ -52,7 +52,7 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
         <?= view("operacion/forms/form_garantes") ?>
     </div>
 </div>
-<?= view("vencimiento/generacion/create_detail_cuotas") ?>
+<?= view("aprobacion/generacion/create_detail_cuotas") ?>
 
 <div class="row mr-md-5 ml-md-5 ">
     <div class="col-12">
@@ -77,22 +77,26 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
 
         let url_ = $("#INDEX-OPERACIONES").val();
         show_loader();
-
+/*
         let parametros_keys = Object.keys(params);
         let strquery = parametros_keys.map(function(clave) {
             return clave + "=" + params[clave];
-        }).join("&");;
-        let parametros = strquery;
+        }).join("&");
+        let parametros = strquery;*/
 
-
+        let parametros= {} ;
+        Object.assign( parametros,  params);
+        parametros["ACCIONES"]= ["VER_CUOTA"];
+      
+ 
         let req = await fetch(url_, {
             "method": "POST",
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
                 'formato': "json"
             },
-            body: parametros
+            body: JSON.stringify( parametros)
         });
         let json_result = await req.json();
         hide_loader();

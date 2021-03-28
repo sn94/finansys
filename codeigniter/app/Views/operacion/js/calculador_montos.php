@@ -11,9 +11,10 @@
 
         let BCP_PORCEN = Math.round((parseFloat(formValidator.limpiarNumero(parametrosCalc.BCP_INTERES)) / 12) * 1e8) / 1e8;
 
-        $("#PORCEN_INTERES").val(formatoNumerico.darFormatoEnMillares(BCP_PORCEN, 8));
+        let PORCEN_IVA= formatoNumerico.darFormatoEnMillares(  formValidator.limpiarNumero(parametrosCalc.IVA)  , 0);
 
-        $("#PORCEN_IVA_INTERES").val(parametrosCalc.IVA);
+        $("#PORCEN_INTERES").val(formatoNumerico.darFormatoEnMillares(BCP_PORCEN, 8));
+        $("#PORCEN_IVA_INTERES").val( PORCEN_IVA );
     }
 
 

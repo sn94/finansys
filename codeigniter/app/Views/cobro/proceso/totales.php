@@ -92,7 +92,7 @@
         //Total en importe de cuotas elegidas
         let importeTotalCuotas = formValidator.limpiarNumero(cuotas_data_model[0].MONTO);
         importeTotalCuotas = formatoNumerico.parsearInt(importeTotalCuotas) * nroCuotasPagar;
-        $("#IMPORTE_PAGADO").val(formatoNumerico.darFormatoEnMillares(importeTotalCuotas));
+        $("#IMPORTE_PAGADO").val(formatoNumerico.darFormatoEnMillares(importeTotalCuotas, 0));
 
 
         //Calculo de Mora
