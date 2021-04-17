@@ -54,6 +54,12 @@
         let url__ = "<?= base_url("parametros/get") ?>";
         let req = await fetch(url__);
         PARAMETROS = await req.json();
+        if(  "auth_error" in PARAMETROS )
+        {
+            alert(  PARAMETROS.auth_error );
+            window.location=  PARAMETROS.redirect;
+        }
+        
     }
 
 

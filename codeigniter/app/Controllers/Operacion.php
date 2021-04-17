@@ -45,7 +45,7 @@ class Operacion extends BaseController
 
 
 
-	
+
 	//Vista de operaciones procesadas, con cuotas generadas
 	public function procesadas()
 	{
@@ -74,10 +74,7 @@ class Operacion extends BaseController
 
 
 
-	public function crear()
-	{
-		echo view("operacion/create/buscador_clientes");
-	}
+ 
 
 	public function create($IDCLIENTE = null)
 	{
@@ -92,11 +89,14 @@ class Operacion extends BaseController
 			//return redirect()->to("index");
 		} else {
 
+			if( is_null( $IDCLIENTE))
+			return view("operacion/create/buscador_clientes");
+
 			$CLIENTE =   (new Deudor_model())
 				->select("deudor.*, format( MONTO_SOLICI, 0, 'de_DE') as MONTO_SOLICI")
 				->where("IDNRO",  $IDCLIENTE)->first();
 
-			echo view('operacion/create/form',  ['CLIENTE' =>  $CLIENTE]);
+			return view('operacion/create/form',  ['CLIENTE' =>  $CLIENTE]);
 		}
 	}
 
@@ -158,12 +158,10 @@ class Operacion extends BaseController
 
 				if ((new Operacion_model())->find($ID_OPERACION)->ESTADO != "PENDIENTE")
 					return  view("plantillas/error", ['titulo' => "<NO PERMITIDO>", "mensaje" => "ESTA OPERACIÓN YA FUE APROBADA ANTERIORMENTE"]);
-
-
 				$operacion = (new Operacion_model())
 					->join("deudor", "deudor.IDNRO =  operacion.NRO_CLIENTE")
 					->select("operacion.* ,  FORMAT(operacion.CREDITO, 0, 'de_DE') AS CREDITO, FORMAT(operacion.TOTAL_INTERESES, 0, 'de_DE') AS TOTAL_INTERESES,
-					format(TOTAL_INTERESES_IVA, 0 , 'de_DE') AS TOTAL_INTERESES_IVA,	format(PORCEN_INTERES, 8, 'de_DE') AS PORCEN_INTERES, 	format(PORCEN_IVA_INTERES, 0 , 'de_DE') AS PORCEN_IVA_INTERES,
+					format(TOTAL_INTERESES_IVA, 0 , 'de_DE') AS TOTAL_INTERESES_IVA,	format(INTERES_PORCE, 8, 'de_DE') AS INTERES_PORCE, 	format(INTERES_IVA_PORCE, 0 , 'de_DE') AS INTERES_IVA_PORCE,
 					FORMAT(operacion.SEGURO_CANCEL, 0, 'de_DE') AS SEGURO_CANCEL, FORMAT(operacion.SEGURO_3ROS, 0, 'de_DE') AS SEGURO_3ROS,  FORMAT(operacion.GASTOS_ADM, 0, 'de_DE') AS GASTOS_ADM,
 					FORMAT(operacion.CAPITAL_DESEMBOLSO, 0, 'de_DE') AS CAPITAL_DESEMBOLSO,FORMAT(operacion.TOTAL_PRESTAMO, 0, 'de_DE') AS TOTAL_PRESTAMO,
 					FORMAT(operacion.CUOTA_IMPORTE, 0, 'de_DE') AS CUOTA_IMPORTE,
@@ -173,7 +171,7 @@ class Operacion extends BaseController
 					->orderBy("operacion.IDNRO", "DESC")
 					->first();
 
-				echo view('aprobacion/generacion/create', ['OPERACION' =>  $operacion]);
+				echo view('aprobacion/create', ['OPERACION' =>  $operacion]);
 			}
 		}
 	}
@@ -205,7 +203,7 @@ class Operacion extends BaseController
 					 FORMAT(operacion.CUOTA_IMPORTE, 0,'de_DE') AS CUOTA_IMPORTE,
 					 format( deudor.MONTO_SOLICI, 0,'de_DE') as MONTO_SOLICI ,
 					 format( operacion.TOTAL_INTERESES, 0,'de_DE') as TOTAL_INTERESES ,
-					 format( operacion.PORCEN_IVA_INTERES,0, 'de_DE') AS PORCEN_IVA_INTERES,
+					 format( operacion.INTERES_IVA_PORCE,0, 'de_DE') AS INTERES_IVA_PORCE,
 					 format( operacion.TOTAL_INTERESES_IVA, 0,'de_DE') as TOTAL_INTERESES_IVA,
 					 format( operacion.SEGURO_3ROS,0, 'de_DE') AS SEGURO_3ROS,
 					 format( operacion.SEGURO_CANCEL,0, 'de_DE') AS SEGURO_CANCEL,
@@ -253,7 +251,7 @@ class Operacion extends BaseController
 	{
 
 		$data_ = $this->request->getJSON(true);
-	 
+
 
 		//acciones
 		$acciones =  $data_['ACCIONES'];
@@ -343,5 +341,16 @@ if( FECHA_PAGO IS NULL, '', DATE_FORMAT( FECHA_PAGO,  '%d/%m/%Y' )   ) AS FECHA_
 			else
 				return view("operacion/index/aprobados/cuotas/index",    $data);
 		}
+	}
+
+
+
+
+	public function generar_codigo_operacion($letra)
+	{
+		$nuevo_codigo = (new Operacion_model())->where("LETRA",  $letra)
+			->select(" if( LETRA is NULL, '$letra', LETRA) AS LETRA, IF(CORRELATIVO IS NULL, 1 , max(CORRELATIVO)+1) AS CORRELATIVO  ")
+			->first();
+		return $this->response->setJSON($nuevo_codigo);
 	}
 }

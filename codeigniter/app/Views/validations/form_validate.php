@@ -33,47 +33,53 @@
             stringified = stringified == "" ? "0" : stringified;
 
             let valor_purifi = stringified.replaceAll(new RegExp(/\.*[A-Za-z]*/g), "").replaceAll(new RegExp(/,+/g), ".");
-             
+
             return valor_purifi;
 
         },
         getData: function(type) {
 
             type = type == undefined ? 'application/x-www-form-urlencoded' : type;
-            if (type == "application/x-www-form-urlencoded") {
-                let list_params = [];
-                let elements = this.form.elements;
-                let contextoThis = this;
-                Array.prototype.forEach.call(elements, function(ar) {
 
-                    let valorPurificado = null;
-                    if (contextoThis.esNumerico(ar)) {
-                        valorPurificado = contextoThis.limpiarNumero(ar.value);
-                    } else {
+
+            let procesador = function(ar) {
+
+
+                let valorPurificado = null;
+                if (this.esNumerico(ar)) {
+                    valorPurificado = this.limpiarNumero(ar.value);
+                } else {
+                    if (ar.type == "radio") {
+                        if (ar.checked)
+                            valorPurificado = ar.value;
+                        else return;
+                    } else
                         valorPurificado = ar.value;
-                    }
+                }
+                let nombre = ar.name;
+                let valor = valorPurificado;
+                return {
+                    name: nombre,
+                    value: valor
+                };
 
-                    list_params.push(ar.name + "=" + valorPurificado);
+                //list_params.push(ar.name + "=" + valorPurificado);
+            };
+
+            let elements = this.form.elements;
+            let list_params = Array.prototype.map.call(elements, procesador.bind(this)).filter(ar => ar != undefined);
+
+            if (type == "application/x-www-form-urlencoded") {
+                let xwwwformParams = list_params.filter(ar => "name" in ar).map((ar) => {
+                    return ar.name + "=" + ar.value;
                 });
-
-                return list_params.join("&");
+                return xwwwformParams.join("&");
 
             }
             if (type == "application/json") {
                 let object_params = {};
-                let elements = this.form.elements;
-                let contextoThis = this;
-                Array.prototype.forEach.call(elements, function(ar) {
-
-                    let valorPurificado = null;
-                    if (contextoThis.esNumerico(ar)) {
-                        valorPurificado = contextoThis.limpiarNumero(ar.value);
-                    } else {
-                        valorPurificado = ar.value;
-                    }
-
-                    object_params[ar.name] = valorPurificado;
-
+                let objectParams = list_params.forEach((ar) => {
+                    object_params[ar.name] = ar.value;
                 });
                 return object_params;
             }

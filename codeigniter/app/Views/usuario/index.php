@@ -20,7 +20,7 @@
 <?php  foreach($lista as $i):?>
 <tr id="<?=$i->IDNRO?>">
 <td><a href="<?= base_url("usuario/view/$i->IDNRO")?>"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
-<td><a href="<?= base_url("usuario/edit/$i->IDNRO")?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+<td><a href="<?= base_url("usuario/edit/$i->IDNRO")?>"><i class="fa fa-edit" aria-hidden="true"></i></a></td>
 <td><a onclick="borrarFila(event)" href="<?= base_url("usuario/delete/$i->IDNRO")?>"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
  <td><?=$i->NICK?></td> <td><?=$i->ROL == "A" ? "ADMINISTRADOR" : ( $i->ROL == "S" ? "SUPERVISOR" : "COBRADOR")  ?></td> </tr>
 <?php  endforeach;?>

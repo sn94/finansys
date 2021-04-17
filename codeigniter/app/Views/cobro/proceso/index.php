@@ -115,6 +115,15 @@
       body: JSON.stringify(dataPayload)
     });
     let resp = await req.json();
+
+    if(  "auth_error" in resp )
+        {
+            alert(  resp.auth_error );
+            window.location=  resp.redirect;
+        }
+        
+
+        
     if ("ok" in resp) {
       alert("Cobro registrado");
       window.location = "<?= base_url("operacion/procesadas") ?>";

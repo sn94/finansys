@@ -160,7 +160,7 @@
                     let NUEVA_FECHA_DIA= true ? DIA_BASE :  fechaBase.getDate();
                     let nuevaFechaBase = new Date(fechaBase.getFullYear(), fechaBase.getMonth() + 1, NUEVA_FECHA_DIA);
                     fechaBase = nuevaFechaBase;
-                    console.log(nuevaFechaBase);
+                    
                     //OPCION 2    ------ Incrementar fecha en X dias
                     // fechaBase.setDate(fechaBase.getDate() + formato); //La siguiente fecha de vencimiento
 
@@ -185,21 +185,5 @@
 
     };
 
-
-
-
-
-
-
-
-
-
-
-    //Agrupa el numero de dias definidos para pago, ya sea Lunes = 1, Martes= 2, Miercoles= 3, etc.
-
-
-
-    /** 
-     * end generador de cuotas
-     */
+ 
 </script>

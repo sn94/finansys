@@ -11,7 +11,7 @@ $TOTAL_PRESTAMO =    (isset($OPERACION) ?  $OPERACION->TOTAL_PRESTAMO : "0");
 </div>
 <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
     <label style="grid-column-start: 1;">MONTO PRÉSTAMO: </label>
-    <input readonly style="grid-column-start: 2;"  value="<?= $TOTAL_PRESTAMO ?>" name="TOTAL_PRESTAMO" ID="MONTO-PRESTAMO" type="text" class="form-control entero">
+    <input readonly style="grid-column-start: 2;"  value="<?= $TOTAL_PRESTAMO ?>" name="TOTAL_PRESTAMO" ID="TOTAL_PRESTAMO" type="text" class="form-control entero">
 </div>
 <div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
     <label style="grid-column-start: 1;">IMPORTE CUOTA: </label>

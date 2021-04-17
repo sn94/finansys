@@ -166,6 +166,13 @@ use App\Helpers\Utilidades;
       body: payload
     });
     let resp = await req.json();
+    if(  "auth_error" in resp )
+        {
+            alert(  resp.auth_error );
+            window.location=  resp.redirect;
+        }
+        
+        
     //Re habilitar
     $("button[type=submit]").prop("disabled", false);
     hide_loader();

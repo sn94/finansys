@@ -1,88 +1,178 @@
+<?= view("operacion/js/calc_vencimientos") ?>
+<?= view("operacion/js/sistema_de_calculo") ?>
+
 <script>
+    /*****  Datos  ************ */
+    /*
+    De la BD: 
+
+        BCP_INTERES
+        DIASXMES
+        DIASXANIO
+        IVA
+        MESESXANIO
+        GASTOS_ADM_PORCE
+        SEGURO_CANCEL
+        SEGURO_3ROS
+        MORA_PORCE
+        PUNITORIO PORCE 
+        INTERES_PORCE (CALCULADO)
+*/
     var parametrosCalc = {};
+
+     
+    /** 
+     * valores Calculados: 
+     * 
+     * TOTAL_INTERESES
+     * TOTAL_IVA_INTERESES
+     * TOTAL_GASTOS_ADMIN
+     * TOTAL_SEGURO_CANCEL
+     * TOTAL_SEGURO_3ROS
+     * TOTAL_NETO_DESEMBOLSAR
+     * MONTO_CREDITO_FINAL
+     */
+    var operacionModel = {};
+
+
+
+
+
+    function getTipoDeCalculoElegido(  ){
+        return SISTEMA_DE_AMORTIZACION[ $("#SISTEMA").val() ];
+    }
+
+
+
+    /** Inicializar
+     * Limpiar las entradas de usuario antes de empezar el calculo
+     * 
+     */
+
+    async function iniciar_calculos_de_operacion() {
+
+        if (Object.keys(parametrosCalc).length == 0) {
+            await obtener_parametros();
+            await obtener_data_producto_financiero();
+        }
+
+        /**Entradas de usuario  */
+        let MONTO_CREDITO = formatoNumerico.parsearInt(formValidator.limpiarNumero($("input[name=CREDITO]").val()));
+        let NRO_CUOTAS = formatoNumerico.parsearInt(formValidator.limpiarNumero($("input[name=NRO_CUOTAS]").val()));
+        let PRIMER_VENCIMIENTO = $("#PRIMER_VENCIMIENTO").val();
+        let userInputs = {
+            MONTO_CREDITO: MONTO_CREDITO,
+            NRO_CUOTAS: NRO_CUOTAS,
+            PRIMER_VENCIMIENTO: PRIMER_VENCIMIENTO
+        };
+
+       // Object.assign(sistemaFrances, parametrosCalc);
+        //Object.assign(sistemaFrances, userInputs);
+        getTipoDeCalculoElegido().setUserInputs(   userInputs );
+        getTipoDeCalculoElegido().setParametros(   parametrosCalc );
+        getTipoDeCalculoElegido().init();
+
+        //guardar
+        operacionModel.CREDITO = MONTO_CREDITO;
+        operacionModel.NRO_CUOTAS = NRO_CUOTAS;
+        operacionModel.SEGURO_CANCEL =  getTipoDeCalculoElegido().RESULTADOS.SEGURO_CANCEL;
+        operacionModel.SEGURO_3ROS =  getTipoDeCalculoElegido().RESULTADOS.SEGURO_3ROS;
+        operacionModel.GASTOS_ADM =  getTipoDeCalculoElegido().RESULTADOS.GASTOS_ADM;
+        operacionModel.CAPITAL_DESEMBOLSO =  getTipoDeCalculoElegido().RESULTADOS.CAPITAL_DESEMBOLSO;
+        operacionModel.TOTAL_INTERESES =  getTipoDeCalculoElegido().RESULTADOS.TOTAL_INTERESES;
+        operacionModel.INTERES_PORCE = parametrosCalc.INTERES_PORCE;
+        operacionModel.INTERES_IVA_PORCE = parametrosCalc.INTERES_IVA_PORCE;
+        operacionModel.TOTAL_INTERESES_IVA =  getTipoDeCalculoElegido().RESULTADOS.TOTAL_INTERESES_IVA;
+        operacionModel.TOTAL_PRESTAMO =  getTipoDeCalculoElegido().RESULTADOS.TOTAL_PRESTAMO;
+        operacionModel.CUOTA_IMPORTE =  getTipoDeCalculoElegido().RESULTADOS.CUOTA_IMPORTE;
+        operacionModel.PRIMER_VENCIMIENTO = PRIMER_VENCIMIENTO;
+
+
+
+        mostrar_resultados_calculo();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+    Paso PRIMERO 
+    */
+    async function obtener_data_producto_financiero() {
+
+        let idNro = $("#PRODUCTO_FINA").val();
+        let url__ = "<?= base_url("producto-finan/get") ?>/" + idNro; //header formato: json-raw
+        let req = await fetch(url__, {
+            headers: {
+                formato: "json-raw",
+                'CHECK-AUTH': "S"
+            }
+        });
+        let resp = await req.json();
+
+        //Producto financiero 
+        if ("auth_error" in resp) {
+            alert(resp.auth_error);
+            window.location = resp.redirect;
+        }
+
+        Object.assign(parametrosCalc, resp);
+    }
 
 
     async function obtener_parametros() {
+        /*
+        SEGURO_CANCEL
+        SEGURO_3ROS
+        GAST_ADM_PORCE
+        INTERES_PORCE
+        IVA
+        DIASXANIO
+        MESESXANIO
+        DIASXMES
+        */
 
-        let url__ = "<?= base_url("parametros/get") ?>";
-        let req = await fetch(url__);
+        if (Object.keys(parametrosCalc).length > 0) return;
+
+        //PARAMETROS GENERALES 
+        let url__ = "<?= base_url("parametros/get") ?>"; //header formato: json-raw
+        let req = await fetch(url__, {
+            headers: {
+                formato: "json-raw",
+                'CHECK-AUTH': "S"
+            }
+        });
         let resp = await req.json();
-        parametrosCalc = resp;
 
-        let BCP_PORCEN = Math.round((parseFloat(formValidator.limpiarNumero(parametrosCalc.BCP_INTERES)) / 12) * 1e8) / 1e8;
-
-        let PORCEN_IVA= formatoNumerico.darFormatoEnMillares(  formValidator.limpiarNumero(parametrosCalc.IVA)  , 0);
-
-        $("#PORCEN_INTERES").val(formatoNumerico.darFormatoEnMillares(BCP_PORCEN, 8));
-        $("#PORCEN_IVA_INTERES").val( PORCEN_IVA );
-    }
-
-
-
-    function numeroDeMillones(numero) {
-        let base = 1000000;
-        let parame = numero;
-        let numeroMillones = 1;
-        if (numero == base) return numeroMillones;
-        if (numero < base) return 0;
-
-        while (parame > base) {
-            parame -= base;
-            if (parame < base) break;
-            numeroMillones++;
-
+        //Producto financiero 
+        if ("auth_error" in resp) {
+            alert(resp.auth_error);
+            window.location = resp.redirect;
         }
-        return numeroMillones;
+
+        Object.assign(parametrosCalc, resp);
 
     }
 
 
-    async function calcular_montos() {
 
+    function mostrar_resultados_calculo() {
 
-        await obtener_parametros();
-
-        /**Capital NETO A DESEMBOLSAR */
-        let monto_ = formatoNumerico.parsearInt(formValidator.limpiarNumero($("input[name=CREDITO]").val()));
-        /**Calculo de gastos en base al monto del crédito */
-
-        let seguro_cancel = (parseInt( formValidator.limpiarNumero(parametrosCalc.SEGURO_CANCEL) ) ) * numeroDeMillones(monto_);
-        let seguro_3ros = (parseInt( formValidator.limpiarNumero(parametrosCalc.SEGURO_3ROS) )) * numeroDeMillones(monto_);
-        let gastos_adm = (parseFloat( formValidator.limpiarNumero(parametrosCalc.GAST_ADM_PORCE) ) / 100) * monto_;
-
-        $("#SEGURO_CANCEL").val(formatoNumerico.darFormatoEnMillares(seguro_cancel, 0));
-        $("#SEGURO_3ROS").val(formatoNumerico.darFormatoEnMillares(seguro_3ros, 0));
-        $("#GASTOS_ADM").val(formatoNumerico.darFormatoEnMillares(gastos_adm, 0));
-
-        /**Capital Neto a desembolsar**** */
-        let capital_neto_a_desem = monto_ + seguro_cancel + seguro_3ros + gastos_adm;
-        $("#CAPITAL_DESEMBOLSO").val(formatoNumerico.darFormatoEnMillares(capital_neto_a_desem, 0));
-        /**     ***   ***   ***   *** *** ****  */
-
-        /** Monto Total del prestamo mas intereses + IVA */
-        let nro_cuotas = formatoNumerico.parsearInt(formValidator.limpiarNumero($("input[name=NRO_CUOTAS]").val()));
-        let interes_porcen = parseFloat(formValidator.limpiarNumero($("#PORCEN_INTERES").val())) / 100; //8 dec
-
-        let intereses = (monto_ * (interes_porcen)) * nro_cuotas;
-        let intereses_iva_porce = parseFloat(formValidator.limpiarNumero($("#PORCEN_IVA_INTERES").val())) / 100;
-        let iva_intereses = intereses * (intereses_iva_porce);
-
-        let total_prestamo = capital_neto_a_desem + intereses + iva_intereses;
-        $("#MONTO-PRESTAMO").val(formatoNumerico.darFormatoEnMillares(total_prestamo, 0));
-        $("#INTERESES").val(formatoNumerico.darFormatoEnMillares(intereses, 0));
-        $("#INTERES_IVA").val(formatoNumerico.darFormatoEnMillares(iva_intereses, 0));
-        /**  */
-        /*** Calculo de importe de cuota */
-        let param_calc_cuota = {
-            CAPITAL_A_DESENVOL: capital_neto_a_desem,
-            TASA_INTERES: interes_porcen,
-            NRO_CUOTAS: nro_cuotas
-        };
-       
-        let importe_de_la_cuota = sistemaFrances.calculaMontoCuota(param_calc_cuota);
-
-
-        importe_de_la_cuota = (!isFinite(importe_de_la_cuota) || isNaN(importe_de_la_cuota)) ? 0 : importe_de_la_cuota;
-        $("#CUOTA_IMPORTE").val(formatoNumerico.darFormatoEnMillares(importe_de_la_cuota, 0));
+        $("#SEGURO_CANCEL").val(formatoNumerico.darFormatoEnMillares(operacionModel.SEGURO_CANCEL, 0));
+        $("#SEGURO_3ROS").val(formatoNumerico.darFormatoEnMillares(operacionModel.SEGURO_3ROS, 0));
+        $("#GASTOS_ADM").val(formatoNumerico.darFormatoEnMillares(operacionModel.GASTOS_ADM, 0));
+        $("#CAPITAL_DESEMBOLSO").val(formatoNumerico.darFormatoEnMillares(operacionModel.CAPITAL_DESEMBOLSO, 0));
+        $("#TOTAL_PRESTAMO").val(formatoNumerico.darFormatoEnMillares(operacionModel.TOTAL_PRESTAMO, 0));
+        $("#INTERESES").val(formatoNumerico.darFormatoEnMillares(operacionModel.TOTAL_INTERESES, 0));
+        $("#INTERES_IVA").val(formatoNumerico.darFormatoEnMillares(operacionModel.TOTAL_INTERESES_IVA, 0));
+        $("#CUOTA_IMPORTE").val(formatoNumerico.darFormatoEnMillares(operacionModel.CUOTA_IMPORTE, 0));
     }
 </script>

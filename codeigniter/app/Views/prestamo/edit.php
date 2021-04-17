@@ -81,6 +81,14 @@ function input_number_millares(ev) {
 
         });
         let resp = await req.json();
+      
+        if(  "auth_error" in resp )
+        {
+            alert(  resp.auth_error );
+            window.location=  resp.redirect;
+        }
+        
+
         $("input[name=DEUDOR]").val(resp.IDNRO);
         if( resp.CEDULA != "")
         $("#TITULAR_CI").val(resp.CEDULA);
@@ -107,6 +115,14 @@ function input_number_millares(ev) {
 
         });
         let resp = await req.json();
+        if(  "auth_error" in resp )
+        {
+            alert(  resp.auth_error );
+            window.location=  resp.redirect;
+        }
+        
+
+
         let dataArray = resp.map(function(value) {
             return {
                 label: "( " + value.CEDULA + " )" + value.NOMBRES + " " + value.APELLIDOS,
@@ -176,6 +192,13 @@ function input_number_millares(ev) {
             body: payload
         });
         let resp = await req.json();
+        if(  "auth_error" in resp )
+        {
+            alert(  resp.auth_error );
+            window.location=  resp.redirect;
+        }
+        
+        
         //Re habilitar
         $("button[type=submit]").prop("disabled", false);
         hide_loader();

@@ -66,6 +66,14 @@ COBROS
     show_loader();
     let req = await fetch(pagina);
     let resp = await req.json();
+
+    if(  "auth_error" in resp )
+        {
+            alert(  resp.auth_error );
+            window.location=  resp.redirect;
+        }
+        
+        
     if ("ok" in resp) act_grilla();
     else alert(resp.err);
   }

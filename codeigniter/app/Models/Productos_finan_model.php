@@ -4,10 +4,10 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class  Parametros_model extends Model
+class  Productos_finan_model extends Model
 {
 
-    protected $table = 'parametros';
+    protected $table = 'productos_finan';
 
     protected $primaryKey = 'IDNRO';
 
@@ -16,7 +16,9 @@ class  Parametros_model extends Model
 
     protected $allowedFields =
     [
-        'BCP_INTERES', 'SALARIO_MIN', 'JORNAL_MIN', 'IVA'
+       'DESCRIPCION',  'INTERES_PORCE', 'GAST_ADM_PORCE', 'DIASXMES', 'DIASXANIO', 'MESESXANIO',
+        'SEGURO_CANCEL',  'SEGURO_3ROS',  'MORA_PORCE', 'PUNITORIO_PORCE',  'CODIGO_PRODUCTO',
+        'DIAS_SIN_INTERES'
     ];
 
 

@@ -8,7 +8,10 @@ APROBACIÓN DE OPERACIÓN Y GENERACIÓN DE VENCIMIENTOS
 
 <?= $this->section("contenido") ?>
 
+<!-- LINK AL CUAL SE DEBE DIRECCIONAR AL TERMINAR DE GRABAR -->
 <input type="hidden" id="OPERACIONES-INDEX" value="<?= base_url("operacion/generar-vencimiento") ?>">
+<!--LISTA LA OPERACIONES DE CREDITO REGISTRADAS PARA OBTENER EL ULTIMO CODIGO Y GENERAR UNO NUEVO,
+EL ULTIMO + 1 -->
 <input type="hidden" id="INDEX-OPERACIONES" value="<?= base_url('operacion/list') ?>">
 
 <div id="loaderplace">
@@ -19,32 +22,40 @@ APROBACIÓN DE OPERACIÓN Y GENERACIÓN DE VENCIMIENTOS
 <?php
 echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"]);
 ?>
- 
+
+<!--UNA VEZ APROBADO EL CREDITO CAMBIARA SU ESTADO -->
 <input type="hidden" name="ESTADO" value="PROCESADO">
-<input type="hidden" name="PROCESADO_POR" value="<?=session("ID")?>">
+<input type="hidden" name="PROCESADO_POR" value="<?= session("ID") ?>">
+
 
 <div class="row mr-md-5 ml-md-5 mb-1" style="background-color: #00968826;">
     <div class="col-12 col-md-4 ">
+        <!--DATOS DE CLIENTE (SOLO LECTURA )-->
         <?= view("operacion/forms/form_cliente_view") ?>
     </div>
 
     <div class="col-12 col-md-4">
-        <?= view("operacion/forms/form_opera1") ?>
+        <!-- VIEW:  monto de credito , numero de cuotas y fecha de primer vencimiento -->
+        <?= view("operacion/forms/form_data_principal") ?>
 
     </div>
     <div class="col-12 col-md-4 ">
-        <?= view("operacion/forms/form_opera2") ?>
+        <!-- VIEW: Gastos administrativos, seguro de cancelacion, seguro de terceros -->
+        <?= view("operacion/forms/form_seguro_gasto") ?>
     </div>
 
 </div>
 <div class="row mr-md-5 ml-md-5 mb-1 pt-2">
+    <!-- VIEW: Codigo de operacion, empresa encargada, numero de factura -->
     <?= view("operacion/forms/form_codigos") ?>
 </div>
 <div class="row mr-md-5 ml-md-5 mb-1 text-light pt-2  bg-primary">
 
     <div class="col-12 col-md-7">
-        <?= view("operacion/forms/form_opera3") ?>
-        <?= view("operacion/forms/form_opera4") ?>
+        <!-- VIEW: parametros de total en intereses, total IVA de intereses, porcentaje de interes y  porcentaje de IVA -->
+        <?= view("operacion/forms/form_intereses") ?>
+        <!-- VIEW: monto final del prestamo, capital neto a desembolsar, importe de la cuota      -->
+        <?= view("operacion/forms/form_montos_calculados") ?>
     </div>
 
     <div class="col-12 col-md-5 ">
@@ -52,7 +63,8 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
         <?= view("operacion/forms/form_garantes") ?>
     </div>
 </div>
-<?= view("aprobacion/generacion/create_detail_cuotas") ?>
+
+<?= view("aprobacion/create_detail_cuotas") ?>
 
 <div class="row mr-md-5 ml-md-5 ">
     <div class="col-12">
@@ -67,70 +79,27 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
 
 <?= view("validations/formato_numerico") ?>
 <?= view("validations/form_validate") ?>
+
 <?= view("operacion/js/calculador_montos") ?>
 
-<script> 
-
-
-    async function filtrar_operaciones(params) {
-
-
-        let url_ = $("#INDEX-OPERACIONES").val();
-        show_loader();
-/*
-        let parametros_keys = Object.keys(params);
-        let strquery = parametros_keys.map(function(clave) {
-            return clave + "=" + params[clave];
-        }).join("&");
-        let parametros = strquery;*/
-
-        let parametros= {} ;
-        Object.assign( parametros,  params);
-        parametros["ACCIONES"]= ["VER_CUOTA"];
-      
- 
-        let req = await fetch(url_, {
-            "method": "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'formato': "json"
-            },
-            body: JSON.stringify( parametros)
-        });
-        let json_result = await req.json();
-        hide_loader();
-        return json_result;
-
-    }
-
+<script>
     async function generar_codigo_operacion(esto) {
         let selectedValue = esto == undefined ? $("#LETRAS").val() : esto.value;
         let selectedText = $("#LETRAS option[value=" + selectedValue + "]").text();
         let componentes = selectedText.split("-");
         let letra = componentes[0];
-        let numero = componentes[1];
-        let corr = isNaN(parseInt(numero) + 1) ? 0 : parseInt(numero) + 1;
-        //Ya existe codigo de operacion?
-        let coinciden = await filtrar_operaciones({
-            LETRA: letra,
-            CORRELATIVO: corr
-        });
+        let nuevoCodigo = await fetch("<?= base_url("operacion/generar_codigo_operacion") ?>/" + letra);
+        let letra_corre = await nuevoCodigo.json();
+        if(  "auth_error" in letra_corre )
+        {
+            alert(  letra_corre.auth_error );
+            window.location=  letra_corre.redirect;
+        }
+        
 
-        $("input[name=LETRA]").val(letra);
-        $("input[name=CORRELATIVO]").val(corr);
-
+        $("input[name=LETRA]").val(letra_corre.LETRA);
+        $("input[name=CORRELATIVO]").val(letra_corre.CORRELATIVO);
     }
-
-
-
-
-
-
-
- 
- 
- 
 
 
 
@@ -156,7 +125,10 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
 
         formValidator.init(e.target);
         let cabecera = formValidator.getData("application/json");
-        let payload= {CABECERA: cabecera, DETALLE: cuotas_model };
+        let payload = {
+            CABECERA: cabecera,
+            DETALLE: cuotas_model
+        };
         let endpoint = e.target.action;
 
         show_loader();
@@ -169,9 +141,16 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
                 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            body: JSON.stringify( payload)
+            body: JSON.stringify(payload)
         });
         let resp = await req.json();
+        if(  "auth_error" in resp )
+        {
+            alert(  resp.auth_error );
+            window.location=  resp.redirect;
+        }
+        
+
         //Re habilitar
         $("button[type=submit]").prop("disabled", false);
 
@@ -208,56 +187,27 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
 
 
 
-
-
-
-
-
-
-
-
-
-
     window.onload = async function() {
 
-
-        await obtener_parametros();
-        
-
-        calcular_montos();
-
+      //  await obtener_parametros();
+        iniciar_calculos_de_operacion();
 
         mostrarCuotas();
-
         //Codigo de operacion
         generar_codigo_operacion();
 
-        //formato entero
-        let enteros = document.querySelectorAll(".entero");
-        Array.prototype.forEach.call(enteros, function(inpu) {
-            inpu.oninput = formatoNumerico.formatearEntero;
-            $(inpu).addClass("text-right");
-        });
-
-
-        let decimales = document.querySelectorAll(".decimal");
-        Array.prototype.forEach.call(decimales, function(inpu) {
-            inpu.oninput = formatoNumerico.formatearDecimal;
-            $(inpu).addClass("text-right");
-        });
-
-
-
-
+        //formato numerico
+        formatoNumerico.formatearCamposNumericos();
         //Auto calculo
         let autocalc = document.querySelectorAll("#CREDITO, #NRO_CUOTAS,#SEGURO_CANCEL,#SEGURO_3ROS,#GASTOS_ADM ");
         Array.prototype.forEach.call(autocalc, function(inpu) {
             let keep = inpu.oninput;
 
             inpu.oninput = function(ev) {
-                keep(ev);
-                calcular_montos();
-                mostrarCuotas() ;
+                if (typeof keep == "function")
+                    keep(ev);
+                iniciar_calculos_de_operacion();
+                mostrarCuotas();
             };
             $(inpu).addClass("text-right");
         });

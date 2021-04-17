@@ -334,6 +334,13 @@ echo form_open("prestamo/aprobar", ['id' => "aprobacion-form", 'onsubmit' => 'ap
     let url_ = "<?= base_url("categoria_monto/get") ?>/" + id_categoria_monto;
     let req = await fetch(url_);
     let datos = await req.json();
+    if(  "auth_error" in datos )
+        {
+            alert(  datos.auth_error );
+            window.location=  datos.redirect;
+        }
+        
+
     $("#cate-monto").val(dar_formato_millares(datos.MONTO));
     $("#cate-nro-cuo").val(datos.NRO_CUOTAS);
     $("#cate-cuotas").val(dar_formato_millares(datos.CUOTA));
@@ -423,6 +430,22 @@ echo form_open("prestamo/aprobar", ['id' => "aprobacion-form", 'onsubmit' => 'ap
       body: payload
     });
     let resp = await req.json();
+    if(  "auth_error" in resp )
+        {
+            alert(  resp.auth_error );
+            window.location=  resp.redirect;
+        }
+        
+        
+
+    if(  "auth_error" in resp )
+        {
+            alert(  resp.auth_error );
+            window.location=  resp.redirect;
+        }
+        
+
+
     //Re habilitar
     $("button[type=submit]").prop("disabled", false);
     hide_loader();

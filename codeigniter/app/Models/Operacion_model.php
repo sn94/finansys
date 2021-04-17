@@ -17,9 +17,23 @@ class  Operacion_model extends Model
 
     protected $allowedFields =
     [
-        //DURANTE EL REGISTRO
-        'NRO_CLIENTE',  'EMPRESA', 'PRIMER_VENCIMIENTO', 'PORCEN_INTERES', 'TOTAL_INTERESES', 'CREDITO',  'NRO_CUOTAS', 'CUOTA_IMPORTE',
-        'SEGURO_CANCEL', 'GASTOS_ADM', 'SEGURO_3ROS', 'PORCEN_IVA_INTERES', 'TOTAL_INTERESES_IVA','CAPITAL_DESEMBOLSO', 'TOTAL_PRESTAMO',
+//Principales
+        'NRO_CLIENTE', 'PRODUCTO_FINA','SISTEMA',  'EMPRESA', 
+        'PRIMER_VENCIMIENTO', 'CREDITO',  'NRO_CUOTAS',
+    
+//Calculados
+          'CUOTA_IMPORTE',
+          'SEGURO_CANCEL',
+          'SEGURO_3ROS', 
+          'GASTOS_ADM',
+          'TOTAL_INTERESES',
+          'TOTAL_INTERESES_IVA',
+          'CAPITAL_DESEMBOLSO',
+          'TOTAL_PRESTAMO',
+//Parametros
+          'INTERES_PORCE', 
+          'INTERES_IVA_PORCE', 
+
         'ESTADO', 'LETRA', 'CORRELATIVO', 'FACTURA',
         'GARANTE1_CI', 'GARANTE1_NOM', 'GARANTE2_CI', 'GARANTE2_NOM', 'GARANTE3_CI', 'GARANTE3_NOM',
         'FUNCIONARIO',  'PROCESADO_POR',

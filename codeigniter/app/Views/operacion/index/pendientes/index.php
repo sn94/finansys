@@ -19,7 +19,7 @@ OPERACIONES PENDIENTES
    
   <div class="card-body mt-0 pt-0">
 
-    <a class="btn btn-primary" href="<?= base_url('operacion/crear') ?>">CREAR OPERACIÓN</a>
+    <a class="btn btn-primary" href="<?= base_url('operacion/create') ?>">CREAR OPERACIÓN</a>
 
 
 
@@ -57,6 +57,14 @@ OPERACIONES PENDIENTES
     show_loader();
     let req = await fetch(pagina);
     let resp = await req.json();
+
+    if(  "auth_error" in resp )
+        {
+            alert(  resp.auth_error );
+            window.location=  resp.redirect;
+        }
+        
+        
     if( "ok" in resp) act_grilla();
     else alert(  resp.err); 
   }

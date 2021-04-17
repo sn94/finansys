@@ -48,6 +48,7 @@
     #VENC-TABLE tbody tr>td:nth-child(7) {
         width: 100px;
     }
+
     #VENC-TABLE tr th:nth-child(8),
     #VENC-TABLE tbody tr>td:nth-child(8) {
         width: 100px;
@@ -75,8 +76,6 @@
         </tbody>
     </table>
 </div>
-<?= view("aprobacion/js/calc_vencimientos") ?>
-<?= view("aprobacion/js/sistema_frances") ?>
 
 
 <script>
@@ -106,48 +105,13 @@
         return "<tr>" + tds + "</tr>";
     };
 
-    function calcularInteresCuotas(args) {
-        sistemaFrances.init(args);
-        sistemaFrances.generarCuotas();
-        return sistemaFrances.DETALLE_CALCULO;
-    }
-
-
+   
 
     async function mostrarCuotas() {
-
-
-
-
         $("#VENC-TABLE tbody").html("");
-
-        let fechaPrimerVenc = $("#PRIMER_VENCIMIENTO").val();
-        let montoCredito = formValidator.limpiarNumero($("#CREDITO").val());
-        let nroCuotas = formValidator.limpiarNumero($("#NRO_CUOTAS").val());
-        //PARAMS 
-        let porcentajeInteres = parseFloat(formValidator.limpiarNumero($("#PORCEN_INTERES").val())) / 100;
-        let porcentajeIvaInteres = formValidator.limpiarNumero($("#PORCEN_IVA_INTERES").val());
-        let netoDesembolsar = formValidator.limpiarNumero($("#CAPITAL_DESEMBOLSO").val());
-        let montoDeCuota = formValidator.limpiarNumero($("#CUOTA_IMPORTE").val());
-        //Total del prestamp
-        let totalPrestamo= formValidator.limpiarNumero( $("#MONTO-PRESTAMO").val() );
-
-        let calcularInteresParams = {
-            DA: parametrosCalc['DIASXANIO'], //dias del anio
-            MA: parametrosCalc['MESESXANIO'], //Meses del anio
-            DM: parametrosCalc['DIASXMES'], //Dias del mes
-            CAPITAL: netoDesembolsar,
-            TOTAL_PRESTAMO: totalPrestamo  ,//Nuevo
-            NRO_CUOTAS: nroCuotas,
-            PORCEN_INTERES: porcentajeInteres,
-            PORCEN_IVA: porcentajeIvaInteres,
-            PRIMER_VENCIMIENTO: fechaPrimerVenc,
-            FORMATO: "M",
-            DIAS_PAGO: [1, 2, 3, 4, 5, 6]
-        };
-
         //cuota vencimiento dia
-        let detalleGenCuota = calcularInteresCuotas(calcularInteresParams);
+        await iniciar_calculos_de_operacion();
+        let detalleGenCuota = getTipoDeCalculoElegido().DETALLE_CALCULO;
         cuotas_model = detalleGenCuota.map((cuo) => {
             return {
                 NUMERO: cuo.IDCUOTA,
@@ -158,7 +122,6 @@
                 CAPITAL: cuo.CAPITAL,
                 MONTO: cuo.CUOTA,
                 SALDO: cuo.SALDO
-
             };
         });
 

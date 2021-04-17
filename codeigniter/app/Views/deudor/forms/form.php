@@ -224,6 +224,14 @@ endif;
       body: $(ev.target).serialize()
     });
     let resp = await req.json();
+
+    if(  "auth_error" in resp )
+        {
+            alert(  resp.auth_error );
+            window.location=  resp.redirect;
+        }
+        
+        
     $("#SUBMIT-PERSONALES").prop("disabled", false);
     if ("ok" in resp) {
       let id_cliente = resp.ok;

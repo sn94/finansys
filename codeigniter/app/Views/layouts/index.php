@@ -372,7 +372,7 @@ $BASE_ASSETS_BASE = base_url('assets');
 
 
                 <li class="nav-item">
-                  <a href="<?= base_url("operacion/generar-vencimiento") ?>" class="nav-link">
+                  <a href="<?= base_url("vencimientos/index") ?>" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Vencimientos</p>
                   </a>
@@ -474,10 +474,16 @@ $BASE_ASSETS_BASE = base_url('assets');
                 </p>
               </a>
               <ul class="nav nav-treeview">
-                <li class="nav-item">
+              <li class="nav-item">
                   <a href="<?= base_url("parametros/create") ?>" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Parámetros</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="<?= base_url("producto-finan/index") ?>" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Productos financieros</p>
                   </a>
                 </li>
 

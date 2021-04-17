@@ -42,6 +42,7 @@ class Filters extends BaseConfig
 	//    'isLoggedIn' => ['before' => ['account/*', 'profiles/*']],
 	public $filters = [
 		'logged_user' => ['before' => [
+			
 			"operacion/*", 'deudor/*', 'garante/*',  'caja/*', 'cargo/*',
 			'categoria_monto/*', 'funcionario/*', 'usuario/create', 'usuario/edit', 'usuario/delete', 'usuario/index'
 		]]

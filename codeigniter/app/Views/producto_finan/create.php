@@ -1,14 +1,23 @@
 <?= $this->extend("layouts/index") ?>
+<?= $this->section("title") ?>
+PRODUCTOS FINANCIEROS
+<?= $this->endSection() ?>
+
 <?= $this->section("contenido") ?>
 
+
+<?php 
+
+$FORM_URL=  isset( $dato ) ? "producto-finan/edit" :  "producto-finan/create"; 
+?>
 
 <div id="loaderplace">
 </div>
 
-<h4 class="text-center">PARÁMETROS</h4>
+ 
  <?php
     echo form_open(
-        "parametros/create",
+        $FORM_URL,
         [
             "id"=> "param-form",
             "style" => "padding-left: 5px;",
@@ -19,7 +28,7 @@
     );
     ?>
 
- <?php echo view('parametros/form'); ?>
+ <?php echo view('producto_finan/form'); ?>
 
  </form>
 

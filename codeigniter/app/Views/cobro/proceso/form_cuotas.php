@@ -141,6 +141,12 @@
        headers: {  formato:  "json"}
      });
      cuotas_data_model = await req.json();
+     if(  "auth_error" in cuotas_data_model )
+        {
+            alert(  cuotas_data_model.auth_error );
+            window.location=  cuotas_data_model.redirect;
+        }
+        
 
 
    }

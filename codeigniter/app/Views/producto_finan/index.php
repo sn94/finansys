@@ -1,24 +1,22 @@
 <?= $this->extend("layouts/index") ?>
+<?= $this->section("title") ?>
+PRODUCTOS FINANCIEROS
+<?= $this->endSection() ?>
+
+
 <?= $this->section("contenido") ?>
 
 
 
-<input type="hidden" id="INDEX-URL" value="<?= base_url("parametros/index") ?>">
+<input type="hidden" id="INDEX-URL" value="<?= base_url("producto-finan/index") ?>">
 
-<div class="card">
-  <div class="card-header card-header-primary">
-    <h4 class="text-center">PARÁMETROS</h4>
-  </div>
-
-  <div id="loaderplace">
-  </div>
-
-  <div class="container-fluid" id="grill">
-<?= view("parametros/grill")?>
-
-  </div>
+<div id="loaderplace">
 </div>
+<a class="btn btn-primary btn-sm" href="<?= base_url('producto-finan/create') ?>">NUEVO</a>
+<div class="container-fluid" id="grill">
+  <?= view("producto_finan/grill") ?>
 
+</div>
 
 <script>
   function show_loader() {
@@ -43,19 +41,17 @@
   }
 
 
-  function borrarFila(ev) {
+ async function borrarFila(ev) {
 
     ev.preventDefault();
     if (!confirm("BORRAR?")) return;
-    $.ajax({
-      url: ev.currentTarget.href,
-      dataType: "json",
-      success: function(resp) {
-        console.log(typeof resp, resp);
+
+    let req=  await fetch(  ev.currentTarget.href );
+    let resp =  await req.json(); 
         if (!("error" in resp)) //Ojo los parentesis internos
-          $("#" + resp.id).remove();
-      }
-    });
+          $("#row" + resp.ok).remove();
+
+     
 
   }
 </script>

@@ -41,7 +41,7 @@ echo form_open("operacion/create",  ["onsubmit" => "guardar(event)"]);
 
     window.onload = function() {
 
-        obtener_parametros();
+        iniciar_calculos_de_operacion();
         //formato entero
         let enteros = document.querySelectorAll(".entero");
 
@@ -56,7 +56,7 @@ echo form_open("operacion/create",  ["onsubmit" => "guardar(event)"]);
             inpu.oninput = function(ev) {
 
 
-                calcular_montos();
+                iniciar_calculos_de_operacion();
                 if (typeof keep == "function") {
                     keep(ev);
                 }

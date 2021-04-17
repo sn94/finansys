@@ -415,6 +415,13 @@ MostrarEstadisticaCobro();
 async function MostrarEstadisticaCobro(){ 
     let resultados= await  fetch("<?=base_url("prestamo/total_cobrados_por_dia")?>");
     let resultados_=   await resultados.json();
+    if(  "auth_error" in resultados )
+        {
+            alert(  resultados.auth_error );
+            window.location=  resultados.redirect;
+        }
+        
+
     //preparar info
     let sourceData= resultados_.map(function(item){
         return [item.FECHA, parseInt(item.EFECTIVO), parseInt( item.CHEQUE), parseInt(item.TARJETA) ];

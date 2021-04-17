@@ -125,6 +125,13 @@ BUSQUE UN CLIENTE PARA CREAR UNA OPERACIÓN
       body: "BUSCADO=" + buscado + "&LIMITE=10"
     });
     clientes_solicitudes = await req.json();
+    if(  "auth_error" in clientes_solicitudes )
+        {
+            alert(  clientes_solicitudes.auth_error );
+            window.location=  clientes_solicitudes.redirect;
+        }
+        
+
     hide_loader();
     cargar_tabla();
   }

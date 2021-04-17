@@ -19,24 +19,24 @@
 
 
     <div class="col-12 col-md-4 pt-1">
-        <?= view("operacion/forms/form_opera1") ?>
+        <?= view("operacion/forms/form_data_principal") ?>
     </div>
     <div class="col-12 col-md-4 pt-1 bg-primary" id="FICHA-CLIENTE">
 
         <?= view("operacion/forms/form_cliente_view",  ['CLIENTE'=>  $CLIENTE]) ?>
     </div>
     <div class="col-12 col-md-4 bg-primary  pt-1">
-        <?= view("operacion/forms/form_opera2") ?>
+        <?= view("operacion/forms/form_seguro_gasto") ?>
     </div>
 </div>
 
 <div class="row mr-md-5 ml-md-5 mb-1 pt-2 mt-0 bg-primary">
     <div class="col-12 col-md-5 ">
 
-        <?= view("operacion/forms/form_opera3") ?>
+        <?= view("operacion/forms/form_intereses") ?>
     </div>
     <div class="col-12 col-md-5">
-        <?= view("operacion/forms/form_opera4") ?>
+        <?= view("operacion/forms/form_montos_calculados") ?>
     </div>
     <div class="col-12 col-md-2 ">
         <div class="row mr-md-5 ml-md-5 ">
@@ -55,7 +55,7 @@
 
 <?= view("validations/formato_numerico") ?>
 <?= view("validations/form_validate") ?>
-<?= view("aprobacion/js/sistema_frances") ?>
+
 <?= view("operacion/js/calculador_montos") ?>
 <script>
     function campos_requeridos() {
@@ -101,6 +101,13 @@
             body: payload
         });
         let resp = await req.json();
+        if(  "auth_error" in resp )
+        {
+            alert(  resp.auth_error );
+            window.location=  resp.redirect;
+        }
+        
+        
         //Re habilitar
         $("button[type=submit]").prop("disabled", false);
         //  restaurar_sep_miles();

@@ -90,6 +90,12 @@ $PORCENTAJE =  !isset($dato) ? "" :   $dato->PORCENTAJE;
              body: $(ev.target).serialize()
          });
          let resp = await req.json();
+         if(  "auth_error" in resp )
+        {
+            alert(  resp.auth_error );
+            window.location=  resp.redirect;
+        }
+        
          if ("ok" in resp) {
              limpiar_campos( ev );
              act_grilla();

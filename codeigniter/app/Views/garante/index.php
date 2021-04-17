@@ -21,7 +21,7 @@
 <?php  foreach($lista as $i):?>
 <tr id="<?=$i->IDNRO?>">
 <td><a href="<?= base_url("garante/view/$i->IDNRO")?>"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
-<td><a href="<?= base_url("garante/edit/$i->IDNRO")?>"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+<td><a href="<?= base_url("garante/edit/$i->IDNRO")?>"><i class="fa fa-edit" aria-hidden="true"></i></a></td>
 <td><a onclick="borrarFila(event)" href="<?= base_url("garante/delete/$i->IDNRO")?>"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
 <td><?=$i->CEDULA?></td><td><?=$i->NOMBRES?></td><td><?=$i->APELLIDOS?></td><td><?=$i->CIUDAD?></td><td><?=$i->TELEFONO?></td></tr>
                         <?php  endforeach;?>

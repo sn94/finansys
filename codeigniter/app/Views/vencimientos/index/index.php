@@ -32,7 +32,7 @@ VENCIMIENTOS
   }
 </style>
 
-<input type="hidden" id="INDEX-OPERACIONES-PARA-VENC" value="<?= base_url('operacion/list') ?>">
+<input type="hidden" id="INDEX-OPERACIONES-PARA-VENC" value="<?= base_url('vencimientos/index') ?>">
 
 
 
@@ -104,7 +104,7 @@ VENCIMIENTOS
         'Content-Type': 'application/json',
         'X-Requested-With': 'XMLHttpRequest'
       },
-      body: JSON.stringify( {"BUSCADO": buscado , ESTADO: "APROBADO", ACCIONES: ["COBRAR", "VER_CUOTA"] } )
+      body: JSON.stringify( {"BUSCADO": buscado } )
     });
     let html_result = await req.text();
     hide_loader();
