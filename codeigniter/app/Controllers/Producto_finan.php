@@ -19,13 +19,16 @@ class Producto_finan extends BaseController
 	public function index()
 	{
 
-		$params = (new Productos_finan_model())->select(
-			"productos_finan.*,
-	format(MORA_PORCE,  4,  'de_DE' ) AS MORA_PORCE  , FORMAT(PUNITORIO_PORCE, 4, 'de_DE' ) as PUNITORIO_PORCE,
-	 format(GAST_ADM_PORCE,  4,  'de_DE' ) AS GAST_ADM_PORCE ,
-	 format(INTERES_PORCE,  4,  'de_DE' )  AS INTERES_PORCE
-	"
-		)->get()->getResult();
+		$params = (new Productos_finan_model())
+		->select("productos_finan.*,
+				
+			format( SEGURO_CANCEL, 0, 'de_DE') as SEGURO_CANCEL,
+			format( INTERES_PORCE, 4, 'de_DE') as INTERES_PORCE,
+				 format( GAST_ADM_PORCE, 4, 'de_DE') as GAST_ADM_PORCE,
+				 format( MORA_PORCE, 4, 'de_DE') as MORA_PORCE,
+				 format( PUNITORIO_PORCE, 4, 'de_DE') as PUNITORIO_PORCE
+			  ")
+	->get()->getResult();
 
 
 
@@ -84,6 +87,8 @@ class Producto_finan extends BaseController
 
 			$param =  (new Productos_finan_model())->select("productos_finan.*,
 				
+			format( SEGURO_CANCEL, 0, 'de_DE') as SEGURO_CANCEL,
+			format( INTERES_PORCE, 4, 'de_DE') as INTERES_PORCE,
 				 format( GAST_ADM_PORCE, 4, 'de_DE') as GAST_ADM_PORCE,
 				 format( MORA_PORCE, 4, 'de_DE') as MORA_PORCE,
 				 format( PUNITORIO_PORCE, 4, 'de_DE') as PUNITORIO_PORCE

@@ -4,8 +4,7 @@
 use App\Helpers\Mobile_Detect;
 
 $ES_MOBILE=  (new Mobile_Detect())->isMobile() ;
-
-
+ 
 /*
 
 Acciones permitidas para operaciones aprobadas:
@@ -16,13 +15,12 @@ Acciones permitidas para operaciones aprobadas:
 ACCION_GRILL  VER_CUOTA |  COBRAR
 
 */
+ 
 
-
-
-
+$params=  isset($COBRANZA) ? [ 'COBRANZA'=> 'SI']: [];
 if(  $ES_MOBILE )  
-echo view("operacion/index/aprobados/grill/mobile");
+echo view("operacion/index/aprobados/grill/mobile", $params);
 else
-echo view("operacion/index/aprobados/grill/desktop");
+echo view("operacion/index/aprobados/grill/desktop", $params);
 ?>
  

@@ -37,9 +37,9 @@ public static function get($cedula){
 		$funcio= new Usuario_model();
 		$registro= $funcio->where('CEDULA',  $cedula)->first();
 		if( is_null($registro))
-		echo view("usuario/form", [ "OPERACION"=> "A" , "ADICIONAL"=>"CI° NO REGISTRADO"] );
+		echo view("usuario/forms/index", [ "OPERACION"=> "A" , "ADICIONAL"=>"CI° NO REGISTRADO"] );
 		else
-			echo view("usuario/form", array("usuario_dato"=> $registro , "OPERACION"=>"M"));
+			echo view("usuario/forms/index", array("usuario_dato"=> $registro , "OPERACION"=>"M"));
 }
  
 
@@ -90,7 +90,7 @@ public static function get($cedula){
 			$permisos=  $permi_model->findAll();
 
 			if($this->request->isAJAX())
-			echo view('usuario/form',  ['OPERACION'=>"A", 'permisos'=> $permisos]);  
+			echo view('usuario/forms/index',  ['OPERACION'=>"A", 'permisos'=> $permisos]);  
 			else
 			echo view('usuario/create', ['OPERACION'=>"A", 'permisos'=> $permisos ]);  	}
 	}
@@ -132,7 +132,7 @@ public static function get($cedula){
 		$registro= $funcio->find( $id );
 		helper("form");
 		if( $this->request->isAJAX()) {	 	
-		echo view("usuario/form", array("dato"=> $registro)  );}
+		echo view("usuario/forms/index", array("dato"=> $registro)  );}
 		else {	  echo view("usuario/view", array("usuario_dato"=> $registro, "OPERACION"=> "V" )  );}
 	}
 	 

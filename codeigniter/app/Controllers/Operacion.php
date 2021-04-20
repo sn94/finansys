@@ -152,7 +152,7 @@ class Operacion extends BaseController
 			//return redirect()->to("index");
 		} else {
 			if (is_null($ID_OPERACION))
-				echo view('operacion/index/aprobados/index', ['ACCION_GRILL' => ['VER_CUOTA']]);
+				echo view('operacion/index/aprobados/index');
 			else {
 
 
@@ -253,13 +253,12 @@ class Operacion extends BaseController
 		$data_ = $this->request->getJSON(true);
 
 
-		//acciones
-		$acciones =  $data_['ACCIONES'];
-
+	 
 		//RECOGER PARAMETROS
 		$CLIENTE = is_null($IDCLIENTE) ? "" :  $IDCLIENTE;
 		$ESTADO =  $data_["ESTADO"];
 		$BUSCADO =   $data_["BUSCADO"];
+		$COBRANZA =   array_key_exists("COBRANZA",  $data_) ? $data_["COBRANZA"] : false ;//para cobranza?
 
 		$operac = (new Operacion_model())->builder();
 
@@ -299,10 +298,13 @@ class Operacion extends BaseController
 		//Formato HTML
 		$data = [
 			'OPERACION' => $operac->paginate(10),
-			'pager' => $operac->pager,
-			'ACCION_GRILL' => $acciones
+			'pager' => $operac->pager
+			 
 		];
 		if ($CLIENTE == "") {
+			if( $COBRANZA)   $data['COBRANZA'] = true; 
+ 
+			 
 			if ($this->request->isAJAX())
 				return view("operacion/index/aprobados/grill/index",  $data);
 			else

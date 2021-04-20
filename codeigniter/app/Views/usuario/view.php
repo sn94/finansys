@@ -15,7 +15,7 @@
 <!-- INI FORM -->
 <form style="padding-left: 10px;"  id="viewusuario" enctype="multipart/form-data" class="form-horizontal form-label-left container" method="post" action="/usuario/edit">
 
-<?php echo view('usuario/form'); ?>
+<?php echo view('usuario/forms/index'); ?>
 
 </form>
 <script>

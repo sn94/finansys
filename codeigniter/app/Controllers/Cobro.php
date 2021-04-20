@@ -180,7 +180,17 @@ class Cobro  extends BaseController
 		}
 
 		//GET REQUEST
-		if (is_null($ID_OPERACION)) return view("operacion/index/aprobados/index", ['ACCION_GRILL' => ['COBRAR']]);
+		/*
+		$requestService= \Config\Services::request();
+$request=  $requestService->uri;
+echo $request->getPath();
+
+//Mostrar boton de cobro, dependiendo de la url de origen en el request
+$mostrarBotonDeCobro = false;
+if( preg_match( "",  $request->getPath()  ) )  $mostrarBotonDeCobro= true;
+
+	*/
+		if (is_null($ID_OPERACION)) return view("operacion/index/aprobados/index", ['COBRANZA'=>"SI"]);
 
 		if ((new Operacion_model())->find($ID_OPERACION)->ESTADO != "APROBADO")
 			return  view("plantillas/error", ['titulo' => "<NO PERMITIDO>", "mensaje" => "ESTA OPERACIÓN  AÚN NO FUE APROBADA "]);

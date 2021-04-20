@@ -20,7 +20,7 @@ echo form_open("usuario/edit",
  "class"=> "form-horizontal form-label-left container prestyle" ])
 ?>
 
-<?php echo view('usuario/form'); ?>
+<?php echo view('usuario/forms/index'); ?>
 
 </form>
 

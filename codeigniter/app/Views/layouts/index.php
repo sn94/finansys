@@ -330,10 +330,13 @@ $BASE_ASSETS_BASE = base_url('assets');
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
 
-          <div class="info">
-            <a href="#" class="d-block">
-              <i class="fa fa-user"></i>
+          <div class="info w-100" style="display: flex;flex-direction: row;justify-content: space-between;">
+            <a href="#"  style="display: flex;flex-direction: row;" >
+              <i class="fa fa-user d-block"></i>
               <?= session("NICK") ?>
+            </a>
+            <a href="<?=base_url("usuario/sign-out")?>" class="d-block"   style="text-decoration: underline;font-weight: 600;color: #bfbe53;" >
+             Salir
             </a>
           </div>
         </div>
@@ -506,6 +509,12 @@ $BASE_ASSETS_BASE = base_url('assets');
                   </a>
                 </li>
 
+                <li class="nav-item">
+                  <a href="<?= base_url("usuario/index") ?>" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>USuarios</p>
+                  </a>
+                </li>
               </ul>
             </li>
 

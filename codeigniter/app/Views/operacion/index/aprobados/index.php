@@ -2,6 +2,12 @@
 
 use App\Helpers\Utilidades;
 
+
+//MOSTRAR BOTON DE COBRO
+$COBRANZA = "NO";
+if (isset($COBRANZA))  $COBRANZA = "SI";
+
+
 ?>
 
 <?= $this->extend("layouts/index") ?>
@@ -12,7 +18,7 @@ VENCIMIENTOS
 
 <?= $this->section("contenido") ?>
 
- 
+
 <style>
   #BUSCADO::placeholder {
     color: black;
@@ -32,23 +38,20 @@ VENCIMIENTOS
   }
 </style>
 
-<input type="hidden" id="INDEX-OPERACIONES-PARA-VENC" value="<?= base_url('operacion/list') ?>">
 
-
-
-
-
+<input type="hidden" id="SHOW-COBRO" value="<?= $COBRANZA ?>">
+<input type="hidden" id="INDEX-OPERACIONES-APROBADAS" value="<?= base_url('operacion/list') ?>">
 <input type="text" oninput="filtrar_operaciones(event)" id="BUSCADO" placeholder="BUSCAR POR CEDULA, O NOMBRE, O CÓDIGO DE OPERACION" class="form-control">
 
 
 
-<!--BOTONES DE ACCION --> 
+<!--BOTONES DE ACCION -->
 <a class="btn btn-primary mt-3" href="#">FACTURA CRÉDITO</a>
 <a class="btn btn-primary mt-3" href="#">IMPRIMIR
 </a>
 
 <div id="GRILL" class="mt-1" style="overflow-y: auto;height: 200px;">
- 
+
 </div>
 <div id="GRILL-CUOTAS">
 
@@ -76,12 +79,11 @@ VENCIMIENTOS
     show_loader();
     let req = await fetch(pagina);
     let resp = await req.json();
-    if(  "auth_error" in resp )
-        {
-            alert(  resp.auth_error );
-            window.location=  resp.redirect;
-        }
-        
+    if ("auth_error" in resp) {
+      alert(resp.auth_error);
+      window.location = resp.redirect;
+    }
+
     if ("ok" in resp) act_grilla();
     else alert(resp.err);
   }
@@ -91,20 +93,23 @@ VENCIMIENTOS
 
     //borrar vista actual de cuotas
     $("#GRILL-CUOTAS").html("");
-
-
     let buscado = ev == undefined ? "" : ev.target.value;
-    let url_ = $("#INDEX-OPERACIONES-PARA-VENC").val();
-
+    let url_ = $("#INDEX-OPERACIONES-APROBADAS").val();
     show_loader();
 
+    let bodyreq = {
+      "BUSCADO": buscado,
+      ESTADO: "APROBADO"
+    };
+
+    if ($("#SHOW-COBRO").val() == "SI") bodyreq.COBRANZA = "SI";
     let req = await fetch(url_, {
       "method": "POST",
       headers: {
         'Content-Type': 'application/json',
         'X-Requested-With': 'XMLHttpRequest'
       },
-      body: JSON.stringify( {"BUSCADO": buscado , ESTADO: "APROBADO", ACCIONES: ["COBRAR", "VER_CUOTA"] } )
+      body: JSON.stringify(bodyreq)
     });
     let html_result = await req.text();
     hide_loader();
@@ -135,7 +140,7 @@ VENCIMIENTOS
 
 
   window.onload = function() {
-   filtrar_operaciones();
+    filtrar_operaciones();
   };
 </script>
 <?= $this->endSection() ?>

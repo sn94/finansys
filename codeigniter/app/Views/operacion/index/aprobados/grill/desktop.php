@@ -14,13 +14,23 @@
     width: 100px;
   }
 </style>
+
+ 
+
+
 <table id="OPERACIONES-CON-VENC" class="table table-bordered table-striped prestyle  ">
   <thead class="dark-head">
     <tr style="font-family: mainfont;">
 
-      <?php foreach ($ACCION_GRILL as $accion) : ?>
+
+
+      <?php if ( isset($COBRANZA)) :
+        ?>
         <th></th>
-      <?php endforeach; ?>
+      <?php endif; ?>
+
+      <th></th>
+      <!--ver cuotas-->
 
 
 
@@ -46,19 +56,18 @@
       <tr id="<?= $i->IDNRO ?>">
 
 
-        <?php foreach ($ACCION_GRILL as $accion) :
-          if ($accion ==  "COBRAR") :  ?>
-            <td class="p-0">
-              <a class="btn btn-primary btn-sm" href="<?= base_url("cobro/create/" . $i->IDNRO) ?>">COBRAR </a>
-            </td>
-          <?php endif;
-          if ($accion ==  "VER_CUOTA") : ?>
-            <td style='padding: 0px;'>
-              <a onclick="verCuotas(event)" class="btn btn-sm btn-primary m-0" href="<?= base_url("operacion/cuotas/" . $i->IDNRO) ?>">Ver cuotas</a>
-            </td>
-          <?php endif;   ?>
+        <?php if ( isset($COBRANZA)) : ?>
+          <td class="p-0">
+            <a class="btn btn-primary btn-sm" href="<?= base_url("cobro/create/" . $i->IDNRO) ?>">COBRAR </a>
+          </td>
+        <?php endif; ?>
 
-        <?php endforeach; ?>
+
+        <td style='padding: 0px;'>
+          <a onclick="verCuotas(event)" class="btn btn-sm btn-primary m-0" href="<?= base_url("operacion/cuotas/" . $i->IDNRO) ?>">Ver cuotas</a>
+        </td>
+
+
 
 
 
