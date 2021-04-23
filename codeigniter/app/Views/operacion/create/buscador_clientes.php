@@ -10,6 +10,10 @@ BUSQUE UN CLIENTE PARA CREAR UNA OPERACIÓN
   #BUSCADO::placeholder {
     color: black;
   }
+
+  #BUSCADOR-CLIENTES thead tr th:nth-child(0), #BUSCADOR-CLIENTES thead tr th:nth-child(1){
+width: 90px;
+  }
 </style>
 
 <input type="hidden" id="INDEX-CLIENTE" value="<?= base_url('deudor/index/json') ?>">
@@ -26,7 +30,7 @@ BUSQUE UN CLIENTE PARA CREAR UNA OPERACIÓN
     <div class="table-responsive">
 
 
-      <table class="table table-bordered table-striped table-hover">
+      <table id="BUSCADOR-CLIENTES" class="table table-bordered table-striped table-hover table-info">
 
         <thead>
           <tr style="font-family: textfont;">
@@ -34,7 +38,9 @@ BUSQUE UN CLIENTE PARA CREAR UNA OPERACIÓN
             <th></th>
             <th>CEDULA</th>
             <th>NOMBRES,APELLIDOS</th>
-            <th>TIPO CRÉDITO</th>
+            <th>DOMICILIO</th>
+            <th>TELÉFONO</th>
+            <th>REGISTRADO</th>
           </tr>
         </thead>
 
@@ -81,22 +87,27 @@ BUSQUE UN CLIENTE PARA CREAR UNA OPERACIÓN
 
       let idnro = row.IDNRO;
       let cedula = row.CEDULA;
-      let nombres = row.NOMBRES;
-      let tipo_credito = row.TIPO_CREDITO;
+      let nombres = row.NOMBRE_COMPLETO;
+      let domicilio = row.DOMICILIO;
+      let telefono= row.TELEFONO;
+      let registrado= row.REGISTRADO;
+
       let link_ope_create = $("#OPERACION-CREATE").val() + "/" + idnro;
       let link_ope_list= $("#OPERACION-LIST").val() + "/" + idnro;
       
       /**campos */
 
-      let boton_crear = " <a class='btn btn-primary btn-sm'  href='" + link_ope_create + "' >CREAR</a>";
+      let boton_crear = " <a class='btn btn-primary btn-sm w-100'  href='" + link_ope_create + "' >CREAR</a>";
       let boton_ver = " <a   href='" + link_ope_list + "' > <i class='fa fa-eye'  ></i> </a>";
 
       let cell1 = create_cell(boton_crear);
       let cell11= create_cell(boton_ver);
       let cell2 = create_cell(cedula);
       let cell3 = create_cell(nombres);
-      let cell4 = create_cell(tipo_credito);
-      let string_r = "<tr> " + cell1 + cell11+ cell2 + cell3 + cell4 + " </tr>";
+      let cell4 = create_cell(domicilio);
+      let cell5 = create_cell(telefono);
+      let cell6 = create_cell(registrado);
+      let string_r = "<tr> " + cell1 + cell11+ cell2 + cell3 + cell4 + cell5+ cell6+" </tr>";
       return string_r;
     };
     $("#TABLE-BODY").html("");

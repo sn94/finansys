@@ -72,14 +72,16 @@ endif;
 
       <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
 
-        <form method="POST" action="<?= base_url("deudor/create") ?>" onsubmit="guardar_datos_personales(event)">
+        <form id="FORM-LABORAL" method="POST" action="<?= base_url("deudor/create-ficha-laboral") ?>" onsubmit="guardar_ficha_laboral(event)">
           <?php
           $IDNRO =  !isset($deudor_dato) ? "" :   $deudor_dato->IDNRO;
           ?>
-          <input class="personal-id" type="hidden" name="IDNRO" value="<?= $IDNRO ?>">
+          <input class="personal-id" type="hidden" name="NRO_CLIENTE" value="<?= $IDNRO ?>">
           <input type="hidden" class="PERMITIDO-ENVIO-SOLICI" value="0">
 
-          <?= $this->include("deudor/forms/laborales") ?>
+         <div  id="FORM-LABORAL-CONTENT">
+         <?= $this->include("deudor/forms/ficha_laboral") ?>
+         </div>
           <button type="submit" class="btn btn-primary"> GUARDAR </button>
         </form>
 
@@ -103,16 +105,17 @@ endif;
 
 
       <div class="tab-pane fade" id="family-panel" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
-        <form method="POST" action="<?= base_url("deudor/create") ?>" onsubmit="guardar_datos_personales(event)">
+        <form id="FORM-FAMILIAS" method="POST" action="<?= base_url("deudor/create-ficha-familiar") ?>" onsubmit="guardar_ficha_familiar(event)">
           <?php
           $IDNRO =  !isset($deudor_dato) ? "" :   $deudor_dato->IDNRO;
           ?>
-          <input class="personal-id" type="hidden" name="IDNRO" value="<?= $IDNRO ?>">
+          <input class="personal-id" type="hidden" name="NRO_CLIENTE" value="<?= $IDNRO ?>">
           <input type="hidden" class="PERMITIDO-ENVIO-SOLICI" value="0">
 
+         <div id="FORM-FAMILIAS-CONTENT">
+         <?= $this->include("deudor/forms/ficha_familiar") ?>
+         </div>
 
-          <?= $this->include("deudor/forms/conyuge") ?>
-          <?= $this->include("deudor/forms/familiares") ?>
           <button type="submit" class="btn btn-primary"> GUARDAR </button>
         </form>
 

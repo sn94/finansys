@@ -23,6 +23,7 @@ class Producto_finan extends BaseController
 		->select("productos_finan.*,
 				
 			format( SEGURO_CANCEL, 0, 'de_DE') as SEGURO_CANCEL,
+			format( SEGURO_3ROS, 0, 'de_DE') as SEGURO_3ROS,
 			format( INTERES_PORCE, 4, 'de_DE') as INTERES_PORCE,
 				 format( GAST_ADM_PORCE, 4, 'de_DE') as GAST_ADM_PORCE,
 				 format( MORA_PORCE, 4, 'de_DE') as MORA_PORCE,

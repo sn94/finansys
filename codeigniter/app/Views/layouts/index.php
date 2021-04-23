@@ -19,12 +19,9 @@ $BASE_ASSETS_BASE = base_url('assets');
 
   <title>Finanweb</title>
 
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="<?= $BASE_ASSETS ?>/plugins/fontawesome-free/css/all.min.css">
-  <!-- Ionicons -->
-  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
   <!-- Tempusdominus Bootstrap 4 -->
   <link rel="stylesheet" href="<?= $BASE_ASSETS ?>/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
   <!-- iCheck -->
@@ -39,8 +36,7 @@ $BASE_ASSETS_BASE = base_url('assets');
   <link rel="stylesheet" href="<?= $BASE_ASSETS ?>/plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
   <link rel="stylesheet" href="<?= $BASE_ASSETS ?>/plugins/summernote/summernote-bs4.min.css">
-  <!-- AUTO COMPLETADO -->
-  <link rel="stylesheet" href="<?= $BASE_ASSETS_BASE ?>/awesomplete/awesomplete.min.css">
+
   <!--  PNOTIFY -->
   <link rel="stylesheet" href="<?= $BASE_ASSETS_BASE ?>/pnotify/pnotify.css">
 
@@ -50,14 +46,11 @@ $BASE_ASSETS_BASE = base_url('assets');
 
 
   <style>
-    @import url("<?= base_url('assets/Raleway-SemiBold.ttf') ?>");
-
     @font-face {
       font-family: "mainfont";
       src: url("<?= base_url('assets/Raleway-SemiBold.ttf') ?>");
     }
 
-    @import url("<?= base_url('assets/Raleway-Regular.ttf') ?>");
 
     @font-face {
       font-family: "textfont";
@@ -87,6 +80,10 @@ $BASE_ASSETS_BASE = base_url('assets');
       background: #3F51B5 !important;
     }
 
+    .bg-info {
+      background-color: #17a2b821 !important;
+    }
+
     .text-primary {
       color: #3F51B5 !important;
     }
@@ -94,14 +91,23 @@ $BASE_ASSETS_BASE = base_url('assets');
 
 
     .form-control {
-      /* height: calc(2.25rem + 2px); */
-      /* font-size: 1rem; */
-      /* background-color: #fff; */
-      height: calc(2rem + 2px);
+
+      /* height: calc(2rem + 2px);*/
+
+      height: calc(1.8rem + 2px);
       font-size: 0.9rem;
       background-color: #B3E5FC;
       border: 1px solid #8c91d7;
     }
+
+    .form-control input[type=date], .form-control select{
+      padding-top: 1px !important;
+    }
+    .form-control input[type=date] span.datetime-edit-field.numeric{
+      padding-top: 1px !important;
+    }
+
+
 
 
 
@@ -168,15 +174,6 @@ $BASE_ASSETS_BASE = base_url('assets');
 
 
 
-    /**awesomplete */
-
-    #awesomplete_list_2 {
-      z-index: 1000000;
-      position: absolute;
-      opacity: 1;
-      background-color: #0072aa;
-      color: wheat;
-    }
 
     .visually-hidden {
       display: none;
@@ -229,7 +226,7 @@ $BASE_ASSETS_BASE = base_url('assets');
             <a href="#" class="dropdown-item">
               <!-- Message Start -->
               <div class="media">
-                <img src="<?= $BASE_ASSETS ?>dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                <img src="<?= $BASE_ASSETS ?>/dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                 <div class="media-body">
                   <h3 class="dropdown-item-title">
                     Brad Diesel
@@ -245,7 +242,7 @@ $BASE_ASSETS_BASE = base_url('assets');
             <a href="#" class="dropdown-item">
               <!-- Message Start -->
               <div class="media">
-                <img src="<?= $BASE_ASSETS ?>dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                <img src="<?= $BASE_ASSETS ?>/dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                 <div class="media-body">
                   <h3 class="dropdown-item-title">
                     John Pierce
@@ -261,7 +258,7 @@ $BASE_ASSETS_BASE = base_url('assets');
             <a href="#" class="dropdown-item">
               <!-- Message Start -->
               <div class="media">
-                <img src="<?= $BASE_ASSETS ?>dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                <img src="<?= $BASE_ASSETS ?>/dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
                 <div class="media-body">
                   <h3 class="dropdown-item-title">
                     Nora Silvester
@@ -331,12 +328,12 @@ $BASE_ASSETS_BASE = base_url('assets');
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
 
           <div class="info w-100" style="display: flex;flex-direction: row;justify-content: space-between;">
-            <a href="#"  style="display: flex;flex-direction: row;" >
+            <a href="#" style="display: flex;flex-direction: row;">
               <i class="fa fa-user d-block"></i>
               <?= session("NICK") ?>
             </a>
-            <a href="<?=base_url("usuario/sign-out")?>" class="d-block"   style="text-decoration: underline;font-weight: 600;color: #bfbe53;" >
-             Salir
+            <a href="<?= base_url("usuario/sign-out") ?>" class="d-block" style="text-decoration: underline;font-weight: 600;color: #bfbe53;">
+              Salir
             </a>
           </div>
         </div>
@@ -477,7 +474,7 @@ $BASE_ASSETS_BASE = base_url('assets');
                 </p>
               </a>
               <ul class="nav nav-treeview">
-              <li class="nav-item">
+                <li class="nav-item">
                   <a href="<?= base_url("parametros/create") ?>" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Parámetros</p>
@@ -663,8 +660,7 @@ $BASE_ASSETS_BASE = base_url('assets');
 
   <script src="<?= $BASE_ASSETS_BASE ?>/xls_gen/xls.js<?= '?v=' . microtime(true) ?>"></script>
   <script src="<?= $BASE_ASSETS_BASE ?>/xls_gen/xls_ini.js"></script>
-  <!--AUTOCOMPLETADO -->
-  <script src="<?= $BASE_ASSETS_BASE ?>/awesomplete/awesomplete.min.js"></script>
+
   <!--AUTOCOMPLETADO -->
   <script src="<?= $BASE_ASSETS_BASE ?>/pnotify/pnotify.js"></script>
 

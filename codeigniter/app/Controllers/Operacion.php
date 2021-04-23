@@ -2,16 +2,12 @@
 
 namespace App\Controllers;
 
-use App\Models\Cobro_model;
+use Dompdf\Dompdf;
 use App\Models\Cuotas_model;
-use App\Models\Detalle_cobro_model;
 use App\Models\Deudor_model;
 use App\Models\Empresa_model;
 use App\Models\Letras_model;
 use App\Models\Operacion_model;
-use App\Models\Prestamo_model;
-use CodeIgniter\Database\Exceptions\DatabaseException;
-use Exception;
 
 class Operacion extends BaseController
 {
@@ -74,7 +70,7 @@ class Operacion extends BaseController
 
 
 
- 
+
 
 	public function create($IDCLIENTE = null)
 	{
@@ -86,12 +82,11 @@ class Operacion extends BaseController
 			$db = \Config\Database::connect();
 			$reg->insert($datos);
 			return $this->response->setJSON(array("ok" => $db->insertID()));
-			//return redirect()->to("index");
 		} else {
 
-			if( is_null( $IDCLIENTE))
-			return view("operacion/create/buscador_clientes");
-
+			if (is_null($IDCLIENTE))
+				return view("operacion/create/buscador_clientes");
+			//Recoger datos de cliente con ID  $IDCLIENTE
 			$CLIENTE =   (new Deudor_model())
 				->select("deudor.*, format( MONTO_SOLICI, 0, 'de_DE') as MONTO_SOLICI")
 				->where("IDNRO",  $IDCLIENTE)->first();
@@ -104,7 +99,7 @@ class Operacion extends BaseController
 
 
 
-	public function generar_vencimiento($ID_OPERACION =  NULL)
+	public function aprobar($ID_OPERACION =  NULL)
 	{
 		if ($this->request->getMethod() === 'post') {
 			//Datos del formulario
@@ -216,7 +211,7 @@ class Operacion extends BaseController
 				->where("operacion.IDNRO", $ID_OPERACION)->first();
 
 
-			echo view('operacion/edit',  ['OPERACION' =>  $operacion]);
+			return view('operacion/create/form',  ['OPERACION' =>  $operacion, 'EDITAR' => true]);
 		}
 	}
 
@@ -247,48 +242,44 @@ class Operacion extends BaseController
 
 
 
+	/**
+	 * Lista las operaciones de cierto cliente
+	 */
 	public function  list($IDCLIENTE = NULL)
 	{
 
 		$data_ = $this->request->getJSON(true);
 
-
-	 
 		//RECOGER PARAMETROS
 		$CLIENTE = is_null($IDCLIENTE) ? "" :  $IDCLIENTE;
-		$ESTADO =  $data_["ESTADO"];
-		$BUSCADO =   $data_["BUSCADO"];
-		$COBRANZA =   array_key_exists("COBRANZA",  $data_) ? $data_["COBRANZA"] : false ;//para cobranza?
+		$ESTADO =  isset($data_["ESTADO"]) ? $data_["ESTADO"] : "";
+
+		$BUSCADO =  isset($data_["BUSCADO"]) ?  $data_["BUSCADO"] : "";
+		$COBRANZA =   isset($data_['COBRANZA']) ? $data_["COBRANZA"] : false; //para cobranza?
 
 		$operac = (new Operacion_model())->builder();
 
 		//jOIN CLIENTE
-		if ($CLIENTE != "") {
-			$operac = $operac->join("deudor", "deudor.IDNRO = operacion.NRO_CLIENTE")
-				->select("operacion.*, deudor.CEDULA,concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRES")
-				->where("NRO_CLIENTE", $IDCLIENTE)
-				->where("ESTADO",  $ESTADO)
-				->orderBy("operacion.IDNRO", "DESC");
-		} else {
-			if ($BUSCADO != "") {
-				$operac = $operac->join("deudor", "deudor.IDNRO = operacion.NRO_CLIENTE")
-					->select("operacion.*, deudor.CEDULA,concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRES")
-					->where("ESTADO",  $ESTADO)
-					->like('deudor.CEDULA', $BUSCADO)
-					->orLike('deudor.NOMBRES', $BUSCADO)
-					->orLike('deudor.APELLIDOS', $BUSCADO)
-					->orLike('concat(operacion.LETRA, concat("-", operacion.CORRELATIVO))', $BUSCADO)
-					->orderBy("operacion.IDNRO", "DESC");
-			} else {
-				$operac = $operac->join("deudor", "deudor.IDNRO = operacion.NRO_CLIENTE")
-					->select("operacion.*, deudor.CEDULA,concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRES")
-					->where("ESTADO",  $ESTADO)
-					->orderBy("operacion.IDNRO", "DESC");
-			}
-		}
+		$selectFields = "operacion.*, productos_finan.DESCRIPCION AS PRODUCTO_FINANCIERO, format(operacion.CREDITO, 0, 'de_DE') AS CREDITO,  deudor.CEDULA,concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRES,
+		operacion.created_at as REGISTRADO, operacion.updated_at as ACTUALIZADO";
 
+		$operac = $operac->join("deudor", "deudor.IDNRO = operacion.NRO_CLIENTE")
+			->join("productos_finan", "productos_finan.IDNRO = operacion.PRODUCTO_FINA", "left")
+			->select($selectFields);
 
+		if ($CLIENTE != "")
+			$operac = $operac->where("NRO_CLIENTE",  $CLIENTE);
 
+		if ($ESTADO != "")
+			$operac = $operac->where("ESTADO",  $ESTADO);
+
+		if ($BUSCADO != "")
+			$operac = $operac->groupStart()
+				->like('deudor.CEDULA', $BUSCADO)
+				->orLike('deudor.NOMBRES', $BUSCADO)
+				->orLike('deudor.APELLIDOS', $BUSCADO)
+				->orLike('concat(operacion.LETRA, concat("-", operacion.CORRELATIVO))', $BUSCADO)
+				->groupEnd();
 		//Formato de respuest 
 		if ($this->getRequestContentType() ==  "json") {
 			return $this->response->setJSON($operac->get()->getResult());
@@ -299,12 +290,12 @@ class Operacion extends BaseController
 		$data = [
 			'OPERACION' => $operac->paginate(10),
 			'pager' => $operac->pager
-			 
+
 		];
 		if ($CLIENTE == "") {
-			if( $COBRANZA)   $data['COBRANZA'] = true; 
- 
-			 
+			if ($COBRANZA)   $data['COBRANZA'] = true;
+
+
 			if ($this->request->isAJAX())
 				return view("operacion/index/aprobados/grill/index",  $data);
 			else
@@ -354,5 +345,39 @@ if( FECHA_PAGO IS NULL, '', DATE_FORMAT( FECHA_PAGO,  '%d/%m/%Y' )   ) AS FECHA_
 			->select(" if( LETRA is NULL, '$letra', LETRA) AS LETRA, IF(CORRELATIVO IS NULL, 1 , max(CORRELATIVO)+1) AS CORRELATIVO  ")
 			->first();
 		return $this->response->setJSON($nuevo_codigo);
+	}
+
+
+
+	public function generar_informe_crediticio($ID_OPERACION)
+	{
+		//Ficha operacion
+		$operacion = (new Operacion_model())->find($ID_OPERACION);
+
+		//Cuotas
+		$cuotas = (new Cuotas_model())->where("OPERACION",  $ID_OPERACION)->get()->getResult();
+
+		//Ficha cliente
+		$NRO_CLIENTE =  $operacion->NRO_CLIENTE;
+		$cliente = (new Deudor_model())->find($NRO_CLIENTE);
+
+		//Empresa
+		$empresa= (new Empresa_model())->find( $operacion->EMPRESA);
+
+		 
+
+		// instantiate and use the dompdf class
+		$dompdf = new Dompdf();
+		$dompdf->loadHtml( view("operacion/informes/resumen_crediticio", 
+		[ "cliente"=>$cliente, "operacion"=>  $operacion, "cuotas"=> $cuotas, "empresa"=> $empresa] ));
+
+		// (Optional) Setup the paper size and orientation
+		$dompdf->setPaper('A4', 'landscape');
+
+		// Render the HTML as PDF
+		$dompdf->render();
+
+		// Output the generated PDF to Browser
+		$dompdf->stream();
 	}
 }

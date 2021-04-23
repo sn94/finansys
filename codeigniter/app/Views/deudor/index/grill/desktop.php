@@ -11,11 +11,11 @@
 
 
 <?php
-$COLUMNS =  ["", "",  "CI°/RUC", "NOMBRES/RAZÓN SOCIAL", "TELÉFONO", "FEC. SOLICI.", "TIPO CRÉD.", "ÚLT. ACT."];
+$COLUMNS =  ["", "",  "CI°/RUC", "NOMBRES/RAZÓN SOCIAL", "TELÉFONO", "DOMICILIO", "REGISTRADO"];
 ?>
 
 <!-- ********************TABLA ***************** -->
-<table id="tabla-funcionarios" class="mt-2 table table-bordered table-stripped prestyle">
+<table id="tabla-funcionarios" class="mt-2 table table-bordered table-striped table-hover table-info">
   <thead class="dark-head">
     <tr style="font-family: textfont;">
       <?php foreach ($COLUMNS as $COL) : ?>
@@ -37,10 +37,8 @@ $COLUMNS =  ["", "",  "CI°/RUC", "NOMBRES/RAZÓN SOCIAL", "TELÉFONO", "FEC. SO
         <td><?= $i->CEDULA ?></td>
         <td><?= $i->NOMBRES ?></td>
         <td><?= $i->TELEFONO ?></td>
-        <td><?= Utilidades::fecha_f($i->FECHA_SOLICI) ?></td>
-        <td><?= $i->TIPO_CREDITO ?></td>
-        <td><?= Utilidades::fecha_f($i->ULT_ACT) ?></td>
-        
+        <td><?= $i->DOMICILIO?></td>
+        <td><?= $i->REGISTRADO ?></td> 
       </tr>
 
     <?php endforeach; ?>

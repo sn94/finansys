@@ -3,6 +3,12 @@
 use App\Helpers\Utilidades;
 
 $IDNRO =  !isset($dato) ? "" :   $dato->IDNRO;
+
+$MONTO_MINIMO =  !isset($dato) ? "" :  $dato->MONTO_MINIMO;
+$MONTO_MAXIMO =  !isset($dato) ? "" :  $dato->MONTO_MAXIMO;
+$NCUOTAS_MINIMO =  !isset($dato) ? "" :  $dato->NCUOTAS_MINIMO;
+$NCUOTAS_MAXIMO =  !isset($dato) ? "" :  $dato->NCUOTAS_MAXIMO;
+
 $CODIGO_PRODUCTO =  !isset($dato) ? "" :  $dato->CODIGO_PRODUCTO;
 $DESCRIPCION =  !isset($dato) ? "" :  $dato->DESCRIPCION;
 $INTERES_PORCE =  !isset($dato) ? "0,0" :  $dato->INTERES_PORCE;
@@ -21,87 +27,109 @@ $PUNITORIO_PORCE =  !isset($dato) ? "0" : ($dato->PUNITORIO_PORCE == "" ?  "0" :
   <input type="hidden" name="IDNRO" value="<?= $IDNRO ?>">
 <?php endif; ?>
 
-<div class="container-fluid col-12 col-md-6">
-
-<div class="row">
-
-  <div class="col-12 col-md-6">
-
-    <div style="display: flex; flex-direction: column;">
-      <label>CÓDIGO PRODUCTO:</label>
-      <input name="CODIGO_PRODUCTO" maxlength="5" required type="text" class="form-control" value="<?= $CODIGO_PRODUCTO ?>">
-    </div>
-    <div style="display: flex; flex-direction: column;">
-      <label>DESCRIPCIÓN:</label>
-      <input name="DESCRIPCION" maxlength="30" required type="text" class="form-control" value="<?= $DESCRIPCION ?>">
-    </div>
+<div class="container-fluid col-12 col-md-8 col-lg-7">
 
 
-    <div style="display: flex; flex-direction: column;">
-      <label>% INTERÉS:</label>
-      <input name="INTERES_PORCE" type="text" class="form-control decimal" value="<?= $INTERES_PORCE ?>">
-    </div>
-    
-    <div style="display: flex; flex-direction: column;">
-      <label>DIAS SIN INTERÉS TRAS VENC.:</label>
-      <input name="DIAS_SIN_INTERES" type="text" class="form-control entero" value="<?= $DIAS_SIN_INTERES ?>">
-    </div>
+  <div class="row">
 
-    <div style="display: flex; flex-direction: column;">
-      <label>% GASTOS ADM.:</label>
-      <input name="GAST_ADM_PORCE" type="text" class="form-control decimal" value="<?= $GAST_ADM_PORCE ?>">
-    </div>
-    <div style="display: flex; flex-direction: column;">
-      <label>SEGURO DE CANCELACIÓN:</label>
-      <input name="SEGURO_CANCEL" type="text" class="form-control entero" value="<?= $SEGURO_CANCEL ?>">
-    </div>
-
-  </div>
-
-  <div class="col-12 col-md-6">
-
-  <div style="display: flex; flex-direction: column;">
-      <label>% MORA:</label>
-      <input name="MORA_PORCE" type="text" class="form-control decimal" value="<?= $MORA_PORCE ?>">
-    </div>
-    
- 
-    <div style="display: flex; flex-direction: row;">
+    <div class="col-12 col-md-4">
       <div style="display: flex; flex-direction: column;">
-        <label>DIAS P/MES:</label>
-        <input maxlength="2" name="DIASXMES" type="text" class="form-control entero" value="<?= $DIASXMES ?>">
+        <label>MONTO MÍN.:</label>
+        <input name="MONTO_MINIMO" required type="text" class="form-control entero" value="<?= $MONTO_MINIMO ?>">
       </div>
       <div style="display: flex; flex-direction: column;">
-        <label>DIAS P/AÑO:</label>
-        <input maxlength="3" name="DIASXANIO" type="text" class="form-control entero" value="<?= $DIASXANIO ?>">
+        <label>MONTO MÁX.:</label>
+        <input name="MONTO_MAXIMO" required type="text" class="form-control entero" value="<?= $MONTO_MAXIMO ?>">
       </div>
+
+      <div style="display: flex; flex-direction: column;">
+        <label>N° CUOTAS DESDE:</label>
+        <input name="NCUOTAS_MINIMO" required type="text" class="form-control entero" value="<?= $NCUOTAS_MINIMO ?>">
+      </div>
+      <div style="display: flex; flex-direction: column;">
+        <label>N° CUOTAS HASTA:</label>
+        <input name="NCUOTAS_MAXIMO" required type="text" class="form-control entero" value="<?= $NCUOTAS_MINIMO ?>">
+      </div>
+      <div style="display: flex; flex-direction: column;">
+        <label>CÓDIGO PRODUCTO:</label>
+        <input name="CODIGO_PRODUCTO" maxlength="5" required type="text" class="form-control" value="<?= $CODIGO_PRODUCTO ?>">
+      </div>
+
+    </div>
+    <div class="col-12 col-md-4">
+
+
+      <div style="display: flex; flex-direction: column;">
+        <label>DESCRIPCIÓN:</label>
+        <input name="DESCRIPCION" maxlength="30" required type="text" class="form-control" value="<?= $DESCRIPCION ?>">
+      </div>
+
+
+      <div style="display: flex; flex-direction: column;">
+        <label>% INTERÉS:</label>
+        <input name="INTERES_PORCE" type="text" class="form-control decimal" value="<?= $INTERES_PORCE ?>">
+      </div>
+
+      <div style="display: flex; flex-direction: column;">
+        <label>DIAS SIN INTERÉS:</label>
+        <input name="DIAS_SIN_INTERES" type="text" class="form-control entero" value="<?= $DIAS_SIN_INTERES ?>">
+      </div>
+
+      <div style="display: flex; flex-direction: column;">
+        <label>% GASTOS ADM.:</label>
+        <input name="GAST_ADM_PORCE" type="text" class="form-control decimal" value="<?= $GAST_ADM_PORCE ?>">
+      </div>
+      <div style="display: flex; flex-direction: column;">
+        <label>SEGURO DE CANCELACIÓN:</label>
+        <input name="SEGURO_CANCEL" type="text" class="form-control entero" value="<?= $SEGURO_CANCEL ?>">
+      </div>
+
+    </div>
+
+    <div class="col-12 col-md-4">
+
+      <div style="display: flex; flex-direction: column;">
+        <label>% MORA:</label>
+        <input name="MORA_PORCE" type="text" class="form-control decimal" value="<?= $MORA_PORCE ?>">
+      </div>
+
+
+      <div style="display: flex; flex-direction: row;">
+        <div style="display: flex; flex-direction: column;">
+          <label>DIAS P/MES:</label>
+          <input maxlength="2" name="DIASXMES" type="text" class="form-control entero" value="<?= $DIASXMES ?>">
+        </div>
+        <div style="display: flex; flex-direction: column;">
+          <label>DIAS P/AÑO:</label>
+          <input maxlength="3" name="DIASXANIO" type="text" class="form-control entero" value="<?= $DIASXANIO ?>">
+        </div>
+      </div>
+
+
+
+
+      <div style="display: flex; flex-direction: column;">
+        <label>MESES P/AÑO:</label>
+        <input maxlength="2" name="MESESXANIO" type="text" class="form-control entero" value="<?= $MESESXANIO ?>">
+      </div>
+      <div style="display: flex; flex-direction: column;">
+        <label>SEGURO A NOM. DE 3ROS.:</label>
+        <input name="SEGURO_3ROS" type="text" class="form-control entero" value="<?= $SEGURO_3ROS ?>">
+      </div>
+      <div style="display: flex; flex-direction: column;">
+        <label>% PUNITORIO:</label>
+        <input name="PUNITORIO_PORCE" type="text" class="form-control decimal" value="<?= $PUNITORIO_PORCE ?>">
+      </div>
+
+      <?php if (!isset($vista)) : ?>
+
+        <button type="submit" class="btn btn-primary mt-1 w-100">GUARDAR</button>
+
+      <?php endif; ?>
     </div>
 
 
-
-
-    <div style="display: flex; flex-direction: column;">
-      <label>MESES P/AÑO:</label>
-      <input maxlength="2" name="MESESXANIO" type="text" class="form-control entero" value="<?= $MESESXANIO ?>">
-    </div>
-    <div style="display: flex; flex-direction: column;">
-      <label>SEGURO A NOM. DE 3ROS.:</label>
-      <input name="SEGURO_3ROS" type="text" class="form-control entero" value="<?= $SEGURO_3ROS ?>">
-    </div>
-    <div style="display: flex; flex-direction: column;">
-      <label>% PUNITORIO:</label>
-      <input name="PUNITORIO_PORCE" type="text" class="form-control decimal" value="<?= $PUNITORIO_PORCE ?>">
-    </div>
-
-    <?php if (!isset($vista)) : ?>
-    
-      <button type="submit" class="btn btn-primary  w-100">GUARDAR</button>
-     
-  <?php endif; ?>
   </div>
-
-
-</div>
 </div>
 
 
@@ -134,7 +162,7 @@ $PUNITORIO_PORCE =  !isset($dato) ? "0" : ($dato->PUNITORIO_PORCE == "" ?  "0" :
       // formValidator.limpiarCampos();
       // restaurar_sep_miles();
       alert("Guardado");
-      window.location= "<?=base_url("producto-finan/index")?>";
+      window.location = "<?= base_url("producto-finan/index") ?>";
     } else {
       // restaurar_sep_miles();
       alert(resp.error);

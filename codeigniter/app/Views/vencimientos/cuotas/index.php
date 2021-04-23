@@ -5,7 +5,7 @@
 
 
 
-<a class="btn btn-primary mb-2" href="<?=base_url("operacion/generar-vencimiento")?>">VOLVER A VENCIMIENTOS</a>
+<a class="btn btn-primary mb-2" href="<?=base_url("operacion/aprobar")?>">VOLVER A VENCIMIENTOS</a>
 
 <?= $this->endSection() ?>
 

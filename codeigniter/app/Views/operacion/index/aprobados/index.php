@@ -30,7 +30,7 @@ VENCIMIENTOS
   }
 
   table thead tr th {
-    font-size: 12px !important;
+    font-size: 14px !important;
   }
 
   table tbody tr td {
@@ -46,8 +46,8 @@ VENCIMIENTOS
 
 
 <!--BOTONES DE ACCION -->
-<a class="btn btn-primary mt-3" href="#">FACTURA CRÉDITO</a>
-<a class="btn btn-primary mt-3" href="#">IMPRIMIR
+<a class="btn btn-sm btn-primary mt-3" href="#">FACTURA CRÉDITO</a>
+<a class="btn btn-sm btn-primary mt-3" href="#">IMPRIMIR
 </a>
 
 <div id="GRILL" class="mt-1" style="overflow-y: auto;height: 200px;">

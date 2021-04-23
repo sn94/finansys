@@ -22,7 +22,7 @@ use App\Helpers\Utilidades;
 foreach ($lista as $it) :  ?>
     <tr>
       <td class="p-0">
-        <a class="btn btn-primary" href="<?= base_url("operacion/generar-vencimiento/" . $it->IDNRO) ?>">APROBAR </a>
+        <a class="btn btn-primary" href="<?= base_url("operacion/aprobar/" . $it->IDNRO) ?>">APROBAR </a>
       </td>
       <td  class="p-0">
         <a  href="<?= base_url("operacion/edit/" . $it->IDNRO) ?>" ><i class="fa fa-edit" aria-hidden="true"></i></a>

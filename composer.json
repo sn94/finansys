@@ -1,0 +1,13 @@
+{
+    "name": "sonia/finansys",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Sonia",
+            "email": "soniatoledo294@hotmail.com"
+        }
+    ],
+    "require": {
+        "dompdf/dompdf": "^1.0"
+    }
+}

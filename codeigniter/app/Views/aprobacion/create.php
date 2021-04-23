@@ -8,8 +8,16 @@ APROBACIÓN DE OPERACIÓN Y GENERACIÓN DE VENCIMIENTOS
 
 <?= $this->section("contenido") ?>
 
+<style>
+        input[readonly] {
+        background-color: #8a96d7 !important;
+        color: black !important;
+    }
+</style>
+
+
 <!-- LINK AL CUAL SE DEBE DIRECCIONAR AL TERMINAR DE GRABAR -->
-<input type="hidden" id="OPERACIONES-INDEX" value="<?= base_url("operacion/generar-vencimiento") ?>">
+<input type="hidden" id="OPERACIONES-INDEX" value="<?= base_url("operacion/aprobar") ?>">
 <!--LISTA LA OPERACIONES DE CREDITO REGISTRADAS PARA OBTENER EL ULTIMO CODIGO Y GENERAR UNO NUEVO,
 EL ULTIMO + 1 -->
 <input type="hidden" id="INDEX-OPERACIONES" value="<?= base_url('operacion/list') ?>">
@@ -20,7 +28,7 @@ EL ULTIMO + 1 -->
 
 
 <?php
-echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"]);
+echo form_open("operacion/aprobar",  ["onsubmit" => "guardar(event)"]);
 ?>
 
 <!--UNA VEZ APROBADO EL CREDITO CAMBIARA SU ESTADO -->
@@ -28,37 +36,40 @@ echo form_open("operacion/generar-vencimiento",  ["onsubmit" => "guardar(event)"
 <input type="hidden" name="PROCESADO_POR" value="<?= session("ID") ?>">
 
 
-<div class="row mr-md-5 ml-md-5 mb-1" style="background-color: #00968826;">
+<div class="row mr-md-5 ml-md-5 mb-1 pt-2">
+    <!-- VIEW: Codigo de operacion, empresa encargada, numero de factura -->
+    <?= view("operacion/forms/form_codigos") ?>
+</div>
+
+<div class="row mr-md-5 ml-md-5 mb-1 bg-primary text-light rounded"  >
     <div class="col-12 col-md-4 ">
         <!--DATOS DE CLIENTE (SOLO LECTURA )-->
         <?= view("operacion/forms/form_cliente_view") ?>
     </div>
 
-    <div class="col-12 col-md-4">
+    <div class="col-12 col-md-8">
         <!-- VIEW:  monto de credito , numero de cuotas y fecha de primer vencimiento -->
         <?= view("operacion/forms/form_data_principal") ?>
 
     </div>
-    <div class="col-12 col-md-4 ">
+  
+
+</div>
+
+<div class="row mr-md-5 ml-md-5 mb-1 text-light pt-2  bg-primary rounded">
+<div class="col-12 col-md-3 ">
         <!-- VIEW: Gastos administrativos, seguro de cancelacion, seguro de terceros -->
         <?= view("operacion/forms/form_seguro_gasto") ?>
     </div>
 
-</div>
-<div class="row mr-md-5 ml-md-5 mb-1 pt-2">
-    <!-- VIEW: Codigo de operacion, empresa encargada, numero de factura -->
-    <?= view("operacion/forms/form_codigos") ?>
-</div>
-<div class="row mr-md-5 ml-md-5 mb-1 text-light pt-2  bg-primary">
-
-    <div class="col-12 col-md-7">
+    <div class="col-12 col-md-5">
         <!-- VIEW: parametros de total en intereses, total IVA de intereses, porcentaje de interes y  porcentaje de IVA -->
         <?= view("operacion/forms/form_intereses") ?>
         <!-- VIEW: monto final del prestamo, capital neto a desembolsar, importe de la cuota      -->
         <?= view("operacion/forms/form_montos_calculados") ?>
     </div>
 
-    <div class="col-12 col-md-5 ">
+    <div class="col-12 col-md-4 ">
         <h5 class="text-center text-light">GARANTES</h5>
         <?= view("operacion/forms/form_garantes") ?>
     </div>

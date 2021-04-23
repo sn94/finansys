@@ -2,8 +2,14 @@
 
 namespace App\Controllers;
 
+
 use App\Models\Deudor_model;
 use App\Libraries\pdf_gen\PDF;
+use App\Models\Ficha_familiar_model;
+use App\Models\Ficha_inmuebles_model;
+use App\Models\Ficha_laboral_model;
+use App\Models\Ficha_rodados_model;
+use App\Models\Operacion_model;
 use App\Models\Prestamo_model;
 use Exception;
 
@@ -15,6 +21,8 @@ class Deudor extends BaseController
 	{
 	}
 
+
+	 
 
 	public function index($FORMATODEFAULT =  "html")
 	{
@@ -35,9 +43,9 @@ class Deudor extends BaseController
 			$LIMITE =   is_null($this->request->getPost("LIMITE")) ? "" :  $this->request->getPost("LIMITE");
 
 			$lista = (new Deudor_model())
-				->select(" deudor.IDNRO, deudor.CEDULA,concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRES, deudor.TELEFONO, DATE(deudor.updated_at) as ULT_ACT,
-			IF((select FECHA_SOLICI from prestamo order by created_at limit 1) IS NULL, '', (select DATE(FECHA_SOLICI )from prestamo order by created_at limit 1) ) AS FECHA_SOLICI,
-			IF((select TIPO_CREDITO from prestamo order by created_at limit 1) IS NULL, '', (select TIPO_CREDITO from prestamo order by created_at limit 1) ) AS TIPO_CREDITO
+
+				->select(" deudor.*, concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRE_COMPLETO, 
+				 DATE_FORMAT(deudor.created_at, '%d/%m/%Y') as REGISTRADO,
 			  ")
 				->like('deudor.CEDULA', $BUSCADO)
 				->orLike('deudor.NOMBRES', $BUSCADO)
@@ -192,6 +200,89 @@ class Deudor extends BaseController
 	}
 
 
+
+	public function view_ficha_laboral($idcliente)
+	{
+		$labo = (new Ficha_laboral_model())->where("NRO_CLIENTE", $idcliente)->get()->getResult();
+		return view("deudor/forms/ficha_laboral", ['ficha_laboral' =>  $labo,  'NRO_CLIENTE' =>  $idcliente]);
+	}
+
+
+	public function create_ficha_laboral()
+	{
+		$reg = new Ficha_laboral_model();
+		$db = \Config\Database::connect();
+		$payload =     $this->request->getJSON(TRUE);
+
+		$NRO_CLIENTE =  $payload['NRO_CLIENTE'];
+		$EMPLEOS =  $payload['EMPLEOS'];
+		$db->transStart();
+
+		(new Ficha_laboral_model())->where("NRO_CLIENTE", $NRO_CLIENTE)->delete();
+
+		foreach ($EMPLEOS as $fam) :
+			$reg = new Ficha_laboral_model();
+			//adjuntar cliente
+			$data = array_merge($fam, ['NRO_CLIENTE' => $NRO_CLIENTE]);
+			$reg->insert($data);
+		endforeach;
+		$db->transComplete();
+		//datos 
+		if ($db->transStatus()) {
+			return $this->response->setJSON(['ok' =>   "Guardado"]);
+		} else 	return $this->response->setJSON(['error' => "No se pudo guardar"]);
+	}
+
+
+	public function view_ficha_familiar($idcliente)
+	{
+		$familiares = (new Ficha_familiar_model())->where("NRO_CLIENTE", $idcliente)->get()->getResult();
+		return view("deudor/forms/ficha_familiar", ['ficha_familiar' =>  $familiares]);
+	}
+
+	public function create_ficha_familiar()
+	{
+
+		$db = \Config\Database::connect();
+
+		$payload =     $this->request->getJSON(TRUE);
+
+		$NRO_CLIENTE =  $payload['NRO_CLIENTE'];
+		$FAMILIARES =  $payload['FAMILIARES'];
+		$db->transStart();
+		(new Ficha_familiar_model())->where("NRO_CLIENTE", $NRO_CLIENTE)->delete();
+		foreach ($FAMILIARES as $fam) :
+			$reg = new Ficha_familiar_model();
+			//adjuntar cliente
+			$data = array_merge($fam, ['NRO_CLIENTE' => $NRO_CLIENTE]);
+			$reg->insert($data);
+		endforeach;
+		$db->transComplete();
+		//datos 
+		if ($db->transStatus()) {
+			//	$familiares = (new Ficha_familiar_model())->where("NRO_CLIENTE", $NRO_CLIENTE)->get()->getResult();
+			return $this->response->setJSON(['ok' =>   "Guardado"]);
+		} else 	return $this->response->setJSON(['error' =>   "No se pudo guardar"]);
+
+		// $db->insertID();
+	}
+
+	private function create_ficha_rodados($data)
+	{
+		$reg = new Ficha_rodados_model();
+		$db = \Config\Database::connect();
+		$reg->insert($data);
+		return  $db->insertID();
+	}
+	private function create_ficha_inmuebles($data)
+	{
+		$reg = new Ficha_inmuebles_model();
+		$db = \Config\Database::connect();
+		$reg->insert($data);
+		return  $db->insertID();
+	}
+
+
 	public function create()
 	{
 		$model = new Deudor_model();
@@ -200,6 +291,7 @@ class Deudor extends BaseController
 			//Datos del formulario
 			//Verificar redundacia de CI O RUC
 			$datos = $this->request->getPost();
+
 
 			//Validacion de Numero de cedula
 			if (array_key_exists("CEDULA",    $datos)) {
@@ -214,13 +306,26 @@ class Deudor extends BaseController
 
 
 			//insert o update
-			if ($datos['IDNRO']  !=  "") {
+			if ($datos['IDNRO']  !=  "") { //Update
 				$model->update($datos['IDNRO'],    $datos);
 				return $this->response->setJSON(array("ok" => $datos['IDNRO']));
 			} else {
+				//Crear 
+				//Transaccion
+				//Guardar datos personales
 				$db = \Config\Database::connect();
+				$db->transStart();
+
 				$model->save($datos);
-				return $this->response->setJSON(array("ok" => $db->insertID()));
+				$id_cliente =  $db->insertID();
+
+
+				$db->transComplete();
+
+				if ($db->transStatus())
+					return $this->response->setJSON(array("ok" => $id_cliente));
+				else
+					return $this->response->setJSON(array("error" => "Error al guardar"));
 			}
 		} else {
 			helper("form");
@@ -235,18 +340,24 @@ class Deudor extends BaseController
 
 
 
+	//Solo Get
 	public  function  edit($id = null)
 	{
 		$deudor = (new Deudor_model())->find($id);
 		if (is_null($deudor))
 			echo "CLIENTE CON ID  $id NO EXISTE";
 
-		$parametros =  ['deudor_dato' =>   $deudor];
+		$laboral = (new Ficha_laboral_model())->where("NRO_CLIENTE", $id)->get()->getResult();
+		$familiares = (new Ficha_familiar_model())->where("NRO_CLIENTE", $id)->get()->getResult();
+
+
+		$parametros =  ['deudor_dato' =>   $deudor, 'ficha_laboral' => $laboral, 'ficha_familiar' => $familiares];
+
 		//Datos de la ultima solicitud
-		$solicitudes = (new Prestamo_model())->where("DEUDOR",   $id)->orderBy("created_at", "DESC")->first();
+		/*$solicitudes = (new Prestamo_model())->where("DEUDOR",   $id)->orderBy("created_at", "DESC")->first();
 		if (!is_null($solicitudes))
 			$parametros = array_merge($parametros,  ['prestamo_dato' =>  $solicitudes]);
-
+*/
 		echo view('deudor/create',   $parametros);
 	}
 
@@ -337,7 +448,7 @@ class Deudor extends BaseController
 			echo json_encode($lista);
 		else {
 			$html = $this->generar_html($lista);
-			$tituloDocumento = "clientes-" . date("d") . "-" . date("m") . "-" . date("yy") . "-" . rand();
+			$tituloDocumento = "clientes-" . date("d") . "-" . date("m") . "-" . date("Y") . "-" . rand();
 			//echo $html;
 			$pdf = new PDF();
 			//$pdf = new PDF(); 

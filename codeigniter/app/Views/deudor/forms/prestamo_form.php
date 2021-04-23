@@ -13,22 +13,22 @@ $ANALISIS =  !isset($deudor_dato->ANALISIS) ? "" :  $deudor_dato->ANALISIS;
 $INHIBIDO_SI =  !isset($deudor_dato->INHIBIDO) ? "checked" : ($deudor_dato->INHIBIDO == "SI" ? "checked" : "");
 $INHIBIDO_NO =  !isset($deudor_dato->INHIBIDO) ? "" : ($deudor_dato->INHIBIDO == "NO" ? "checked" : "");
 $MONTO_SOLICI =  !isset($deudor_dato->MONTO_SOLICI) ? "0" : Utilidades::number_f($deudor_dato->MONTO_SOLICI);
-$MONTO_APROBADO =  !isset($deudor_dato->MONTO_APROBADO) ? "0" : Utilidades::number_f($deudor_dato->MONTO_APROBADO);
+$CREDITO =  !isset($deudor_dato->CREDITO) ? "0" : Utilidades::number_f($deudor_dato->CREDITO);
 $MONTO_ENTREGADO =  !isset($deudor_dato->MONTO_ENTREGADO) ? "0" : Utilidades::number_f($deudor_dato->MONTO_ENTREGADO);
-$CUOTAS =  !isset($deudor_dato->CUOTAS) ? "" :  $deudor_dato->CUOTAS;
+$NRO_CUOTAS =  !isset($deudor_dato->NRO_CUOTAS) ? "" :  $deudor_dato->NRO_CUOTAS;
 $INFORCOMF =  !isset($deudor_dato->INFORCOMF) ? "" :  $deudor_dato->INFORCOMF;
 $DICTAMEN =  !isset($deudor_dato->DICTAMEN) ? "" :  $deudor_dato->DICTAMEN;
 $FECHA_INHIBICION =  !isset($deudor_dato->FECHA_INHIBICION) ? "" :  $deudor_dato->FECHA_INHIBICION;
 $FECHA_APROBACION = !isset($deudor_dato->FECHA_APROBACION) ? "" :  $deudor_dato->FECHA_APROBACION;
-$FECHA_SOLICI = !isset($deudor_dato->FECHA_SOLICI) ? "" :  $deudor_dato->FECHA_SOLICI;
+$FECHA_SOLICI = !isset($deudor_dato->FECHA_SOLICI) ? date("Y-m-d") :  $deudor_dato->FECHA_SOLICI;
 $TIPO_CREDITO =  !isset($deudor_dato->TIPO_CREDITO) ? "" :  $deudor_dato->TIPO_CREDITO;
 
 $TIPO_MORA =  !isset($deudor_dato->TIPO_MORA) ? "" :  $deudor_dato->TIPO_MORA;
 $TIPOMORA1 =  $TIPO_MORA == "1" ?  "checked" : "";
 $TIPOMORA2 =  $TIPO_MORA == "2" ?  "checked" : "";
-$OFICIAL =  !isset($deudor_dato->OFICIAL) ? "" :  $deudor_dato->OFICIAL;
+$OFICIAL_CREDITO =  !isset($deudor_dato->OFICIAL_CREDITO) ? "" :  $deudor_dato->OFICIAL_CREDITO;
 $EMPRESA =  !isset($deudor_dato) ? "" :  $deudor_dato->EMPRESA;
-$APROBADO = !isset($deudor_dato) ? "" :  $deudor_dato->APROBADOR;
+$APROBADO_POR = !isset($deudor_dato) ? "" :  $deudor_dato->APROBADO_POR;
 ?>
 <fieldset>
     <legend>DETALLES DE LA SOLICITUD</legend>
@@ -117,7 +117,7 @@ $APROBADO = !isset($deudor_dato) ? "" :  $deudor_dato->APROBADOR;
 
             <div class="form-group">
                 <label>OFICIAL:</label>
-                <input type="text" name="OFICIAL" class="form-control" maxlength="50" value="<?= $OFICIAL ?>">
+                <input type="text" name="OFICIAL_CREDITO" class="form-control" maxlength="50" value="<?= $OFICIAL_CREDITO ?>">
             </div>
         </div>
     </div>
@@ -132,7 +132,7 @@ $APROBADO = !isset($deudor_dato) ? "" :  $deudor_dato->APROBADOR;
 
             <div class="form-group">
                 <label>APROBADO:</label>
-                <input class="form-control" value="<?= $APROBADO ?>" type="text" name="APROBADOR" maxlength="30">
+                <input class="form-control" value="<?= $APROBADO_POR ?>" type="text" name="APROBADO_POR" maxlength="30">
 
             </div>
         </div>
@@ -149,7 +149,7 @@ $APROBADO = !isset($deudor_dato) ? "" :  $deudor_dato->APROBADOR;
         <div class="col-12 col-md-2">
             <div class="form-group">
                 <label>AUTORIZADO:</label>
-                <input class="form-control text-right numerico" value="<?= $MONTO_APROBADO ?>" type="text" name="MONTO_APROBADO" oninput="input_number_millares(event)">
+                <input class="form-control text-right numerico" value="<?= $CREDITO ?>" type="text" name="CREDITO" oninput="input_number_millares(event)">
             </div>
         </div>
 
@@ -163,7 +163,7 @@ $APROBADO = !isset($deudor_dato) ? "" :  $deudor_dato->APROBADOR;
         <div class="col-12 col-md-2">
             <div class="form-group">
                 <label>CUOTAS:</label>
-                <input class="form-control numerico" value="<?= $CUOTAS ?>" type="text" name="CUOTAS" oninput="input_number_millares(event)">
+                <input class="form-control numerico" value="<?= $NRO_CUOTAS ?>" type="text" name="NRO_CUOTAS" oninput="input_number_millares(event)">
             </div>
         </div>
 

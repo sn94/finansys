@@ -16,7 +16,11 @@ REGISTRO DE OPERACIÓN
 </div>
 
 <?php
-echo form_open("operacion/create",  ["onsubmit" => "guardar(event)"]);
+
+
+$formAction=  isset( $EDITAR) ? "operacion/edit"  : "operacion/create";
+
+echo form_open(   $formAction ,  ["onsubmit" => "guardar(event)"]);
 ?>
 <?= view("operacion/forms/index") ?>
 </form>

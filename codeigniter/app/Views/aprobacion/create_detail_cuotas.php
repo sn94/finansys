@@ -1,6 +1,6 @@
 <style>
     #VENC-TABLE tbody tr td,
-    #VENC-TABLE tbody tr th {
+    #VENC-TABLE thead tr th {
         padding: 0px;
         margin-right: 0px;
     }
@@ -58,7 +58,7 @@
 <div class="row mr-md-5 ml-md-5 ">
 
     <button type="button" onclick="mostrarCuotas()" class="btn btn-sm btn-info">Generar cuotas</button>
-    <table class="table table-hover table-sm " id="VENC-TABLE">
+    <table class="table table-hover table-sm table-info table-striped " id="VENC-TABLE">
         <thead>
             <tr>
                 <th>N°</th>

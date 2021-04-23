@@ -1,7 +1,9 @@
 <?php namespace Config;
 
 require_once SYSTEMPATH . 'Config/AutoloadConfig.php';
-
+// include autoloader
+require_once ROOTPATH . '../vendor/autoload.php';
+ 
 /**
  * -------------------------------------------------------------------
  * AUTO-LOADER

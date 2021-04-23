@@ -8,17 +8,18 @@ $GASTOS_ADM =    (isset($OPERACION) ?  $OPERACION->GASTOS_ADM : "0");
 
 ?>
 
-<div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-    <label style="grid-column-start: 1;">SEGURO DE CANCELACIÓN: </label>
-    <input readonly style="grid-column-start: 2;" value="<?= $SEGURO_CANCEL ?>" id="SEGURO_CANCEL" name="SEGURO_CANCEL" type="text" class="form-control entero" value="0">
+ 
+<div class="form-group mb-1">
+    <label >SEGURO DE CANCELACIÓN: </label>
+    <input readonly  value="<?= $SEGURO_CANCEL ?>" id="SEGURO_CANCEL" name="SEGURO_CANCEL" type="text" class="form-control entero" value="0">
 </div>
 
-<div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-    <label style="grid-column-start: 1;">SEGURO DE 3ROS: </label>
-    <input readonly style="grid-column-start: 2;" value="<?= $SEGURO_3ROS ?>" id="SEGURO_3ROS" name="SEGURO_3ROS" type="text" class="form-control entero" value="0">
+<div class="form-group mb-1">
+    <label >SEGURO DE 3ROS: </label>
+    <input readonly  value="<?= $SEGURO_3ROS ?>" id="SEGURO_3ROS" name="SEGURO_3ROS" type="text" class="form-control entero" value="0">
 </div>
 
-<div class="form-group" style="display: grid; grid-template-columns: 40% 60%; ">
-    <label style="grid-column-start: 1;">GASTOS ADM.: </label>
-    <input readonly style="grid-column-start: 2;" value="<?= $GASTOS_ADM ?>" id="GASTOS_ADM" name="GASTOS_ADM" type="text" class="form-control entero" value="0">
-</div>
+<div class="form-group mb-1">
+    <label >GASTOS ADM.: </label>
+    <input readonly  value="<?= $GASTOS_ADM ?>" id="GASTOS_ADM" name="GASTOS_ADM" type="text" class="form-control entero" value="0">
+</div> 

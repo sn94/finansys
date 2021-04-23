@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Ciudades_model;
+
 $CEDULA =  !isset($deudor_dato) ? "" :   $deudor_dato->CEDULA;
 $RUC =  !isset($deudor_dato) ? "" :   $deudor_dato->RUC;
 $NOMBRES = !isset($deudor_dato) ? "" :  $deudor_dato->NOMBRES;
@@ -9,11 +11,13 @@ $FECHA_NAC = !isset($deudor_dato) ? "" :  $deudor_dato->FECHA_NAC;
 $DOMICILIO =  !isset($deudor_dato) ? "" :  $deudor_dato->DOMICILIO;
 $TELEFONO = !isset($deudor_dato) ? "" :  $deudor_dato->TELEFONO;
 $CELULAR = !isset($deudor_dato) ? "" :  $deudor_dato->CELULAR;
-
-
 $EMAIL = !isset($deudor_dato) ? "" :  $deudor_dato->EMAIL;
 $ESTADO_CIVIL = !isset($deudor_dato) ? "" :  $deudor_dato->ESTADO_CIVIL;
 
+
+
+//Llenar dropdown
+$CIUDADES_DEPART = (new Ciudades_model())->select("departa")->groupBy("departa")->distinct()->get()->getResult();
 ?>
 
 
@@ -21,7 +25,7 @@ $ESTADO_CIVIL = !isset($deudor_dato) ? "" :  $deudor_dato->ESTADO_CIVIL;
 <fieldset>
     <legend>DATOS PERSONALES</legend>
 
- 
+
 
     <div class="row m-0">
 
@@ -54,7 +58,19 @@ $ESTADO_CIVIL = !isset($deudor_dato) ? "" :  $deudor_dato->ESTADO_CIVIL;
         <div class="col-12 col-md-3">
             <div class="form-group" style="display: grid; grid-template-columns: 30% 70%; ">
                 <label style="grid-column-start: 1;">LOCALIDAD:</label>
-                <input style="grid-column-start: 2;" type="text" maxlength="50" name="CIUDAD" class="form-control col-md-10 ciudad" autocomplete="off">
+                <select name="CIUDAD" class=" form-control ">
+                    <?php foreach ($CIUDADES_DEPART as $departamento) : ?>
+                        <optgroup label="<?= $departamento->departa ?>">
+                            <?php
+                            $CIUDADES = (new Ciudades_model())->where("departa", $departamento->departa)->get()->getResult();
+                            ?>
+
+                            <?php foreach ($CIUDADES as $ciudad) : ?>
+                                <option value="<?= $ciudad->regnro ?>"> <?= $ciudad->ciudad ?> </option>
+                            <?php endforeach; ?>
+                        </optgroup>
+                    <?php endforeach; ?>
+                </select>
             </div>
 
         </div>

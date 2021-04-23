@@ -25,16 +25,22 @@ if (!is_null($IDCLIENTE)) {
 <?= $this->section("contenido") ?>
 
 
+<style>
+  table tr th,
+  table tbody tr td {
+    padding: 0px !important;
+  }
+</style>
 
-
-<table class="table table-bordered table-stripped prestyle">
+<table class="table table-bordered table-stripped table-info table-hover">
   <thead class="dark-head">
     <tr style="font-family: mainfont;">
 
-
+      <th>ID</th>
       <th>OPERACIÓN</th>
-      <th>CRÉDITO</th>
-      <th>CUOTAS</th>
+      <th>PRODUCTO</th>
+      <th class="text-right">CRÉDITO</th>
+      <th class="text-center">CUOTAS</th>
       <th>ESTADO</th>
       <th>CREADO</th>
       <th>ÚLT.MOD.</th>
@@ -49,11 +55,13 @@ if (!is_null($IDCLIENTE)) {
     foreach ($OPERACION as $i) : ?>
       <tr id="<?= $i->IDNRO ?>">
         <td><?= $i->IDNRO ?></td>
-        <td><?= $i->CREDITO ?></td>
-        <td><?= $i->CUOTAS ?></td>
+        <td><?= $i->LETRA. $i->CORRELATIVO ?></td>
+        <td><?= $i->PRODUCTO_FINANCIERO ?></td>
+        <td class="text-right"><?= $i->CREDITO ?></td>
+        <td class="text-center"><?= $i->NRO_CUOTAS ?></td>
         <td><?= $i->ESTADO ?></td>
-        <td><?= Utilidades::fecha_f($i->created_at) ?></td>
-        <td><?= Utilidades::fecha_f($i->updated_at) ?></td>
+        <td><?= Utilidades::fecha_f($i->REGISTRADO) ?></td>
+        <td><?= Utilidades::fecha_f($i->ACTUALIZADO) ?></td>
       </tr>
 
     <?php endforeach; ?>

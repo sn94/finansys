@@ -15,12 +15,6 @@ FICHA DE CLIENTE
 
 <!-- INI FORM --> 
 <?php echo view('deudor/forms/form'); ?>
-
- 
- 
- 
-
-
 <?= $this->endSection() ?>
 
 

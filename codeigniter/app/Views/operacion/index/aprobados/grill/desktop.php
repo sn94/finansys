@@ -1,7 +1,11 @@
 <style>
   #OPERACIONES-CON-VENC thead tr th:nth-child(1),
   #OPERACIONES-CON-VENC tbody tr td:nth-child(1) {
-    width: 100px;
+    width: 80px;
+  }
+  #OPERACIONES-CON-VENC thead tr th:nth-child(2),
+  #OPERACIONES-CON-VENC tbody tr td:nth-child(2) {
+    width: 90px;
   }
 
   #OPERACIONES-CON-VENC thead tr th:nth-child(5),
@@ -18,16 +22,15 @@
  
 
 
-<table id="OPERACIONES-CON-VENC" class="table table-bordered table-striped prestyle  ">
+<table id="OPERACIONES-CON-VENC" class="table table-bordered table-striped table-info table-hover  ">
   <thead class="dark-head">
     <tr style="font-family: mainfont;">
 
 
 
-      <?php if ( isset($COBRANZA)) :
-        ?>
+      
         <th></th>
-      <?php endif; ?>
+       
 
       <th></th>
       <!--ver cuotas-->
@@ -56,15 +59,19 @@
       <tr id="<?= $i->IDNRO ?>">
 
 
-        <?php if ( isset($COBRANZA)) : ?>
+      
           <td class="p-0">
-            <a class="btn btn-primary btn-sm" href="<?= base_url("cobro/create/" . $i->IDNRO) ?>">COBRAR </a>
+          <?php if ( isset($COBRANZA)) : ?>
+            <a class="btn btn-primary btn-sm w-100" href="<?= base_url("cobro/create/" . $i->IDNRO) ?>">COBRAR </a>
+            <?php else: ?>
+              -
+            <?php endif; ?>
           </td>
-        <?php endif; ?>
+      
 
 
         <td style='padding: 0px;'>
-          <a onclick="verCuotas(event)" class="btn btn-sm btn-primary m-0" href="<?= base_url("operacion/cuotas/" . $i->IDNRO) ?>">Ver cuotas</a>
+          <a onclick="verCuotas(event)" class="btn btn-sm btn-primary m-0 w-100" href="<?= base_url("operacion/cuotas/" . $i->IDNRO) ?>">Ver cuotas</a>
         </td>
 
 
