@@ -19,8 +19,19 @@ class Producto_finan extends BaseController
 	public function index()
 	{
 
+		//verificar como se piden los parametros
+		$headerFormat = $this->request->getHeader("formato");
+		$formato = "html";
+
+		if (!is_null($headerFormat))  $formato =  $headerFormat->getValue();
+
+		if ($formato == "json") {
+			$productos_financieros = (new Productos_finan_model())->get()->getResult();
+			return $this->response->setJSON($productos_financieros);
+		}
+
 		$params = (new Productos_finan_model())
-		->select("productos_finan.*,
+			->select("productos_finan.*,
 				
 			format( SEGURO_CANCEL, 0, 'de_DE') as SEGURO_CANCEL,
 			format( SEGURO_3ROS, 0, 'de_DE') as SEGURO_3ROS,
@@ -29,9 +40,7 @@ class Producto_finan extends BaseController
 				 format( MORA_PORCE, 4, 'de_DE') as MORA_PORCE,
 				 format( PUNITORIO_PORCE, 4, 'de_DE') as PUNITORIO_PORCE
 			  ")
-	->get()->getResult();
-
-
+			->get()->getResult();
 
 		if ($this->request->isAJAX())
 			return view("producto_finan/grill",  ['producto_finan' => $params]);

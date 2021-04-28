@@ -2,11 +2,12 @@
 
 /**Datos de cliente y su ultima solicitud */
 
-$IDCLIENTE =   (isset($OPERACION) ? $OPERACION->NRO_CLIENTE :   "");
-$CEDULA =   isset($OPERACION) ? $OPERACION->CEDULA :   "";
-$NOMBRES =  isset($OPERACION) ? $OPERACION->NOMBRES : "" ;
-$MONTO_SOLICITADO =  isset($OPERACION) ? $OPERACION->MONTO_SOLICI : "0" ;
-$TIPO_CREDITO =   isset($OPERACION) ?  $OPERACION->TIPO_CREDITO : "";
+$IDCLIENTE =   (isset($CLIENTE) ? $CLIENTE->IDNRO :   "");
+$CEDULA =   isset($CLIENTE) ? $CLIENTE->CEDULA :   "";
+$NOMBRES =  isset($CLIENTE) ? $CLIENTE->NOMBRES : "" ;
+$MONTO_SOLICITADO =  isset($CLIENTE) ? $CLIENTE->MONTO_SOLICI : "0" ;
+$FECHA_SOLICITADO =  isset($CLIENTE) ? $CLIENTE->FECHA_SOLICI : date("Y-m-d");
+$TIPO_CREDITO =   isset($CLIENTE) ?  $CLIENTE->TIPO_CREDITO : "";
 
 ?>
 
@@ -38,7 +39,9 @@ $TIPO_CREDITO =   isset($OPERACION) ?  $OPERACION->TIPO_CREDITO : "";
     <label >NOMBRES: </label>
     <input readonly  type="text" class="form-control" value="<?= $NOMBRES ?>">
 </div>
-<div class="form-group mb-1" >
+<div class="form-group mb-1 " >
     <label >MONTO SOLICITADO: </label>
-    <input readonly  type="text" class="form-control entero" value="<?= $MONTO_SOLICITADO ?>">
+    <input readonly  type="text" class="form-control entero" name="MONTO_SOLICI" value="<?= $MONTO_SOLICITADO ?>">
 </div> 
+
+<input type="hidden" name="FECHA_SOLICI"   value="<?= $FECHA_SOLICITADO ?>">

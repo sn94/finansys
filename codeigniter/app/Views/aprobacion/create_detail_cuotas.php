@@ -66,7 +66,7 @@
                 <th>DIA</th>
                 <th>INTERÉS</th>
                 <th>IVA</th>
-                <th>CAPITAL</th>
+                <th>AMORTIZ.</th>
                 <th>CUOTA</th>
                 <th>SALDO CAPITAL</th>
             </tr>
@@ -74,60 +74,17 @@
         <tbody id="CUOTAS-TABLE">
 
         </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td id="CUOTAS-TABLE-TINTERES" class="text-right"></td>
+                <td id="CUOTAS-TABLE-TIVA"  class="text-right"></td>
+                <td id="CUOTAS-TABLE-TAMORTI"  class="text-right"></td>
+                <td id="CUOTAS-TABLE-TCUOTA"  class="text-right"></td>
+                <td></td>
+            </tr>
+        </tfoot>
     </table>
 </div>
-
-
-<script>
-    var cellsStyles = ['form-control', 'form-control-sm'];
-
-    var cuotas_model = [];
-
-    /**Table constructor */
-    let createTD = function(name, data, tipo) {
-        let tipo__ = tipo == undefined ? "text" : tipo;
-        let estilos = cellsStyles.join(" ");
-        let domobj = "<input class='" + estilos + "'    type='" + tipo__ + "' readonly  value='" + data + "' >";
-
-        return "<td>" + domobj + "</td>";
-    };
-    let createTR = function(obj) {
-
-        let tds = Object.keys(obj).map((kname) => {
-            if (kname == "VENCIMIENTO") return createTD(kname, obj[kname], "date");
-            if (kname == "CUOTA") return createTD(kname, formatoNumerico.darFormatoEnMillares(obj[kname], 0), "text");
-            if (kname == "IVA") return createTD(kname, formatoNumerico.darFormatoEnMillares(obj[kname], 0), "text");
-            if (kname == "INTERES") return createTD(kname, formatoNumerico.darFormatoEnMillares(obj[kname], 0), "text");
-            if (kname == "SALDO") return createTD(kname, formatoNumerico.darFormatoEnMillares(obj[kname], 0), "text");
-            if (kname == "CAPITAL") return createTD(kname, formatoNumerico.darFormatoEnMillares(obj[kname], 0), "text");
-            return createTD(kname, obj[kname]);
-        }).join();
-        return "<tr>" + tds + "</tr>";
-    };
-
-   
-
-    async function mostrarCuotas() {
-        $("#VENC-TABLE tbody").html("");
-        //cuota vencimiento dia
-        await iniciar_calculos_de_operacion();
-        let detalleGenCuota = getTipoDeCalculoElegido().DETALLE_CALCULO;
-        cuotas_model = detalleGenCuota.map((cuo) => {
-            return {
-                NUMERO: cuo.IDCUOTA,
-                VENCIMIENTO: cuo.VENCIMIENTO,
-                DIA: cuo.DIA,
-                INTERES: cuo.INTERES,
-                IVA: cuo.IVA,
-                CAPITAL: cuo.CAPITAL,
-                MONTO: cuo.CUOTA,
-                SALDO: cuo.SALDO
-            };
-        });
-
-        detalleGenCuota.forEach(function(cuo) {
-            $("#VENC-TABLE tbody").append(createTR(cuo));
-        });
-
-    }
-</script>

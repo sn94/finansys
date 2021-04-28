@@ -41,7 +41,7 @@
       <tr id="<?= $i->IDNRO ?>">
 
         <td style='padding: 0px;'>
-          <a onclick="verCuotas(event)" class="btn btn-sm btn-primary m-0" href="<?= base_url("operacion/cuotas/" . $i->IDNRO) ?>">Ver cuotas</a>
+          <a onclick="verCuotas(event)" class="btn btn-sm btn-primary m-0" href="<?= base_url("operacion/cuotas/" . $i->IDNRO) ?>">Cuotas</a>
         </td>
         <td style='padding: 0px;'><?= $i->EMPRESA ?></td>
         <td style='padding: 0px;'><?= $i->LETRA . $i->CORRELATIVO ?></td>

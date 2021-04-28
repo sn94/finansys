@@ -32,16 +32,22 @@ class Vencimientos extends BaseController
 			$DATOS =  $this->request->getJSON(TRUE);
 			$BUSCADO = $DATOS['BUSCADO'];
 		}
-	 
 
+		 
 		$operaciones =  (new Operacion_model())
 			->join("deudor", "deudor.IDNRO =  operacion.NRO_CLIENTE")
+			->where("operacion.ESTADO", "APROBADO");
+			if(  $BUSCADO != "")
+			$operaciones= $operaciones
+			->groupStart()
+			->like("deudor.CEDULA", "$BUSCADO")
+			->orLike("CONCAT(operacion.LETRA,operacion.CORRELATIVO)", "$BUSCADO")
+			->orLike("deudor.NOMBRES", "$BUSCADO")
+			->groupEnd();
+			$operaciones= $operaciones
 			->select("operacion.*, deudor.CEDULA, concat(deudor.NOMBRES, concat(' ',deudor.APELLIDOS)) as NOMBRES")
-			->where(" (operacion.ESTADO='APROBADO')  AND 
-		( deudor.CEDULA LIKE '%$BUSCADO%' OR CONCAT(operacion.LETRA,operacion.CORRELATIVO) LIKE '%$BUSCADO%'  OR  
-		deudor.NOMBRES LIKE '%$BUSCADO%'  OR  deudor.APELLIDOS LIKE '%$BUSCADO%' )")
 			->orderBy("created_at", "DESC");
-
+ 
 		$data = [
 			"OPERACION" =>   $operaciones->paginate(10),
 			"pager" => $operaciones->pager

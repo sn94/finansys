@@ -17,7 +17,7 @@ format(INTERES_PORCE,  4,  'de_DE' )  AS INTERES_PORCE
 /**Parametros */
 $params= (new Parametros_model())->select(
     "parametros.*,FORMAT( parametros.BCP_INTERES,4, 'de_DE') AS BCP_INTERES,
-FORMAT( parametros.IVA,4, 'de_DE') AS INTERES_IVA_PORCE")->first();
+FORMAT( parametros.IVA,0, 'de_DE') AS INTERES_IVA_PORCE")->first();
 
 
 $INTERES_IVA_PORCE =  (isset($OPERACION) ? ($OPERACION->INTERES_IVA_PORCE == "" ? $params->INTERES_IVA_PORCE  :  $OPERACION->INTERES_IVA_PORCE) :  $params->INTERES_IVA_PORCE);

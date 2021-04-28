@@ -6,9 +6,11 @@ use App\Models\Productos_finan_model;
 $productos_financieros = (new Productos_finan_model())->get()->getResult();
 
 $IDNRO =  isset($OPERACION) ?  $OPERACION->IDNRO :   "";
-$CREDITO =  isset($CLIENTE) ?  $CLIENTE->MONTO_SOLICI : (isset($OPERACION) ?  $OPERACION->CREDITO : "");
+$CREDITO =  (isset($OPERACION) ?  $OPERACION->CREDITO : (isset($CLIENTE) ?  $CLIENTE->MONTO_SOLICI : 0));
 $PRIMER_VENCIMIENTO =    (isset($OPERACION) ?  ($OPERACION->PRIMER_VENCIMIENTO == "" ? date("Y-m-d")  :  $OPERACION->PRIMER_VENCIMIENTO) : date("Y-m-d"));
 $NRO_CUOTAS =    (isset($OPERACION) ?  $OPERACION->NRO_CUOTAS : "0");
+
+
 $PRODUCTO_FINA = isset($OPERACION) ?  $OPERACION->PRODUCTO_FINA : "";
 $SISTEMA = isset($OPERACION) ?  $OPERACION->SISTEMA : "";
 
@@ -43,11 +45,11 @@ $FUNCIONARIO = session("ID");
 
         <div class="form-group mb-1">
             <label>CRÉDITO: </label>
-            <input value="<?= $CREDITO ?>" id="CREDITO" name="CREDITO" type="text" class="form-control entero">
+            <input value="<?= $CREDITO ?>" onchange="verificarProductoFinanciero(event)" id="CREDITO" name="CREDITO" type="text" class="form-control entero">
         </div>
         <div class="form-group mb-1">
             <label>CUOTAS: </label>
-            <input onfocus="if(this.value=='0') this.value='';" onblur="if(this.value=='') this.value= '0';  " value="<?= $NRO_CUOTAS ?>" id="NRO_CUOTAS" name="NRO_CUOTAS" type="text" class="form-control entero">
+            <input onchange="verificarProductoFinanciero(event)" onfocus="if(this.value=='0') this.value='';" onblur="if(this.value=='') this.value= '0';  " value="<?= $NRO_CUOTAS ?>" id="NRO_CUOTAS" name="NRO_CUOTAS" type="text" class="form-control entero">
         </div>
 
         <div class="form-group mb-1">
@@ -74,7 +76,7 @@ $FUNCIONARIO = session("ID");
         <!--  Sistema de calculo -->
         <div class="form-group mb-1">
             <label>SISTEMA: </label>
-            <select onchange="cambiarSistema(this.value)" name="SISTEMA" id="SISTEMA" class="form-control">
+            <select name="SISTEMA" id="SISTEMA" class="form-control">
 
                 <?php $sistemas =  ['FRANCES' => 'FRANCÉS', 'ALEMAN' => 'ALEMAN']; ?>
                 <?php foreach ($sistemas  as $key => $value) : ?>
@@ -87,11 +89,4 @@ $FUNCIONARIO = session("ID");
 </div>
 
 
-<script>
-    function cambiarSistema() {
-
-
-        iniciar_calculos_de_operacion();
-
-    }
-</script>
+ 

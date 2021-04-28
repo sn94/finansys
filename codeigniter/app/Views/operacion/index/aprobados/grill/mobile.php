@@ -16,7 +16,7 @@
             Opciones
              </button>
              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-               <a onclick="verCuotas(event)" class="dropdown-item" href="<?= base_url("operacion/cuotas/" . $i->IDNRO) ?>">Ver cuotas</a>
+               <a onclick="verCuotas(event)" class="dropdown-item" href="<?= base_url("operacion/cuotas/" . $i->IDNRO) ?>">Cuotas</a>
                <a class="dropdown-item"   href="<?= base_url("operacion/edit/" . $i->IDNRO) ?>">Editar operación</a>
                <a class="dropdown-item" onclick="borrar(event)" href="<?= base_url("operacion/delete/" . $i->IDNRO) ?>"> Borrar operación</a>
 

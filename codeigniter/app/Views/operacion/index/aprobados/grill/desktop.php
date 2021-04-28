@@ -3,6 +3,7 @@
   #OPERACIONES-CON-VENC tbody tr td:nth-child(1) {
     width: 80px;
   }
+
   #OPERACIONES-CON-VENC thead tr th:nth-child(2),
   #OPERACIONES-CON-VENC tbody tr td:nth-child(2) {
     width: 90px;
@@ -19,7 +20,7 @@
   }
 </style>
 
- 
+
 
 
 <table id="OPERACIONES-CON-VENC" class="table table-bordered table-striped table-info table-hover  ">
@@ -28,9 +29,10 @@
 
 
 
-      
+      <?php if (isset($COBRANZA)) : ?>
         <th></th>
-       
+
+      <?php endif; ?>
 
       <th></th>
       <!--ver cuotas-->
@@ -59,19 +61,19 @@
       <tr id="<?= $i->IDNRO ?>">
 
 
-      
+
+
+        <?php if (isset($COBRANZA)) : ?>
           <td class="p-0">
-          <?php if ( isset($COBRANZA)) : ?>
             <a class="btn btn-primary btn-sm w-100" href="<?= base_url("cobro/create/" . $i->IDNRO) ?>">COBRAR </a>
-            <?php else: ?>
-              -
-            <?php endif; ?>
           </td>
-      
+        <?php endif; ?>
+
+
 
 
         <td style='padding: 0px;'>
-          <a onclick="verCuotas(event)" class="btn btn-sm btn-primary m-0 w-100" href="<?= base_url("operacion/cuotas/" . $i->IDNRO) ?>">Ver cuotas</a>
+          <a onclick="verCuotas(event)" class="btn btn-sm btn-primary m-0 w-100 px-0" href="<?= base_url("operacion/cuotas/" . $i->IDNRO) ?>">Cuotas</a>
         </td>
 
 

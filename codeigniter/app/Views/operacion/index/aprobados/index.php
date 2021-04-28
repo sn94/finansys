@@ -3,9 +3,8 @@
 use App\Helpers\Utilidades;
 
 
-//MOSTRAR BOTON DE COBRO
-$COBRANZA = "NO";
-if (isset($COBRANZA))  $COBRANZA = "SI";
+//MOSTRAR BOTON DE COBRO 
+$COBRANZA= (isset($COBRANZA)) ?   "SI" : "NO";
 
 
 ?>

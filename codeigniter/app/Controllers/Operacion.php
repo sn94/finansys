@@ -166,7 +166,9 @@ class Operacion extends BaseController
 					->orderBy("operacion.IDNRO", "DESC")
 					->first();
 
-				echo view('aprobacion/create', ['OPERACION' =>  $operacion]);
+				$cliente = (new Deudor_model())->find($operacion->NRO_CLIENTE);
+
+				echo view('aprobacion/create', ['OPERACION' =>  $operacion, "CLIENTE"=> $cliente]);
 			}
 		}
 	}
@@ -197,6 +199,7 @@ class Operacion extends BaseController
 				->select("operacion.*,  FORMAT(operacion.CREDITO, 0,'de_DE') AS CREDITO,
 					 FORMAT(operacion.CUOTA_IMPORTE, 0,'de_DE') AS CUOTA_IMPORTE,
 					 format( deudor.MONTO_SOLICI, 0,'de_DE') as MONTO_SOLICI ,
+					 format( operacion.INTERES_PORCE, 2,'de_DE') as INTERES_PORCE ,
 					 format( operacion.TOTAL_INTERESES, 0,'de_DE') as TOTAL_INTERESES ,
 					 format( operacion.INTERES_IVA_PORCE,0, 'de_DE') AS INTERES_IVA_PORCE,
 					 format( operacion.TOTAL_INTERESES_IVA, 0,'de_DE') as TOTAL_INTERESES_IVA,
@@ -210,8 +213,9 @@ class Operacion extends BaseController
 
 				->where("operacion.IDNRO", $ID_OPERACION)->first();
 
+				$cliente= (new Deudor_model())->find( $operacion->NRO_CLIENTE);
 
-			return view('operacion/create/form',  ['OPERACION' =>  $operacion, 'EDITAR' => true]);
+			return view('operacion/create/form',  ['OPERACION' =>  $operacion, 'CLIENTE'=>$cliente, 'EDITAR' => true]);
 		}
 	}
 
@@ -362,14 +366,16 @@ if( FECHA_PAGO IS NULL, '', DATE_FORMAT( FECHA_PAGO,  '%d/%m/%Y' )   ) AS FECHA_
 		$cliente = (new Deudor_model())->find($NRO_CLIENTE);
 
 		//Empresa
-		$empresa= (new Empresa_model())->find( $operacion->EMPRESA);
+		$empresa = (new Empresa_model())->find($operacion->EMPRESA);
 
-		 
+
 
 		// instantiate and use the dompdf class
 		$dompdf = new Dompdf();
-		$dompdf->loadHtml( view("operacion/informes/resumen_crediticio", 
-		[ "cliente"=>$cliente, "operacion"=>  $operacion, "cuotas"=> $cuotas, "empresa"=> $empresa] ));
+		$dompdf->loadHtml(view(
+			"operacion/informes/resumen_crediticio",
+			["cliente" => $cliente, "operacion" =>  $operacion, "cuotas" => $cuotas, "empresa" => $empresa]
+		));
 
 		// (Optional) Setup the paper size and orientation
 		$dompdf->setPaper('A4', 'landscape');
